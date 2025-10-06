@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head>
+    <!-- 页面元信息：设置字符编码、视口以及页面标题 -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSR 志愿服务匹配平台</title>
+    <!-- 页面字体与图标引入 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- 关联主样式表（由 Express 静态资源服务） -->
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <!-- 整体页面容器：包裹所有内容以便统一控制 -->
+    <div class="page-wrapper">
+      <!-- 页眉区域：包含平台标题与导航 -->
+      <header class="site-header">
+        <div class="header-content">
+          <!-- 平台徽标及标题 -->
+          <div class="logo-group">
+            <!-- 使用 SVG 绘制的简易徽标 -->
+            <svg
+              class="logo-icon"
+              viewBox="0 0 64 64"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <defs>
+                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#2c7be5" />
+                  <stop offset="100%" stop-color="#51cf66" />
+                </linearGradient>
+              </defs>
+              <circle cx="32" cy="32" r="30" fill="url(#grad)" />
+              <path
+                d="M32 16c-5.523 0-10 4.477-10 10 0 6.25 7 12 10 22 3-10 10-15.75 10-22 0-5.523-4.477-10-10-10zm0 14a4 4 0 110-8 4 4 0 010 8z"
+                fill="#fff"
+              />
+            </svg>
+            <h1>CSR 志愿服务匹配平台</h1>
+          </div>
+          <!-- 主导航菜单 -->
+          <nav class="main-nav" aria-label="主导航">
+            <ul>
+              <li><a href="#overview">概览</a></li>
+              <li><a href="#accounts">多角色管理</a></li>
+              <li><a href="#requests">求助请求</a></li>
+              <li><a href="#csr">CSR 志愿服务</a></li>
+              <li><a href="#pin">PIN 数据洞察</a></li>
+              <li><a href="#reports">平台报表</a></li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+
+      <!-- 主内容区域：承载全部页面模块 -->
+      <main>
+        <!-- 平台概览区块：展示平台定位与核心价值 -->
+        <section id="overview" class="hero-section">
+          <div class="hero-text">
+            <h2>连接 CSR 志愿者与有需要的人</h2>
+            <p>
+              我们的目标是通过信息透明与高效匹配，帮助企业履行社会责任，也让求助者得到及时的支持。
+            </p>
+            <div class="hero-actions">
+              <a class="primary-btn" href="#accounts">立即查看角色功能</a>
+              <a class="secondary-btn" href="#reports">了解报表体系</a>
+            </div>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <!-- 使用语义化 figure 描述示意图 -->
+            <figure>
+              <img
+                src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80"
+                alt="志愿者与受助者合作的示意图"
+                loading="lazy"
+              />
+              <figcaption>协作共建可持续的社会支持网络</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <!-- 角色与账户管理区块：展示各角色主要任务 -->
+        <section id="accounts" class="accounts-section">
+          <header class="section-header">
+            <h2>多角色账户与档案管理</h2>
+            <p>
+              通过统一的账户中心，管理员可以灵活配置用户档案、权限与状态，确保系统安全与协作顺畅。
+            </p>
+          </header>
+          <div class="role-grid">
+            <% roles.forEach((role) => { %>
+              <!-- 角色卡片：展示角色名称及核心职责 -->
+              <article class="role-card">
+                <h3><%= role.name %></h3>
+                <ul>
+                  <% role.highlights.forEach((item) => { %>
+                    <li><%= item %></li>
+                  <% }) %>
+                </ul>
+              </article>
+            <% }) %>
+          </div>
+        </section>
+
+        <!-- 求助请求区块：展示 PIN 请求列表与管理操作 -->
+        <section id="requests" class="requests-section">
+          <header class="section-header">
+            <h2>PIN 求助请求管理</h2>
+            <p>集中管理求助者需求，支持分类、筛选与状态追踪。</p>
+          </header>
+          <div class="requests-content">
+            <!-- 请求筛选表单（暂未接入接口，可通过 API 进一步扩展） -->
+            <form class="filter-form" aria-label="求助请求筛选">
+              <div class="form-row">
+                <label for="request-category">服务类别</label>
+                <select id="request-category" name="request-category">
+                  <option value="all">全部</option>
+                  <option value="medical">医疗陪同</option>
+                  <option value="mobility">辅助出行</option>
+                  <option value="daily">日常照护</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label for="request-time">时间段</label>
+                <input id="request-time" type="month" name="request-time" />
+              </div>
+              <div class="form-row">
+                <label for="request-status">状态</label>
+                <select id="request-status" name="request-status">
+                  <option value="all">全部</option>
+                  <option value="pending">待匹配</option>
+                  <option value="matched">已匹配</option>
+                  <option value="completed">已完成</option>
+                </select>
+              </div>
+              <button type="submit" class="primary-btn">快速筛选</button>
+            </form>
+
+            <!-- 请求列表表格：通过服务器注入的请求数据渲染 -->
+            <div class="table-wrapper" role="region" aria-live="polite">
+              <table>
+                <caption>最新求助请求列表</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">请求标题</th>
+                    <th scope="col">服务类别</th>
+                    <th scope="col">状态</th>
+                    <th scope="col">浏览量</th>
+                    <th scope="col">收藏次数</th>
+                    <th scope="col">提交时间</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% pinRequests.forEach((request) => { %>
+                    <% const statusInfo = requestStatuses[request.status] || { label: request.status, className: '' }; %>
+                    <tr>
+                      <td><%= request.title %></td>
+                      <td><%= request.category %></td>
+                      <td>
+                        <span class="status <%= statusInfo.className %>"><%= statusInfo.label %></span>
+                      </td>
+                      <td><%= request.views %></td>
+                      <td><%= request.favorites %></td>
+                      <td><%= request.submittedAt %></td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- CSR 志愿服务区块：展示搜索与候选清单 -->
+        <section id="csr" class="csr-section">
+          <header class="section-header">
+            <h2>CSR 志愿者服务工作台</h2>
+            <p>
+              提供搜索、收藏与历史管理工具，帮助 CSR 代表快速找到适合的志愿机会。
+            </p>
+          </header>
+          <div class="csr-layout">
+            <!-- 搜索与候选清单区域 -->
+            <div class="csr-search">
+              <h3>志愿机会搜索</h3>
+              <form class="filter-form" aria-label="志愿机会搜索">
+                <div class="form-row">
+                  <label for="service-type">服务类别</label>
+                  <select id="service-type" name="service-type">
+                    <option value="all">全部</option>
+                    <option value="medical">医疗陪同</option>
+                    <option value="mobility">辅助出行</option>
+                    <option value="daily">日常照护</option>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <label for="service-date">服务时间</label>
+                  <input id="service-date" type="date" name="service-date" />
+                </div>
+                <div class="form-row">
+                  <label for="service-location">服务区域</label>
+                  <input
+                    id="service-location"
+                    type="text"
+                    name="service-location"
+                    placeholder="如：徐汇区"
+                  />
+                </div>
+                <button type="submit" class="primary-btn">搜索机会</button>
+              </form>
+
+              <h3>我的候选清单</h3>
+              <ul class="shortlist">
+                <% csrShortlist.forEach((item) => { %>
+                  <li>
+                    <h4><%= item.title %></h4>
+                    <p><%= item.desc %></p>
+                  </li>
+                <% }) %>
+              </ul>
+            </div>
+
+            <!-- 志愿服务历史记录 -->
+            <div class="csr-history">
+              <h3>历史志愿服务记录</h3>
+              <form class="filter-form" aria-label="历史服务筛选">
+                <div class="form-row">
+                  <label for="history-type">服务类别</label>
+                  <select id="history-type" name="history-type">
+                    <option value="all">全部</option>
+                    <option value="health">健康陪伴</option>
+                    <option value="education">教育辅导</option>
+                    <option value="community">社区建设</option>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <label for="history-range">时间区间</label>
+                  <input id="history-range" type="month" name="history-range" />
+                </div>
+                <button type="submit" class="secondary-btn">筛选历史</button>
+              </form>
+              <div class="table-wrapper">
+                <table>
+                  <caption>完成的志愿服务列表</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">服务名称</th>
+                      <th scope="col">类别</th>
+                      <th scope="col">时间</th>
+                      <th scope="col">服务时长</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% csrHistory.forEach((record) => { %>
+                      <tr>
+                        <td><%= record.title %></td>
+                        <td><%= record.category %></td>
+                        <td><%= record.serviceDate %></td>
+                        <td><%= record.duration %></td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PIN 数据洞察区块：展示浏览与收藏指标 -->
+        <section id="pin" class="pin-section">
+          <header class="section-header">
+            <h2>PIN 请求数据洞察</h2>
+            <p>
+              实时了解求助需求的关注度，并支持按类别与时间段查询历史匹配记录。
+            </p>
+          </header>
+          <div class="pin-dashboard">
+            <!-- 指标展示卡片 -->
+            <div class="metrics-grid">
+              <% pinMetrics.forEach((metric) => { %>
+                <div class="metric-card">
+                  <h3><%= metric.title %></h3>
+                  <p class="metric-value"><%= metric.value %></p>
+                  <p class="metric-desc"><%= metric.description %></p>
+                </div>
+              <% }) %>
+            </div>
+
+            <!-- 历史匹配查询表单与结果 -->
+            <div class="history-panel">
+              <form class="filter-form" aria-label="PIN 历史匹配查询">
+                <div class="form-row">
+                  <label for="pin-category">服务类别</label>
+                  <select id="pin-category" name="pin-category">
+                    <option value="all">全部</option>
+                    <option value="medical">医疗陪同</option>
+                    <option value="mobility">辅助出行</option>
+                    <option value="daily">日常照护</option>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <label for="pin-range">时间区间</label>
+                  <input id="pin-range" type="month" name="pin-range" />
+                </div>
+                <button type="submit" class="primary-btn">查询记录</button>
+              </form>
+
+              <div class="table-wrapper">
+                <table>
+                  <caption>历史匹配记录</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">匹配服务</th>
+                      <th scope="col">CSR 代表</th>
+                      <th scope="col">完成日期</th>
+                      <th scope="col">服务反馈</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% pinMatches.forEach((match) => { %>
+                      <tr>
+                        <td><%= match.service %></td>
+                        <td><%= match.csr %></td>
+                        <td><%= match.completedAt %></td>
+                        <td><%= match.feedback %></td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 平台报表区块：展示服务类别管理与报表 -->
+        <section id="reports" class="reports-section">
+          <header class="section-header">
+            <h2>平台管理与报表中心</h2>
+            <p>
+              维护服务类别并生成多维度运营报告，支持战略决策与日常运营。
+            </p>
+          </header>
+          <div class="reports-grid">
+            <!-- 服务类别管理模块 -->
+            <div class="category-management">
+              <h3>服务类别管理</h3>
+              <form class="filter-form" aria-label="服务类别维护">
+                <div class="form-row">
+                  <label for="category-name">类别名称</label>
+                  <input
+                    id="category-name"
+                    type="text"
+                    name="category-name"
+                    placeholder="如：心理支持"
+                  />
+                </div>
+                <div class="form-row">
+                  <label for="category-status">状态</label>
+                  <select id="category-status" name="category-status">
+                    <option value="active">启用</option>
+                    <option value="suspended">停用</option>
+                  </select>
+                </div>
+                <button type="submit" class="primary-btn">保存类别</button>
+              </form>
+              <ul class="category-list">
+                <% serviceCategories.forEach((category) => { %>
+                  <% const statusInfo = requestStatuses[category.status] || { label: category.status, className: '' }; %>
+                  <li>
+                    <span><%= category.name %></span>
+                    <span class="status <%= statusInfo.className %>"><%= statusInfo.label %></span>
+                  </li>
+                <% }) %>
+              </ul>
+            </div>
+
+            <!-- 报表展示模块 -->
+            <div class="report-cards">
+              <% reports.forEach((report) => { %>
+                <article class="report-card">
+                  <h3><%= report.title %></h3>
+                  <% report.highlights.forEach((highlight) => { %>
+                    <p><%= highlight %></p>
+                  <% }) %>
+                </article>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- 页脚区域：展示版权与联系信息 -->
+      <footer class="site-footer">
+        <p>© 2025 CSR 志愿服务匹配平台 ｜ 共建温暖城市</p>
+        <a href="mailto:contact@csr-platform.org">contact@csr-platform.org</a>
+      </footer>
+    </div>
+  </body>
+</html>

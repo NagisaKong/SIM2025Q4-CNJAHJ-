@@ -1,0 +1,457 @@
+/* 页面全局样式：定义字体、颜色变量与布局基础 */
+:root {
+  /* 品牌主色与辅助色：用于按钮与状态标签 */
+  --color-primary: #2c7be5;
+  --color-secondary: #51cf66;
+  --color-dark: #1f2933;
+  --color-muted: #6b7280;
+  --color-light: #f5f7fa;
+  --color-white: #ffffff;
+  --color-border: #e5e7eb;
+  --shadow-soft: 0 12px 32px rgba(31, 41, 51, 0.08);
+}
+
+/* 全局排版设置：确保中文字体友好显示 */
+body {
+  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  margin: 0;
+  background: var(--color-light);
+  color: var(--color-dark);
+  line-height: 1.6;
+}
+
+/* 页面外层容器：控制最大宽度与边距 */
+.page-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
+
+/* 页眉样式：设置背景、阴影与布局 */
+.site-header {
+  background: var(--color-white);
+  box-shadow: var(--shadow-soft);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* 页眉内容：使用 Flex 对齐徽标与导航 */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+}
+
+/* 徽标区域：横向排列图标与标题 */
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* SVG 徽标：控制尺寸与圆角 */
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+/* 导航菜单：移除默认样式并设置横向排列 */
+.main-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+/* 导航链接：设置颜色与交互状态 */
+.main-nav a {
+  text-decoration: none;
+  color: var(--color-dark);
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 999px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* 导航链接悬停效果：提升对比度 */
+.main-nav a:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+/* 英雄区块：使用网格布局展示文案与图片 */
+.hero-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+  padding: 72px 0 48px;
+  align-items: center;
+}
+
+/* 英雄文案：设置标题层级与间距 */
+.hero-text h2 {
+  font-size: 2.4rem;
+  margin-bottom: 16px;
+}
+
+/* 英雄按钮组：使用 Flex 排列操作按钮 */
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+/* 主按钮样式：填充背景并突出层级 */
+.primary-btn {
+  background: var(--color-primary);
+  color: var(--color-white);
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* 副按钮样式：使用描边与透明背景 */
+.secondary-btn {
+  background: transparent;
+  color: var(--color-primary);
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* 按钮悬停反馈：适度放大并投影 */
+.primary-btn:hover,
+.secondary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(44, 123, 229, 0.2);
+}
+
+/* 英雄图片：添加圆角与阴影 */
+.hero-visual img {
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+  display: block;
+}
+
+/* 图注样式：设置字体与色彩 */
+.hero-visual figcaption {
+  margin-top: 12px;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+/* 通用区块标题：统一样式 */
+.section-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+/* 区块标题文字：增加字重 */
+.section-header h2 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+/* 角色卡片网格：使用响应式列布局 */
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+/* 角色卡片样式：圆角背景与阴影 */
+.role-card {
+  background: var(--color-white);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* 角色卡片标题：强调角色名称 */
+.role-card h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+/* 角色列表项：调整行距 */
+.role-card ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--color-muted);
+}
+
+/* 求助请求区块背景：增加区隔感 */
+.requests-section {
+  margin-top: 64px;
+  background: var(--color-white);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* 表单样式：统一标签与输入控件 */
+.filter-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* 表单行：竖直排列标签与输入框 */
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 输入控件：设置边框与圆角 */
+.filter-form input,
+.filter-form select {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+/* 表格外层：控制水平滚动以保证移动端可读性 */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  background: var(--color-white);
+  box-shadow: var(--shadow-soft);
+}
+
+/* 表格样式：填充间距与颜色 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 480px;
+}
+
+/* 表头样式：设定背景色与字重 */
+thead {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+/* 表格单元格：设置内边距与边框 */
+th,
+td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+/* 状态标签基础样式：统一填充与圆角 */
+.status {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* 不同状态颜色：对应请求状态提示 */
+.status-pending {
+  background: rgba(255, 165, 0, 0.16);
+  color: #c05621;
+}
+
+.status-matched {
+  background: rgba(44, 123, 229, 0.16);
+  color: var(--color-primary);
+}
+
+.status-completed {
+  background: rgba(81, 207, 102, 0.18);
+  color: #2f9e44;
+}
+
+.status-active {
+  background: rgba(81, 207, 102, 0.15);
+  color: #2f9e44;
+}
+
+.status-suspended {
+  background: rgba(239, 68, 68, 0.15);
+  color: #c53030;
+}
+
+/* CSR 区块布局：使用双列结构 */
+.csr-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* CSR 搜索区域卡片：统一背景与阴影 */
+.csr-search,
+.csr-history {
+  background: var(--color-white);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* 候选清单：移除默认列表样式并设置间距 */
+.shortlist {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+}
+
+/* 候选清单项：突出标题与说明 */
+.shortlist li {
+  background: var(--color-light);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+/* PIN 区块整体背景：与页面形成层次 */
+.pin-section {
+  margin-top: 64px;
+}
+
+/* PIN 仪表盘：使用网格布局排列内容 */
+.pin-dashboard {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+/* 指标卡片网格：自适应列布局 */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+/* 指标卡片样式：凸显关键数据 */
+.metric-card {
+  background: var(--color-white);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* 指标数值：调整字号与色彩 */
+.metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 8px 0;
+  color: var(--color-primary);
+}
+
+/* 历史面板：统一卡片样式 */
+.history-panel {
+  background: var(--color-white);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* 平台报表区块：使用网格展示分类与报表 */
+.reports-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* 服务类别管理卡片：保持一致视觉 */
+.category-management {
+  background: var(--color-white);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* 服务类别列表：自定义列表外观 */
+.category-list {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+/* 服务类别列表项：使用 Flex 对齐文字与状态 */
+.category-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-light);
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+/* 报表卡片容器：网格排列日报周报月报 */
+.report-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+/* 报表卡片样式：保持一致视觉语言 */
+.report-card {
+  background: var(--color-white);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* 页脚样式：居中对齐与色彩弱化 */
+.site-footer {
+  text-align: center;
+  margin-top: 64px;
+  color: var(--color-muted);
+}
+
+/* 页脚链接：设置主色并取消下划线 */
+.site-footer a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* 响应式调整：在小屏幕上优化导航与间距 */
+@media (max-width: 720px) {
+  /* 调整页眉布局：导航下移占满宽度 */
+  .header-content {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* 调整导航布局：启用换行 */
+  .main-nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* 调整英雄标题：缩小字体大小 */
+  .hero-text h2 {
+    font-size: 2rem;
+  }
+
+  /* 调整页面边距：减少左右留白 */
+  .page-wrapper {
+    padding: 0 16px 32px;
+  }
+}
