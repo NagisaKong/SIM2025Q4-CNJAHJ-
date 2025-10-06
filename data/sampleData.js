@@ -152,21 +152,24 @@ const userAccounts = [
     displayName: "梁敏",
     role: "用户管理员",
     status: "active",
-    lastLogin: "2025-02-14 09:30"
+    lastLogin: "2025-02-14 09:30",
+    password: "admin123"
   },
   {
     username: "csr.wangqi",
     displayName: "王琪",
     role: "CSR 代表",
     status: "active",
-    lastLogin: "2025-02-13 18:05"
+    lastLogin: "2025-02-13 18:05",
+    password: "csr12345"
   },
   {
     username: "pin.lijuan",
     displayName: "李娟",
     role: "求助者（PIN）",
     status: "suspended",
-    lastLogin: "2024-12-22 14:12"
+    lastLogin: "2024-12-22 14:12",
+    password: "pin12345"
   }
 ];
 
@@ -236,6 +239,62 @@ const reports = [
   }
 ];
 
+// 数据操作函数：提供简单的内存增删改查以支持演示功能。
+function authenticateUser(username, password) {
+  return userAccounts.find(
+    (account) => account.username === username && account.password === password
+  );
+}
+
+function addUserAccount(account) {
+  userAccounts.push(account);
+  return account;
+}
+
+function updateUserAccount(username, updates) {
+  const target = userAccounts.find((account) => account.username === username);
+  if (!target) return null;
+  Object.assign(target, updates);
+  return target;
+}
+
+function searchUserAccounts(keyword) {
+  if (!keyword) return userAccounts;
+  const lower = keyword.toLowerCase();
+  return userAccounts.filter(
+    (account) =>
+      account.username.toLowerCase().includes(lower) ||
+      account.displayName.toLowerCase().includes(lower) ||
+      account.role.toLowerCase().includes(lower)
+  );
+}
+
+function getUserAccount(username) {
+  return userAccounts.find((account) => account.username === username);
+}
+
+function addUserProfile(profile) {
+  userProfiles.push(profile);
+  return profile;
+}
+
+function updateUserProfile(name, updates) {
+  const target = userProfiles.find((profile) => profile.name === name);
+  if (!target) return null;
+  Object.assign(target, updates);
+  return target;
+}
+
+function searchUserProfiles(keyword) {
+  if (!keyword) return userProfiles;
+  const lower = keyword.toLowerCase();
+  return userProfiles.filter(
+    (profile) =>
+      profile.name.toLowerCase().includes(lower) ||
+      profile.description.toLowerCase().includes(lower)
+  );
+}
+
 module.exports = {
   requestStatuses,
   roles,
@@ -248,5 +307,13 @@ module.exports = {
   reports,
   userAccounts,
   userProfiles,
-  volunteerOpportunities
+  volunteerOpportunities,
+  authenticateUser,
+  addUserAccount,
+  updateUserAccount,
+  getUserAccount,
+  searchUserAccounts,
+  addUserProfile,
+  updateUserProfile,
+  searchUserProfiles
 };

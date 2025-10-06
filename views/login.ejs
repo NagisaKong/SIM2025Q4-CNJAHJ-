@@ -1,124 +1,116 @@
 <!DOCTYPE html>
 <html lang="zh-Hans">
   <head>
-    <!-- 页面元信息：声明字符集、视口与标题 -->
+    <!-- 元信息：确保页面自适应不同设备 -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>平台登录 ｜ CSR 志愿服务匹配平台</title>
-    <!-- 引入与主页一致的字体与样式，保持视觉一致性 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <title>登录 ｜ CSR 志愿服务匹配平台</title>
+    <!-- 引入统一的简约样式 -->
     <link rel="stylesheet" href="/styles.css" />
   </head>
-  <body class="login-body">
-    <!-- 页面包裹容器：控制登录页面的宽度与居中 -->
-    <div class="login-wrapper">
-      <!-- 页眉：包含返回首页入口 -->
-      <header class="login-header">
-        <a class="back-home" href="/">
-          <!-- 使用 SVG 作为返回图标 -->
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path
-              d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"
-              fill="currentColor"
-            />
-          </svg>
-          <span>返回平台主页</span>
-        </a>
-        <h1>欢迎登录 CSR 志愿服务匹配平台</h1>
-        <p>请选择您的角色并输入账户信息，以继续后续操作。</p>
+  <body class="login">
+    <!-- 登录容器：水平垂直居中展示主要内容 -->
+    <main class="login__container">
+      <header class="login__header">
+        <h1>欢迎访问 CSR 志愿服务匹配平台</h1>
+        <p>请先登录或创建账户后继续。</p>
       </header>
 
-      <!-- 登录表单区域：支持多角色切换与密码找回提示 -->
-      <section class="login-panel">
-        <h2>账户登录</h2>
-        <form class="login-form" aria-label="多角色登录表单">
-          <!-- 角色选择：通过单选按钮切换登录身份 -->
-          <fieldset>
-            <legend>选择登录角色</legend>
-            <div class="role-options">
-              <% roles.forEach((role, index) => { %>
-                <label class="role-option">
-                  <input
-                    type="radio"
-                    name="login-role"
-                    value="<%= role.name %>"
-                    <%= index === 0 ? 'checked' : '' %>
-                  />
-                  <span><%= role.name %></span>
-                </label>
-              <% }) %>
-            </div>
-          </fieldset>
-
-          <!-- 账号输入：用户名与密码字段 -->
-          <div class="form-row">
-            <label for="login-username">用户名</label>
-            <input
-              id="login-username"
-              name="login-username"
-              type="text"
-              placeholder="请输入企业邮箱 / 账号"
-              required
-            />
-          </div>
-          <div class="form-row">
-            <label for="login-password">密码</label>
-            <input
-              id="login-password"
-              name="login-password"
-              type="password"
-              placeholder="请输入密码"
-              required
-            />
-          </div>
-
-          <!-- 表单动作：登录与找回密码 -->
-          <div class="form-actions">
-            <button type="submit" class="primary-btn">登录系统</button>
-            <a class="link-btn" href="#password-help">忘记密码？</a>
-          </div>
-        </form>
-
-        <!-- 安全提示：帮助用户了解密码管理要求 -->
-        <div id="password-help" class="security-hints">
-          <h3>密码与安全提示</h3>
-          <ul>
-            <li>密码需包含大小写字母、数字与特殊字符。</li>
-            <li>企业账号支持每 90 天自动提醒修改密码。</li>
-            <li>如遇登录异常，请联系平台管理员重置。</li>
-          </ul>
+      <% if (flash) { %>
+        <div class="flash flash--<%= flash.type %>">
+          <p><%= flash.message %></p>
         </div>
+      <% } %>
+
+      <!-- 登录表单：支持所有角色使用同一入口 -->
+      <section class="login__panel" aria-labelledby="login-title">
+        <h2 id="login-title">账户登录</h2>
+        <form method="post" action="/login" class="stack-form">
+          <label for="login-username">用户名</label>
+          <input
+            id="login-username"
+            name="username"
+            type="text"
+            placeholder="请输入用户名"
+            required
+          />
+
+          <label for="login-password">密码</label>
+          <input
+            id="login-password"
+            name="password"
+            type="password"
+            placeholder="请输入密码"
+            required
+          />
+
+          <button type="submit">登录平台</button>
+        </form>
       </section>
 
-      <!-- 角色导览区块：说明各角色登录后的核心操作 -->
-      <section class="role-guides">
-        <h2>角色快捷入口</h2>
-        <div class="role-guide-grid">
+      <!-- 创建账户选项：满足新用户注册需求 -->
+      <section class="login__panel" aria-labelledby="register-title">
+        <h2 id="register-title">创建新账户</h2>
+        <p class="login__hint">如您尚未拥有平台账号，可在此完成注册（默认启用状态）。</p>
+        <form method="post" action="/register" class="stack-form">
+          <label for="register-username">用户名</label>
+          <input
+            id="register-username"
+            name="username"
+            type="text"
+            placeholder="例如：pin.zhang"
+            required
+          />
+
+          <label for="register-display">姓名</label>
+          <input
+            id="register-display"
+            name="displayName"
+            type="text"
+            placeholder="请输入姓名"
+            required
+          />
+
+          <label for="register-password">密码</label>
+          <input
+            id="register-password"
+            name="password"
+            type="password"
+            placeholder="设置登录密码"
+            required
+          />
+
+          <label for="register-role">选择角色</label>
+          <select id="register-role" name="role" required>
+            <% roles.forEach((role) => { %>
+              <option value="<%= role.name %>"><%= role.name %></option>
+            <% }) %>
+          </select>
+
+          <button type="submit">创建账户</button>
+        </form>
+      </section>
+
+      <!-- 角色简介：帮助用户理解不同角色的职责 -->
+      <section class="login__panel" aria-labelledby="roles-title">
+        <h2 id="roles-title">角色简介</h2>
+        <ul class="role-list">
           <% roles.forEach((role) => { %>
-            <article class="role-guide-card">
-              <h3><%= role.name %></h3>
+            <li>
+              <strong><%= role.name %></strong>
               <ul>
                 <% role.highlights.forEach((item) => { %>
                   <li><%= item %></li>
                 <% }) %>
               </ul>
-              <a class="secondary-btn" href="/#accounts">了解更多职能</a>
-            </article>
+            </li>
           <% }) %>
-        </div>
+        </ul>
       </section>
 
-      <!-- 底部：提供联系与退出提示 -->
-      <footer class="login-footer">
-        <p>忘记退出？请点击下方按钮确保账户安全。</p>
-        <button type="button" class="ghost-btn">安全退出</button>
-        <p class="contact-help">企业客服：service@csr-platform.org ｜ 电话：400-800-8800</p>
+      <footer class="login__footer">
+        <p>登录后方可访问平台主页。若需要帮助，请联系平台管理员。</p>
       </footer>
-    </div>
+    </main>
   </body>
 </html>

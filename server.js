@@ -2,6 +2,7 @@
 const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
+const session = require('express-session');
 
 const {
   requestStatuses,
@@ -13,9 +14,15 @@ const {
   pinMatches,
   serviceCategories,
   reports,
-  userAccounts,
-  userProfiles,
-  volunteerOpportunities
+  volunteerOpportunities,
+  authenticateUser,
+  addUserAccount,
+  updateUserAccount,
+  getUserAccount,
+  searchUserAccounts,
+  addUserProfile,
+  updateUserProfile,
+  searchUserProfiles
 } = require('./data/sampleData');
 
 const app = express();
@@ -30,9 +37,55 @@ app.use(morgan('dev'));
 
 // 配置静态资源目录，使浏览器能够访问样式、图片等文件。
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
 
-// 根路由：渲染平台主页并注入所有演示数据。
+app.use(
+  session({
+    secret: 'csr-volunteer-secret',
+    resave: false,
+    saveUninitialized: false
+  })
+);
+
+function setFlash(req, type, message) {
+  req.session.flash = { type, message };
+}
+
+function getFlash(req) {
+  const flash = req.session.flash;
+  delete req.session.flash;
+  return flash;
+}
+
+function requireAuth(req, res, next) {
+  if (!req.session.user) {
+    setFlash(req, 'error', '请先登录以访问平台主页。');
+    return res.redirect('/login');
+  }
+  next();
+}
+
+function requireAdmin(req, res, next) {
+  if (!req.session.user || req.session.user.role !== '用户管理员') {
+    setFlash(req, 'error', '仅用户管理员可以执行此操作。');
+    return res.redirect('/dashboard');
+  }
+  next();
+}
+
 app.get('/', (req, res) => {
+  if (req.session.user) {
+    return res.redirect('/dashboard');
+  }
+  res.redirect('/login');
+});
+
+// 平台主页：需登录后访问，根据查询条件输出筛选结果。
+app.get('/dashboard', requireAuth, (req, res) => {
+  const accountKeyword = req.query.accountSearch || '';
+  const profileKeyword = req.query.profileSearch || '';
+  const flash = getFlash(req) || null;
+
   res.render('index', {
     roles,
     pinRequests,
@@ -43,18 +96,187 @@ app.get('/', (req, res) => {
     serviceCategories,
     requestStatuses,
     reports,
-    userAccounts,
-    userProfiles,
-    volunteerOpportunities
+    accounts: searchUserAccounts(accountKeyword),
+    profiles: searchUserProfiles(profileKeyword),
+    volunteerOpportunities,
+    accountKeyword,
+    profileKeyword,
+    currentUser: req.session.user,
+    flash
   });
 });
 
 // 登录页面：提供多角色登录界面示例，演示角色切换与辅助说明。
 app.get('/login', (req, res) => {
+  if (req.session.user) {
+    return res.redirect('/dashboard');
+  }
+  const flash = getFlash(req) || null;
   res.render('login', {
     roles,
-    requestStatuses
+    requestStatuses,
+    flash
   });
+});
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  const user = authenticateUser(username, password);
+  if (!user) {
+    setFlash(req, 'error', '登录失败：请确认用户名与密码。');
+    return res.redirect('/login');
+  }
+
+  if (user.status === 'suspended') {
+    setFlash(req, 'error', '该账户已被暂停，无法登录。');
+    return res.redirect('/login');
+  }
+
+  req.session.user = {
+    username: user.username,
+    displayName: user.displayName,
+    role: user.role
+  };
+
+  updateUserAccount(user.username, {
+    lastLogin: new Date().toISOString().replace('T', ' ').slice(0, 16)
+  });
+
+  setFlash(req, 'success', `${user.displayName}，欢迎回来！`);
+  res.redirect('/dashboard');
+});
+
+app.post('/logout', requireAuth, (req, res) => {
+  req.session.destroy(() => {
+    res.redirect('/login');
+  });
+});
+
+app.post('/register', (req, res) => {
+  const { username, displayName, password, role } = req.body;
+  if (!username || !password || !displayName || !role) {
+    setFlash(req, 'error', '请完整填写创建账户所需信息。');
+    return res.redirect('/login');
+  }
+
+  const exists = Boolean(getUserAccount(username));
+  if (exists) {
+    setFlash(req, 'error', '用户名已存在，请更换后重试。');
+    return res.redirect('/login');
+  }
+
+  addUserAccount({
+    username,
+    displayName,
+    role,
+    status: 'active',
+    lastLogin: '-',
+    password
+  });
+
+  setFlash(req, 'success', '账户创建成功，请使用新账户登录。');
+  res.redirect('/login');
+});
+
+app.post('/admin/accounts/create', requireAdmin, (req, res) => {
+  const { username, displayName, role, status, password } = req.body;
+  if (!username || !displayName || !role || !status || !password) {
+    setFlash(req, 'error', '请完整填写账户信息。');
+    return res.redirect('/dashboard');
+  }
+
+  const exists = Boolean(getUserAccount(username));
+  if (exists) {
+    setFlash(req, 'error', '该用户名已存在，无法重复创建。');
+    return res.redirect('/dashboard');
+  }
+
+  addUserAccount({
+    username,
+    displayName,
+    role,
+    status,
+    lastLogin: '-',
+    password
+  });
+
+  setFlash(req, 'success', '用户账户创建完成。');
+  res.redirect('/dashboard');
+});
+
+app.post('/admin/accounts/update', requireAdmin, (req, res) => {
+  const { username, displayName, role, status } = req.body;
+  const updated = updateUserAccount(username, { displayName, role, status });
+  if (!updated) {
+    setFlash(req, 'error', '未找到对应的用户账户。');
+    return res.redirect('/dashboard');
+  }
+  setFlash(req, 'success', '账户信息已更新。');
+  res.redirect('/dashboard');
+});
+
+app.post('/admin/accounts/suspend', requireAdmin, (req, res) => {
+  const { username } = req.body;
+  const updated = updateUserAccount(username, { status: 'suspended' });
+  if (!updated) {
+    setFlash(req, 'error', '未找到对应的用户账户。');
+    return res.redirect('/dashboard');
+  }
+  setFlash(req, 'success', '用户账户已暂停。');
+  res.redirect('/dashboard');
+});
+
+app.post('/admin/profiles/create', requireAdmin, (req, res) => {
+  const { name, description, permissions } = req.body;
+  if (!name || !description) {
+    setFlash(req, 'error', '档案名称与描述为必填项。');
+    return res.redirect('/dashboard');
+  }
+
+  addUserProfile({
+    name,
+    description,
+    permissions: permissions
+      ? permissions.split(',').map((item) => item.trim()).filter(Boolean)
+      : [],
+    status: 'active'
+  });
+
+  setFlash(req, 'success', '用户档案创建完成。');
+  res.redirect('/dashboard');
+});
+
+app.post('/admin/profiles/update', requireAdmin, (req, res) => {
+  const { name, description, status } = req.body;
+  const permissions = req.body.permissions
+    ? req.body.permissions.split(',').map((item) => item.trim()).filter(Boolean)
+    : [];
+
+  const updated = updateUserProfile(name, {
+    description,
+    status,
+    permissions
+  });
+
+  if (!updated) {
+    setFlash(req, 'error', '未找到对应的用户档案。');
+    return res.redirect('/dashboard');
+  }
+
+  setFlash(req, 'success', '用户档案信息已更新。');
+  res.redirect('/dashboard');
+});
+
+app.post('/admin/profiles/suspend', requireAdmin, (req, res) => {
+  const { name } = req.body;
+  const updated = updateUserProfile(name, { status: 'suspended' });
+  if (!updated) {
+    setFlash(req, 'error', '未找到对应的用户档案。');
+    return res.redirect('/dashboard');
+  }
+
+  setFlash(req, 'success', '用户档案已暂停使用。');
+  res.redirect('/dashboard');
 });
 
 // 提供基础的 JSON API，便于未来接入真实前端或进行接口测试。
