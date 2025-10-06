@@ -16,9 +16,10 @@
         <p>请先登录或创建账户后继续。</p>
       </header>
 
-      <% if (flash) { %>
-        <div class="flash flash--<%= flash.type %>">
-          <p><%= flash.message %></p>
+      <% const flashMessage = typeof flash !== 'undefined' ? flash : null; %>
+      <% if (flashMessage) { %>
+        <div class="flash flash--<%= flashMessage.type %>">
+          <p><%= flashMessage.message %></p>
         </div>
       <% } %>
 
@@ -26,6 +27,19 @@
       <section class="login__panel" aria-labelledby="login-title">
         <h2 id="login-title">账户登录</h2>
         <form method="post" action="/login" class="stack-form">
+          <!-- 登录身份选择：允许用户明确以何种角色进入平台 -->
+          <label for="login-role">登录身份</label>
+          <select id="login-role" name="role" required>
+            <% roles.forEach((roleOption) => { %>
+              <option
+                value="<%= roleOption.name %>"
+                <%= selectedRole === roleOption.name ? 'selected' : '' %>
+              >
+                <%= roleOption.name %>
+              </option>
+            <% }) %>
+          </select>
+
           <label for="login-username">用户名</label>
           <input
             id="login-username"
@@ -33,6 +47,7 @@
             type="text"
             placeholder="请输入用户名"
             required
+            value="<%= loginPrefill && loginPrefill.username ? loginPrefill.username : '' %>"
           />
 
           <label for="login-password">密码</label>

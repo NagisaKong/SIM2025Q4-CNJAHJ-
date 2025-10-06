@@ -21,9 +21,10 @@
     </header>
 
     <!-- 全局提示区域：显示成功或错误信息 -->
-    <% if (flash) { %>
-      <div class="flash flash--<%= flash.type %>">
-        <p><%= flash.message %></p>
+    <% const flashMessage = typeof flash !== 'undefined' ? flash : null; %>
+    <% if (flashMessage) { %>
+      <div class="flash flash--<%= flashMessage.type %>">
+        <p><%= flashMessage.message %></p>
       </div>
     <% } %>
 

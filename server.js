@@ -47,14 +47,17 @@ app.use(
   })
 );
 
+// 中间件：统一注入 flash 信息与登录表单回填数据，避免模板读取未定义变量。
+app.use((req, res, next) => {
+  res.locals.flash = req.session.flash || null;
+  res.locals.loginPrefill = req.session.loginPrefill || null;
+  delete req.session.flash;
+  delete req.session.loginPrefill;
+  next();
+});
+
 function setFlash(req, type, message) {
   req.session.flash = { type, message };
-}
-
-function getFlash(req) {
-  const flash = req.session.flash;
-  delete req.session.flash;
-  return flash;
 }
 
 function requireAuth(req, res, next) {
@@ -84,7 +87,7 @@ app.get('/', (req, res) => {
 app.get('/dashboard', requireAuth, (req, res) => {
   const accountKeyword = req.query.accountSearch || '';
   const profileKeyword = req.query.profileSearch || '';
-  const flash = getFlash(req) || null;
+  const flash = res.locals.flash || null;
 
   res.render('index', {
     roles,
@@ -111,24 +114,30 @@ app.get('/login', (req, res) => {
   if (req.session.user) {
     return res.redirect('/dashboard');
   }
-  const flash = getFlash(req) || null;
+  const loginPrefill = res.locals.loginPrefill || {};
+  const defaultRole = roles.length ? roles[0].name : '';
+  const selectedRole = loginPrefill.role || defaultRole;
   res.render('login', {
     roles,
     requestStatuses,
-    flash
+    flash: res.locals.flash,
+    loginPrefill,
+    selectedRole
   });
 });
 
 app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  const user = authenticateUser(username, password);
+  const { username, password, role } = req.body;
+  const user = authenticateUser(username, password, role);
   if (!user) {
     setFlash(req, 'error', '登录失败：请确认用户名与密码。');
+    req.session.loginPrefill = { username, role };
     return res.redirect('/login');
   }
 
   if (user.status === 'suspended') {
     setFlash(req, 'error', '该账户已被暂停，无法登录。');
+    req.session.loginPrefill = { username, role };
     return res.redirect('/login');
   }
 
@@ -156,12 +165,14 @@ app.post('/register', (req, res) => {
   const { username, displayName, password, role } = req.body;
   if (!username || !password || !displayName || !role) {
     setFlash(req, 'error', '请完整填写创建账户所需信息。');
+    req.session.loginPrefill = { username, role };
     return res.redirect('/login');
   }
 
   const exists = Boolean(getUserAccount(username));
   if (exists) {
     setFlash(req, 'error', '用户名已存在，请更换后重试。');
+    req.session.loginPrefill = { username, role };
     return res.redirect('/login');
   }
 
@@ -175,6 +186,7 @@ app.post('/register', (req, res) => {
   });
 
   setFlash(req, 'success', '账户创建成功，请使用新账户登录。');
+  req.session.loginPrefill = { username, role };
   res.redirect('/login');
 });
 

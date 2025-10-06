@@ -240,9 +240,12 @@ const reports = [
 ];
 
 // 数据操作函数：提供简单的内存增删改查以支持演示功能。
-function authenticateUser(username, password) {
+function authenticateUser(username, password, role) {
   return userAccounts.find(
-    (account) => account.username === username && account.password === password
+    (account) =>
+      account.username === username &&
+      account.password === password &&
+      (!role || account.role === role)
   );
 }
 
