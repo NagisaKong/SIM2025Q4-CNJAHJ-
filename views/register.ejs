@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head>
+    <!-- 元信息：确保注册页面在不同设备上自适应 -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>创建账户 ｜ CSR 志愿服务匹配平台</title>
+    <!-- 复用全站样式以保持视觉一致性 -->
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="login">
+    <!-- 注册容器：居中呈现注册表单与返回入口 -->
+    <main class="login__container">
+      <header class="login__header">
+        <h1>创建平台账户</h1>
+        <p>填写以下信息，即可完成账户注册并登录平台。</p>
+      </header>
+
+      <% const flashMessage = typeof flash !== 'undefined' ? flash : null; %>
+      <% if (flashMessage) { %>
+        <div class="flash flash--<%= flashMessage.type %>">
+          <p><%= flashMessage.message %></p>
+        </div>
+      <% } %>
+
+      <!-- 注册表单：引导用户完成基础信息填写 -->
+      <section class="login__panel" aria-labelledby="register-form-title">
+        <h2 id="register-form-title">填写账户信息</h2>
+        <form method="post" action="/register" class="stack-form">
+          <label for="register-username">用户名</label>
+          <input
+            id="register-username"
+            name="username"
+            type="text"
+            placeholder="例如：pin.zhang"
+            required
+            value="<%= registerPrefill && registerPrefill.username ? registerPrefill.username : '' %>"
+          />
+
+          <label for="register-display">姓名</label>
+          <input
+            id="register-display"
+            name="displayName"
+            type="text"
+            placeholder="请输入姓名"
+            required
+            value="<%= registerPrefill && registerPrefill.displayName ? registerPrefill.displayName : '' %>"
+          />
+
+          <label for="register-password">密码</label>
+          <input
+            id="register-password"
+            name="password"
+            type="password"
+            placeholder="设置登录密码"
+            required
+          />
+
+          <label for="register-role">选择角色</label>
+          <select id="register-role" name="role" required>
+            <% roles.forEach((role) => { %>
+              <option
+                value="<%= role.name %>"
+                <%= registerPrefill && registerPrefill.role === role.name ? 'selected' : '' %>
+              >
+                <%= role.name %>
+              </option>
+            <% }) %>
+          </select>
+
+          <button type="submit">创建账户并返回登录</button>
+        </form>
+      </section>
+
+      <!-- 返回入口：方便用户快速回到登录页面 -->
+      <section class="login__panel" aria-labelledby="back-to-login">
+        <h2 id="back-to-login">已有账户？</h2>
+        <p class="login__hint">如果您已经完成注册，可直接返回登录页面。</p>
+        <a class="button button--ghost" href="/login">返回登录</a>
+      </section>
+
+      <footer class="login__footer">
+        <p>如需协助，请联系平台管理员获取更多支持。</p>
+      </footer>
+    </main>
+  </body>
+</html>

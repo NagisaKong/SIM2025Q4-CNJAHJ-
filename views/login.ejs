@@ -63,64 +63,11 @@
         </form>
       </section>
 
-      <!-- 创建账户选项：满足新用户注册需求 -->
+      <!-- 创建账户按钮：跳转至独立的注册页面，保持登录界面简洁 -->
       <section class="login__panel" aria-labelledby="register-title">
-        <h2 id="register-title">创建新账户</h2>
-        <p class="login__hint">如您尚未拥有平台账号，可在此完成注册（默认启用状态）。</p>
-        <form method="post" action="/register" class="stack-form">
-          <label for="register-username">用户名</label>
-          <input
-            id="register-username"
-            name="username"
-            type="text"
-            placeholder="例如：pin.zhang"
-            required
-          />
-
-          <label for="register-display">姓名</label>
-          <input
-            id="register-display"
-            name="displayName"
-            type="text"
-            placeholder="请输入姓名"
-            required
-          />
-
-          <label for="register-password">密码</label>
-          <input
-            id="register-password"
-            name="password"
-            type="password"
-            placeholder="设置登录密码"
-            required
-          />
-
-          <label for="register-role">选择角色</label>
-          <select id="register-role" name="role" required>
-            <% roles.forEach((role) => { %>
-              <option value="<%= role.name %>"><%= role.name %></option>
-            <% }) %>
-          </select>
-
-          <button type="submit">创建账户</button>
-        </form>
-      </section>
-
-      <!-- 角色简介：帮助用户理解不同角色的职责 -->
-      <section class="login__panel" aria-labelledby="roles-title">
-        <h2 id="roles-title">角色简介</h2>
-        <ul class="role-list">
-          <% roles.forEach((role) => { %>
-            <li>
-              <strong><%= role.name %></strong>
-              <ul>
-                <% role.highlights.forEach((item) => { %>
-                  <li><%= item %></li>
-                <% }) %>
-              </ul>
-            </li>
-          <% }) %>
-        </ul>
+        <h2 id="register-title">还没有账户？</h2>
+        <p class="login__hint">点击下方按钮，按指引完成账户注册后再返回登录。</p>
+        <a class="button button--ghost" href="/register">前往创建账户</a>
       </section>
 
       <footer class="login__footer">

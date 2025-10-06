@@ -38,18 +38,41 @@ textarea {
   font: inherit;
 }
 
-button {
+button,
+input[type='submit'],
+.button {
+  /* 通用按钮样式：统一圆角与配色，保持简约外观 */
   cursor: pointer;
   border: none;
   background: var(--primary);
   color: #fff;
-  padding: 0.4rem 0.8rem;
-  border-radius: 0.4rem;
-  transition: background 0.2s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
 }
 
-button:hover {
+button:hover,
+input[type='submit']:hover,
+.button:hover {
   background: #1558c0;
+}
+
+/* 反色按钮：用于登录页链接型操作 */
+.button--ghost {
+  /* 采用边框描边，弱化视觉权重 */
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid currentColor;
+}
+
+.button--ghost:hover {
+  background: rgba(31, 111, 235, 0.08);
+  color: #0b3d91;
 }
 
 /* 顶部信息栏：展示登录用户与退出按钮 */
