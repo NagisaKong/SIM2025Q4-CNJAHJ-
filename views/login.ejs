@@ -17,6 +17,19 @@
       </header>
 
       <% const flashMessage = typeof flash !== 'undefined' ? flash : null; %>
+      <% const selectedRoleValue = (() => {
+          if (typeof selectedRole !== 'undefined' && selectedRole) {
+            return selectedRole;
+          }
+          if (loginPrefill && loginPrefill.role) {
+            return loginPrefill.role;
+          }
+          if (Array.isArray(roles) && roles.length) {
+            return roles[0].name;
+          }
+          return '';
+        })();
+      %>
       <% if (flashMessage) { %>
         <div class="flash flash--<%= flashMessage.type %>">
           <p><%= flashMessage.message %></p>
@@ -33,7 +46,7 @@
             <% roles.forEach((roleOption) => { %>
               <option
                 value="<%= roleOption.name %>"
-                <%= selectedRole === roleOption.name ? 'selected' : '' %>
+                <%= selectedRoleValue === roleOption.name ? 'selected' : '' %>
               >
                 <%= roleOption.name %>
               </option>
