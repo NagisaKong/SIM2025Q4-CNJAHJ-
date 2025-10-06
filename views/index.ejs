@@ -53,6 +53,7 @@
               <li><a href="#csr">CSR 志愿服务</a></li>
               <li><a href="#pin">PIN 数据洞察</a></li>
               <li><a href="#reports">平台报表</a></li>
+              <li><a href="/login">登录入口</a></li>
             </ul>
           </nav>
         </div>
@@ -70,6 +71,7 @@
             <div class="hero-actions">
               <a class="primary-btn" href="#accounts">立即查看角色功能</a>
               <a class="secondary-btn" href="#reports">了解报表体系</a>
+              <a class="ghost-btn" href="/login">前往登录中心</a>
             </div>
           </div>
           <div class="hero-visual" aria-hidden="true">
@@ -106,6 +108,168 @@
               </article>
             <% }) %>
           </div>
+
+          <!-- 账户管理工作区：创建、搜索与暂停用户账户/档案 -->
+          <div class="account-management">
+            <!-- 左侧表单：用于创建账户与档案 -->
+            <div class="account-forms">
+              <form class="card-form" aria-label="创建用户账户">
+                <h3>创建用户账户</h3>
+                <div class="form-row">
+                  <label for="new-username">用户名</label>
+                  <input
+                    id="new-username"
+                    type="text"
+                    placeholder="例如：csr.zhang"
+                    required
+                  />
+                </div>
+                <div class="form-row">
+                  <label for="new-display-name">姓名</label>
+                  <input
+                    id="new-display-name"
+                    type="text"
+                    placeholder="请输入员工姓名"
+                    required
+                  />
+                </div>
+                <div class="form-row">
+                  <label for="new-role">角色</label>
+                  <select id="new-role" required>
+                    <% roles.forEach((role) => { %>
+                      <option value="<%= role.name %>"><%= role.name %></option>
+                    <% }) %>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <label for="new-status">状态</label>
+                  <select id="new-status" required>
+                    <% Object.entries(requestStatuses).forEach(([key, status]) => { %>
+                      <option value="<%= key %>"><%= status.label %></option>
+                    <% }) %>
+                  </select>
+                </div>
+                <button type="submit" class="primary-btn">创建账户</button>
+              </form>
+
+              <form class="card-form" aria-label="创建用户档案">
+                <h3>创建用户档案</h3>
+                <div class="form-row">
+                  <label for="profile-name">档案名称</label>
+                  <input
+                    id="profile-name"
+                    type="text"
+                    placeholder="例如：运营分析员"
+                    required
+                  />
+                </div>
+                <div class="form-row">
+                  <label for="profile-desc">档案描述</label>
+                  <textarea
+                    id="profile-desc"
+                    rows="3"
+                    placeholder="描述职责与权限范围"
+                  ></textarea>
+                </div>
+                <div class="form-row">
+                  <label for="profile-status">状态</label>
+                  <select id="profile-status">
+                    <% Object.entries(requestStatuses).forEach(([key, status]) => { %>
+                      <option value="<%= key %>"><%= status.label %></option>
+                    <% }) %>
+                  </select>
+                </div>
+                <button type="submit" class="secondary-btn">保存档案</button>
+              </form>
+
+              <!-- 快捷操作面板：支持搜索与安全退出 -->
+              <div class="account-quick-actions">
+                <label for="account-search">搜索用户账户</label>
+                <input
+                  id="account-search"
+                  type="search"
+                  placeholder="输入姓名或用户名进行查找"
+                />
+                <button type="button" class="ghost-btn">快速搜索</button>
+                <button type="button" class="link-btn">注销登录</button>
+              </div>
+            </div>
+
+            <!-- 右侧数据列表：展示账户与档案 -->
+            <div class="account-data">
+              <div class="table-wrapper">
+                <table>
+                  <caption>用户账户列表</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">用户名</th>
+                      <th scope="col">姓名</th>
+                      <th scope="col">角色</th>
+                      <th scope="col">状态</th>
+                      <th scope="col">最近登录</th>
+                      <th scope="col">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% userAccounts.forEach((account) => { %>
+                      <% const statusInfo = requestStatuses[account.status] || { label: account.status, className: '' }; %>
+                      <tr>
+                        <td><%= account.username %></td>
+                        <td><%= account.displayName %></td>
+                        <td><%= account.role %></td>
+                        <td>
+                          <span class="status <%= statusInfo.className %>"><%= statusInfo.label %></span>
+                        </td>
+                        <td><%= account.lastLogin %></td>
+                        <td>
+                          <button type="button" class="table-action">编辑</button>
+                          <button type="button" class="table-action warn">暂停</button>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="table-wrapper">
+                <table>
+                  <caption>用户档案详情</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">档案名称</th>
+                      <th scope="col">描述</th>
+                      <th scope="col">权限</th>
+                      <th scope="col">状态</th>
+                      <th scope="col">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% userProfiles.forEach((profile) => { %>
+                      <% const profileStatus = requestStatuses[profile.status] || { label: profile.status, className: '' }; %>
+                      <tr>
+                        <td><%= profile.name %></td>
+                        <td><%= profile.description %></td>
+                        <td>
+                          <ul class="inline-list">
+                            <% profile.permissions.forEach((perm) => { %>
+                              <li><%= perm %></li>
+                            <% }) %>
+                          </ul>
+                        </td>
+                        <td>
+                          <span class="status <%= profileStatus.className %>"><%= profileStatus.label %></span>
+                        </td>
+                        <td>
+                          <button type="button" class="table-action">更新</button>
+                          <button type="button" class="table-action warn">停用</button>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </section>
 
         <!-- 求助请求区块：展示 PIN 请求列表与管理操作 -->
@@ -115,6 +279,67 @@
             <p>集中管理求助者需求，支持分类、筛选与状态追踪。</p>
           </header>
           <div class="requests-content">
+            <!-- 求助者操作面板：创建、更新、删除与搜索 -->
+            <div class="pin-request-tools">
+              <form class="card-form" aria-label="创建求助请求">
+                <h3>创建求助请求</h3>
+                <div class="form-row">
+                  <label for="help-title">请求标题</label>
+                  <input
+                    id="help-title"
+                    type="text"
+                    placeholder="如：陪同复诊"
+                    required
+                  />
+                </div>
+                <div class="form-row">
+                  <label for="help-category">服务类别</label>
+                  <select id="help-category" required>
+                    <% serviceCategories.forEach((category) => { %>
+                      <option value="<%= category.name %>"><%= category.name %></option>
+                    <% }) %>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <label for="help-date">期望时间</label>
+                  <input id="help-date" type="date" required />
+                </div>
+                <button type="submit" class="primary-btn">提交请求</button>
+              </form>
+
+              <form class="card-form" aria-label="更新或删除求助请求">
+                <h3>更新 / 删除请求</h3>
+                <div class="form-row">
+                  <label for="request-id">请求编号</label>
+                  <input id="request-id" type="text" placeholder="输入请求编号" />
+                </div>
+                <div class="form-row">
+                  <label for="request-update-status">更新状态</label>
+                  <select id="request-update-status">
+                    <% Object.entries(requestStatuses).forEach(([key, status]) => { %>
+                      <option value="<%= key %>"><%= status.label %></option>
+                    <% }) %>
+                  </select>
+                </div>
+                <div class="form-actions">
+                  <button type="submit" class="secondary-btn">保存更新</button>
+                  <button type="button" class="table-action warn">删除请求</button>
+                </div>
+              </form>
+
+              <!-- 求助搜索面板：快速查找与退出 -->
+              <div class="pin-search-panel">
+                <label for="pin-search">搜索我的求助请求</label>
+                <input
+                  id="pin-search"
+                  type="search"
+                  placeholder="按关键字、状态或日期搜索"
+                />
+                <button type="button" class="ghost-btn">执行搜索</button>
+                <button type="button" class="link-btn">退出登录</button>
+              </div>
+            </div>
+
             <!-- 请求筛选表单（暂未接入接口，可通过 API 进一步扩展） -->
             <form class="filter-form" aria-label="求助请求筛选">
               <div class="form-row">
@@ -214,7 +439,55 @@
                 <button type="submit" class="primary-btn">搜索机会</button>
               </form>
 
+              <!-- 匹配结果展示：列出可加入候选的志愿机会 -->
+              <div class="volunteer-results">
+                <h3>匹配到的志愿机会</h3>
+                <div class="table-wrapper">
+                  <table>
+                    <caption>待认领志愿机会</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">标题</th>
+                        <th scope="col">类别</th>
+                        <th scope="col">服务地区</th>
+                        <th scope="col">时间</th>
+                        <th scope="col">状态</th>
+                        <th scope="col">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% volunteerOpportunities.forEach((opportunity) => { %>
+                        <% const statusInfo = opportunity.status === 'open' ? requestStatuses.active : requestStatuses.completed; %>
+                        <tr>
+                          <td><%= opportunity.title %></td>
+                          <td><%= opportunity.category %></td>
+                          <td><%= opportunity.location %></td>
+                          <td><%= opportunity.schedule %></td>
+                          <td>
+                            <span class="status <%= statusInfo.className %>"><%= statusInfo.label %></span>
+                          </td>
+                          <td>
+                            <button type="button" class="table-action">查看详情</button>
+                            <button type="button" class="table-action">加入候选</button>
+                          </td>
+                        </tr>
+                      <% }) %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
               <h3>我的候选清单</h3>
+              <!-- 候选清单搜索：帮助 CSR 快速定位关注请求 -->
+              <div class="shortlist-search">
+                <label for="shortlist-keyword">搜索候选请求</label>
+                <input
+                  id="shortlist-keyword"
+                  type="search"
+                  placeholder="输入关键词快速定位"
+                />
+                <button type="button" class="ghost-btn">开始搜索</button>
+              </div>
               <ul class="shortlist">
                 <% csrShortlist.forEach((item) => { %>
                   <li>
@@ -223,6 +496,7 @@
                   </li>
                 <% }) %>
               </ul>
+              <button type="button" class="link-btn">注销登录</button>
             </div>
 
             <!-- 志愿服务历史记录 -->
@@ -368,6 +642,16 @@
                 </div>
                 <button type="submit" class="primary-btn">保存类别</button>
               </form>
+              <!-- 服务类别搜索：辅助快速筛选类别 -->
+              <div class="category-search">
+                <label for="category-search">搜索服务类别</label>
+                <input
+                  id="category-search"
+                  type="search"
+                  placeholder="输入类别关键字"
+                />
+                <button type="button" class="ghost-btn">执行搜索</button>
+              </div>
               <ul class="category-list">
                 <% serviceCategories.forEach((category) => { %>
                   <% const statusInfo = requestStatuses[category.status] || { label: category.status, className: '' }; %>
@@ -377,10 +661,29 @@
                   </li>
                 <% }) %>
               </ul>
+              <button type="button" class="link-btn">注销登录</button>
             </div>
 
             <!-- 报表展示模块 -->
             <div class="report-cards">
+              <!-- 报表生成表单：选择周期并导出报表 -->
+              <form class="report-request" aria-label="报表生成">
+                <h3>报表生成</h3>
+                <div class="form-row">
+                  <label for="report-period">报表周期</label>
+                  <select id="report-period">
+                    <option value="daily">日报</option>
+                    <option value="weekly">周报</option>
+                    <option value="monthly">月报</option>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <label for="report-range">时间区间</label>
+                  <input id="report-range" type="month" />
+                </div>
+                <button type="submit" class="primary-btn">生成报表</button>
+                <button type="button" class="ghost-btn">下载上次报表</button>
+              </form>
               <% reports.forEach((report) => { %>
                 <article class="report-card">
                   <h3><%= report.title %></h3>

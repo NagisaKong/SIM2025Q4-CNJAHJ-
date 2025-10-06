@@ -146,6 +146,81 @@ const serviceCategories = [
   { name: "应急支援", status: "suspended" }
 ];
 
+const userAccounts = [
+  {
+    username: "admin.liang",
+    displayName: "梁敏",
+    role: "用户管理员",
+    status: "active",
+    lastLogin: "2025-02-14 09:30"
+  },
+  {
+    username: "csr.wangqi",
+    displayName: "王琪",
+    role: "CSR 代表",
+    status: "active",
+    lastLogin: "2025-02-13 18:05"
+  },
+  {
+    username: "pin.lijuan",
+    displayName: "李娟",
+    role: "求助者（PIN）",
+    status: "suspended",
+    lastLogin: "2024-12-22 14:12"
+  }
+];
+
+const userProfiles = [
+  {
+    name: "用户管理员",
+    description: "负责系统内所有用户的账户与档案安全。",
+    permissions: ["创建/更新账户", "分配角色权限", "暂停或恢复访问"],
+    status: "active"
+  },
+  {
+    name: "CSR 代表",
+    description: "对接求助者需求并安排企业志愿者服务。",
+    permissions: ["浏览与搜索请求", "维护候选清单", "登记服务结果"],
+    status: "active"
+  },
+  {
+    name: "求助者（PIN）",
+    description: "提交与跟踪求助请求，查看曝光指标。",
+    permissions: ["创建/更新求助", "查看曝光数据", "管理历史匹配"],
+    status: "active"
+  },
+  {
+    name: "平台管理",
+    description: "维护服务目录并分析系统运营表现。",
+    permissions: ["维护服务类别", "生成运营报表", "管理平台公告"],
+    status: "active"
+  }
+];
+
+const volunteerOpportunities = [
+  {
+    title: "医院陪诊志愿者",
+    category: "医疗陪同",
+    location: "静安区",
+    schedule: "2025-02-18",
+    status: "open"
+  },
+  {
+    title: "轮椅出行协助",
+    category: "辅助出行",
+    location: "浦东新区",
+    schedule: "2025-02-20",
+    status: "open"
+  },
+  {
+    title: "康复运动指导",
+    category: "健康陪伴",
+    location: "徐汇区",
+    schedule: "2025-03-02",
+    status: "filled"
+  }
+];
+
 const reports = [
   {
     title: "日报",
@@ -170,5 +245,8 @@ module.exports = {
   pinMetrics,
   pinMatches,
   serviceCategories,
-  reports
+  reports,
+  userAccounts,
+  userProfiles,
+  volunteerOpportunities
 };

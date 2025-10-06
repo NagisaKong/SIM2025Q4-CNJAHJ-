@@ -12,7 +12,10 @@ const {
   pinMetrics,
   pinMatches,
   serviceCategories,
-  reports
+  reports,
+  userAccounts,
+  userProfiles,
+  volunteerOpportunities
 } = require('./data/sampleData');
 
 const app = express();
@@ -39,7 +42,18 @@ app.get('/', (req, res) => {
     pinMatches,
     serviceCategories,
     requestStatuses,
-    reports
+    reports,
+    userAccounts,
+    userProfiles,
+    volunteerOpportunities
+  });
+});
+
+// 登录页面：提供多角色登录界面示例，演示角色切换与辅助说明。
+app.get('/login', (req, res) => {
+  res.render('login', {
+    roles,
+    requestStatuses
   });
 });
 

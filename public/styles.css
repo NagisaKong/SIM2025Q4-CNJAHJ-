@@ -133,6 +133,31 @@ body {
   transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
+/* 次级文字按钮：用于辅助操作如退出或链接 */
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 8px 0;
+  display: inline-block;
+}
+
+/* 幽灵按钮：用于次要操作，具有边框但背景透明 */
+.ghost-btn {
+  background: transparent;
+  border: 1px dashed var(--color-primary);
+  color: var(--color-primary);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
 /* 按钮悬停反馈：适度放大并投影 */
 .primary-btn:hover,
 .secondary-btn:hover {
@@ -193,6 +218,159 @@ body {
   margin: 0;
   padding-left: 20px;
   color: var(--color-muted);
+}
+
+/* 账户管理容器：双列布局呈现表单与数据 */
+.account-management {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.4fr);
+  gap: 32px;
+  margin-top: 40px;
+}
+
+/* 账户表单区域：垂直排列多个操作卡片 */
+.account-forms {
+  display: grid;
+  gap: 24px;
+  align-content: start;
+}
+
+/* 卡片表单：通用样式用于账户、求助等操作 */
+.card-form {
+  background: var(--color-white);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  gap: 16px;
+}
+
+/* 卡片表单中的输入控件：统一边框与圆角 */
+.card-form input,
+.card-form select,
+.card-form textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+/* 快捷操作面板：用于搜索与退出功能 */
+.account-quick-actions {
+  background: var(--color-white);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  gap: 12px;
+}
+
+/* 账户数据区域：堆叠显示账户与档案表格 */
+.account-data {
+  display: grid;
+  gap: 24px;
+}
+
+/* 表格操作按钮：用于编辑、暂停等行为 */
+.table-action {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin-right: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* 警示操作按钮：用于暂停或删除 */
+.table-action.warn {
+  border-color: #ef4444;
+  color: #c53030;
+}
+
+/* 内联权限列表：横向标签形式展示权限 */
+.inline-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+.inline-list li {
+  background: var(--color-light);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+/* PIN 操作面板：三列布局呈现不同表单 */
+.pin-request-tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+/* PIN 搜索面板：独立卡片展示搜索和退出 */
+.pin-search-panel {
+  background: var(--color-white);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  gap: 12px;
+}
+
+/* 志愿机会结果：与表格配合的容器 */
+.volunteer-results {
+  margin: 24px 0;
+  display: grid;
+  gap: 16px;
+}
+
+/* 候选清单搜索：并列展示输入与按钮 */
+.shortlist-search {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.shortlist-search input {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+
+/* 服务类别搜索面板：保持卡片样式一致 */
+.category-search {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.category-search input {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+
+/* 报表生成表单：在报表区域内使用卡片样式 */
+.report-request {
+  background: var(--color-white);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  gap: 16px;
+}
+
+.report-request input,
+.report-request select {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
 }
 
 /* 求助请求区块背景：增加区隔感 */
@@ -325,6 +503,152 @@ td {
   padding: 16px;
 }
 
+/* 登录页面背景：使用柔和渐变区分页面层次 */
+.login-body {
+  background: linear-gradient(135deg, rgba(44, 123, 229, 0.12), rgba(81, 207, 102, 0.12));
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+/* 登录容器：限制宽度并添加阴影 */
+.login-wrapper {
+  background: var(--color-white);
+  border-radius: 24px;
+  padding: 40px;
+  width: min(960px, 92vw);
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  gap: 32px;
+}
+
+/* 登录页头部：排列返回与标题 */
+.login-header {
+  display: grid;
+  gap: 12px;
+}
+
+/* 返回链接：横向排列图标与文字 */
+.back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.back-home svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* 登录面板：卡片化展示登录表单 */
+.login-panel {
+  background: var(--color-light);
+  border-radius: 20px;
+  padding: 32px;
+  display: grid;
+  gap: 24px;
+}
+
+/* 登录表单：垂直布局字段 */
+.login-form {
+  display: grid;
+  gap: 20px;
+}
+
+.login-form fieldset {
+  border: 1px dashed var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.login-form legend {
+  font-weight: 600;
+}
+
+/* 角色选项：以多行多列展示角色按钮 */
+.role-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.role-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-white);
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+}
+
+.login-form input[type='text'],
+.login-form input[type='password'] {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+
+/* 安全提示区域：使用浅色背景提示注意事项 */
+.security-hints {
+  background: var(--color-white);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+}
+
+.security-hints ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--color-muted);
+}
+
+/* 角色导览区：展示角色快捷操作 */
+.role-guides {
+  display: grid;
+  gap: 16px;
+}
+
+.role-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.role-guide-card {
+  background: var(--color-white);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  gap: 12px;
+}
+
+.role-guide-card ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--color-muted);
+}
+
+/* 登录页脚：居中展示退出与联系方式 */
+.login-footer {
+  display: grid;
+  gap: 12px;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.login-footer .ghost-btn {
+  justify-self: center;
+}
+
 /* PIN 区块整体背景：与页面形成层次 */
 .pin-section {
   margin-top: 64px;
@@ -453,5 +777,19 @@ td {
   /* 调整页面边距：减少左右留白 */
   .page-wrapper {
     padding: 0 16px 32px;
+  }
+
+  /* 响应式调整账户管理布局：切换为单列 */
+  .account-management {
+    grid-template-columns: 1fr;
+  }
+
+  /* 登录页在小屏幕时减小内边距 */
+  .login-wrapper {
+    padding: 24px;
+  }
+
+  .login-panel {
+    padding: 24px;
   }
 }
