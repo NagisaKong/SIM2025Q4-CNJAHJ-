@@ -1,7 +1,7 @@
 {
   "name": "csr-volunteer-matching",
   "version": "1.0.0",
-  "description": "CSR 志愿服务匹配平台的 Node.js 原型，提供服务端渲染前端页面与演示数据接口。",
+  "description": "Node.js prototype of a CSR volunteer matching platform with server-rendered views and demo data APIs.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

@@ -1,67 +1,67 @@
-// 演示数据：集中维护页面所需的静态数据，后续可替换为真实数据库查询结果。
+// Demo data: centralised static content that can later be replaced with real data sources.
 const requestStatuses = {
-  pending: { label: "待匹配", className: "status-pending" },
-  matched: { label: "已匹配", className: "status-matched" },
-  completed: { label: "已完成", className: "status-completed" },
-  active: { label: "启用", className: "status-active" },
-  suspended: { label: "停用", className: "status-suspended" }
+  pending: { label: "Awaiting Match", className: "status-pending" },
+  matched: { label: "Matched", className: "status-matched" },
+  completed: { label: "Completed", className: "status-completed" },
+  active: { label: "Active", className: "status-active" },
+  suspended: { label: "Suspended", className: "status-suspended" }
 };
 
 const roles = [
   {
-    name: "用户管理员",
+    name: "User Administrator",
     highlights: [
-      "创建、更新与停用用户账户及档案",
-      "检索用户资料与权限配置",
-      "监控系统访问并支持账号安全"
+      "Create, update, and suspend user accounts and profiles",
+      "Search for account details and permission assignments",
+      "Monitor access to keep the platform secure"
     ]
   },
   {
-    name: "CSR 代表",
+    name: "CSR Representative",
     highlights: [
-      "浏览、筛选并收藏志愿机会",
-      "查看志愿请求详情与历史记录",
-      "完成匹配后回报服务成果"
+      "Browse, filter, and shortlist volunteer opportunities",
+      "Review request details and track completion history",
+      "Report back after fulfilling a service"
     ]
   },
   {
-    name: "求助者（PIN）",
+    name: "Person in Need (PIN)",
     highlights: [
-      "提交、更新与删除求助请求",
-      "查看请求曝光度与兴趣度指标",
-      "跟踪历史匹配记录"
+      "Submit, update, and cancel help requests",
+      "Monitor visibility metrics such as views and shortlist counts",
+      "Review historical matches and connected CSR partners"
     ]
   },
   {
-    name: "平台管理",
+    name: "Platform Manager",
     highlights: [
-      "维护服务类别目录与可用性",
-      "生成日报、周报与月报",
-      "洞察平台运营成效"
+      "Maintain the catalogue of service categories",
+      "Publish daily, weekly, and monthly activity reports",
+      "Analyse platform performance for continuous improvement"
     ]
   }
 ];
 
 const pinRequests = [
   {
-    title: "医院复诊陪同",
-    category: "医疗陪同",
+    title: "Hospital Follow-up Companion",
+    category: "Medical Escort",
     status: "pending",
     views: 42,
     favorites: 6,
     submittedAt: "2025-02-12"
   },
   {
-    title: "轮椅维护支持",
-    category: "辅助出行",
+    title: "Wheelchair Maintenance Support",
+    category: "Mobility Assistance",
     status: "matched",
     views: 38,
     favorites: 9,
     submittedAt: "2025-02-10"
   },
   {
-    title: "家庭餐食协助",
-    category: "日常照护",
+    title: "Family Meal Preparation Help",
+    category: "Daily Care",
     status: "completed",
     views: 55,
     favorites: 14,
@@ -71,102 +71,102 @@ const pinRequests = [
 
 const csrShortlist = [
   {
-    title: "社区复康运动协助",
-    desc: "服务日期：2025-03-03 ｜ 类别：健康陪伴"
+    title: "Community Rehab Exercise Coach",
+    desc: "Service date: 2025-03-03 | Category: Health Support"
   },
   {
-    title: "老人陪诊服务",
-    desc: "服务日期：2025-02-28 ｜ 类别：医疗陪同"
+    title: "Elderly Clinic Companion",
+    desc: "Service date: 2025-02-28 | Category: Medical Escort"
   }
 ];
 
 const csrHistory = [
   {
-    title: "长者健康随访",
-    category: "健康陪伴",
+    title: "Senior Wellness Check-ins",
+    category: "Health Support",
     serviceDate: "2025-01-18",
-    duration: "4 小时"
+    duration: "4 hours"
   },
   {
-    title: "社区图书整理",
-    category: "社区建设",
+    title: "Community Library Sorting",
+    category: "Community Building",
     serviceDate: "2024-12-05",
-    duration: "3 小时"
+    duration: "3 hours"
   },
   {
-    title: "青少年学习辅导",
-    category: "教育辅导",
+    title: "Youth Study Mentoring",
+    category: "Education Support",
     serviceDate: "2024-11-22",
-    duration: "2 小时"
+    duration: "2 hours"
   }
 ];
 
 const pinMetrics = [
   {
-    title: "今日浏览总数",
+    title: "Total Views Today",
     value: "128",
-    description: "相较昨日提升 12%"
+    description: "Up 12% compared with yesterday"
   },
   {
-    title: "今日收藏总数",
+    title: "Total Shortlists Today",
     value: "37",
-    description: "新增 9 个 CSR 代表加入候选"
+    description: "Nine CSR representatives added requests to their shortlist"
   },
   {
-    title: "匹配成功率",
+    title: "Match Success Rate",
     value: "82%",
-    description: "本月成功完成 45 次匹配"
+    description: "45 matches completed successfully this month"
   }
 ];
 
 const pinMatches = [
   {
-    service: "术后复诊陪护",
-    csr: "李婷",
+    service: "Post-surgery Clinic Support",
+    csr: "Lena Torres",
     completedAt: "2025-01-12",
-    feedback: "五星好评，感谢守时与关怀"
+    feedback: "Outstanding punctuality and empathy throughout the visit"
   },
   {
-    service: "无障碍出行支持",
-    csr: "王强",
+    service: "Accessible Transport Escort",
+    csr: "Kai Morgan",
     completedAt: "2024-12-20",
-    feedback: "服务周到，顺利完成医院检查"
+    feedback: "Coordinated the hospital check smoothly and safely"
   },
   {
-    service: "家庭饮食指导",
-    csr: "陈珂",
+    service: "Home Nutrition Coaching",
+    csr: "Riley Chen",
     completedAt: "2024-11-30",
-    feedback: "改善饮食结构，家属反馈积极"
+    feedback: "Improved meal planning with practical weekly tips"
   }
 ];
 
 const serviceCategories = [
-  { name: "医疗陪同", status: "active" },
-  { name: "心理支持", status: "active" },
-  { name: "应急支援", status: "suspended" }
+  { name: "Medical Escort", status: "active" },
+  { name: "Emotional Support", status: "active" },
+  { name: "Emergency Response", status: "suspended" }
 ];
 
 const userAccounts = [
   {
-    username: "admin.liang",
-    displayName: "梁敏",
-    role: "用户管理员",
+    username: "admin.reed",
+    displayName: "Morgan Reed",
+    role: "User Administrator",
     status: "active",
     lastLogin: "2025-02-14 09:30",
     password: "admin123"
   },
   {
-    username: "csr.wangqi",
-    displayName: "王琪",
-    role: "CSR 代表",
+    username: "csr.wilson",
+    displayName: "Harper Wilson",
+    role: "CSR Representative",
     status: "active",
     lastLogin: "2025-02-13 18:05",
     password: "csr12345"
   },
   {
-    username: "pin.lijuan",
-    displayName: "李娟",
-    role: "求助者（PIN）",
+    username: "pin.jordan",
+    displayName: "Avery Jordan",
+    role: "Person in Need (PIN)",
     status: "suspended",
     lastLogin: "2024-12-22 14:12",
     password: "pin12345"
@@ -175,50 +175,66 @@ const userAccounts = [
 
 const userProfiles = [
   {
-    name: "用户管理员",
-    description: "负责系统内所有用户的账户与档案安全。",
-    permissions: ["创建/更新账户", "分配角色权限", "暂停或恢复访问"],
+    name: "User Administrator",
+    description: "Maintains secure access for every user account and profile.",
+    permissions: [
+      "Create or update accounts",
+      "Assign role permissions",
+      "Suspend or reinstate access"
+    ],
     status: "active"
   },
   {
-    name: "CSR 代表",
-    description: "对接求助者需求并安排企业志愿者服务。",
-    permissions: ["浏览与搜索请求", "维护候选清单", "登记服务结果"],
+    name: "CSR Representative",
+    description: "Coordinates corporate volunteers with incoming service requests.",
+    permissions: [
+      "Browse and filter requests",
+      "Maintain a shortlist",
+      "Record service outcomes"
+    ],
     status: "active"
   },
   {
-    name: "求助者（PIN）",
-    description: "提交与跟踪求助请求，查看曝光指标。",
-    permissions: ["创建/更新求助", "查看曝光数据", "管理历史匹配"],
+    name: "Person in Need (PIN)",
+    description: "Submits and monitors help requests and engagement metrics.",
+    permissions: [
+      "Create or update requests",
+      "View visibility analytics",
+      "Review completed matches"
+    ],
     status: "active"
   },
   {
-    name: "平台管理",
-    description: "维护服务目录并分析系统运营表现。",
-    permissions: ["维护服务类别", "生成运营报表", "管理平台公告"],
+    name: "Platform Manager",
+    description: "Curates service categories and analyses platform performance.",
+    permissions: [
+      "Manage service categories",
+      "Generate operational reports",
+      "Publish platform notices"
+    ],
     status: "active"
   }
 ];
 
 const volunteerOpportunities = [
   {
-    title: "医院陪诊志愿者",
-    category: "医疗陪同",
-    location: "静安区",
+    title: "Clinic Companion Volunteer",
+    category: "Medical Escort",
+    location: "Downtown Community Hospital",
     schedule: "2025-02-18",
     status: "open"
   },
   {
-    title: "轮椅出行协助",
-    category: "辅助出行",
-    location: "浦东新区",
+    title: "Wheelchair Transit Assistant",
+    category: "Mobility Assistance",
+    location: "Riverside Senior Centre",
     schedule: "2025-02-20",
     status: "open"
   },
   {
-    title: "康复运动指导",
-    category: "健康陪伴",
-    location: "徐汇区",
+    title: "Rehabilitation Exercise Guide",
+    category: "Health Support",
+    location: "Harbourview Wellness Hub",
     schedule: "2025-03-02",
     status: "filled"
   }
@@ -226,20 +242,29 @@ const volunteerOpportunities = [
 
 const reports = [
   {
-    title: "日报",
-    highlights: ["当日新发求助请求：18 条", "当日完成匹配：12 次"]
+    title: "Daily Report",
+    highlights: [
+      "New help requests submitted today: 18",
+      "Matches confirmed today: 12"
+    ]
   },
   {
-    title: "周报",
-    highlights: ["本周参与 CSR 代表：54 位", "本周完成服务：68 次"]
+    title: "Weekly Report",
+    highlights: [
+      "CSR representatives engaged this week: 54",
+      "Volunteer services completed this week: 68"
+    ]
   },
   {
-    title: "月报",
-    highlights: ["本月新增 PIN：35 位", "本月服务满意度：4.8 / 5"]
+    title: "Monthly Report",
+    highlights: [
+      "New PIN registrations this month: 35",
+      "Average satisfaction rating this month: 4.8 / 5"
+    ]
   }
 ];
 
-// 数据操作函数：提供简单的内存增删改查以支持演示功能。
+// Data helpers: lightweight in-memory operations to simulate CRUD behaviour.
 function authenticateUser(username, password, role) {
   return userAccounts.find(
     (account) =>

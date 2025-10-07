@@ -1,57 +1,58 @@
-# CSR 志愿服务匹配平台原型
+# CSR Volunteer Matching Platform Prototype
 
-该仓库提供一个基于 **Node.js + Express + EJS** 的企业社会责任（CSR）志愿服务匹配平台原型，覆盖多角色协作、求助请求管理、CSR 工作台、PIN 数据洞察与平台报表等关键功能。新版界面改为登录后再访问控制台，整体样式更加简约，便于团队后续迭代真实的交互逻辑。
+This repository contains a **Node.js + Express + EJS** prototype for a corporate social responsibility (CSR) volunteer matching platform. The experience now requires users to authenticate before viewing the dashboard, keeps the interface minimal, and ships with English copy and demo data for every module.
 
-## 目录结构
-- `server.js`：Express 应用入口，负责加载演示数据、处理登录验证、会话校验，并渲染控制台与登录页。
-- `views/index.ejs`：控制台视图模板，包含管理员工作台、CSR、PIN 与平台管理等模块。
-- `views/login.ejs`：简约登录页，提供身份选择、账号与密码输入。
-- `public/styles.css`：主样式表，提供简洁的排版、表单和表格样式。
-- `data/sampleData.js`：集中维护演示所用的静态数据（账户、档案、志愿机会等），后续可替换为数据库或外部接口返回值。
-- `package.json`：管理 Node.js 依赖及脚本命令。
+## Project Structure
+- `server.js`: Express entry point that loads demo data, handles authentication, and renders the dashboard and login pages.
+- `views/index.ejs`: Dashboard template featuring tools for administrators, CSR representatives, PIN users, and platform managers.
+- `views/login.ejs`: Focused login form with role selection plus username and password fields.
+- `public/styles.css`: Global stylesheet with streamlined typography, layout, and responsive rules.
+- `data/sampleData.js`: Centralised in-memory sample data (accounts, profiles, opportunities, metrics, etc.).
+- `package.json`: Node.js dependencies and scripts.
 
-## 快速开始
-1. 安装依赖：
+## Getting Started
+1. **Install dependencies**
    ```bash
    npm install
    ```
-2. 启动开发服务器：
+2. **Start the development server**
    ```bash
    npm run dev
    ```
-   使用 `nodemon` 监听代码变化，默认在 [http://localhost:3000](http://localhost:3000) 提供页面与接口。若仅需运行生产模式，可执行 `npm start`。
-3. 访问页面：
-   - `http://localhost:3000/login`：默认显示登录页，输入身份、用户名与密码后登录（示例管理员：用户名 `admin.liang` / 密码 `admin123`）。
-   - 登录成功后自动跳转至 `http://localhost:3000/dashboard` 控制台。
-   - 也可请求如下演示 API：
-     - `GET /api/pin-requests`
-     - `GET /api/csr-history`
-     - `GET /api/pin-matches`
-     - `GET /api/service-categories`
-     - `GET /api/reports`
+   `nodemon` watches for changes and serves the app at [http://localhost:3000](http://localhost:3000). For a one-off run, use `npm start`.
+3. **Access the experience**
+   - Visit `http://localhost:3000/login` to select a role and enter credentials.
+   - After a successful sign-in you are redirected to `http://localhost:3000/dashboard`.
+   - Demo APIs are available at `/api/pin-requests`, `/api/csr-history`, `/api/pin-matches`, `/api/service-categories`, and `/api/reports`.
 
-## 最新能力概览
-- **强制登录流程**：根路由自动重定向至登录页，未通过认证无法访问控制台内容。
-- **用户管理员工作台**：支持创建账户与档案、搜索、更新及暂停操作，完全对齐管理员用户故事。
-- **管理员内建账户管理**：只有登录的“用户管理员”可创建、更新、暂停账户和档案，满足用户故事中关于安全控制的要求。
-- **登录身份选择**：登录区域支持在登录前选择身份类型，并在登录失败后自动回填用户名与角色。
-- **精简 UI 布局**：页面采用简洁的卡片与表格组合，减少装饰元素，突出核心数据与操作。
+### Sample Credentials
+| Role | Username | Password |
+| --- | --- | --- |
+| User Administrator | `admin.reed` | `admin123` |
+| CSR Representative | `csr.wilson` | `csr12345` |
+| Person in Need (PIN) | `pin.jordan` | `pin12345` |
 
-## 页面主要模块
-1. **顶部信息栏**：显示当前登录用户与注销按钮。
-2. **概览区**：用简短文字说明平台定位与支持的角色。
-3. **用户管理员工作台**：当管理员登录时显示创建账户/档案表单。
-4. **用户账户总览**：支持查询、更新、暂停账户。
-5. **用户档案总览**：支持查询、更新、暂停档案。
-6. **CSR 志愿服务区**：展示志愿机会、候选清单及历史记录。
-7. **PIN 洞察区**：汇总请求列表、曝光指标与历史匹配。
-8. **平台运营信息**：展示服务类别与日报/周报/月报摘要。
-9. **登录页**：入口页面仅保留身份选择、用户名与密码，强调需管理员协助创建账户。
+## Current Capabilities
+- **Authentication first**: the root route redirects to the login form and the dashboard is protected by a session check.
+- **Admin workspace**: signed-in user administrators can create, update, search, and suspend user accounts and profiles.
+- **Role selection on login**: the form remembers the selected role and username after a failed attempt.
+- **Streamlined UI**: cards, tables, and stacked forms provide a lightweight layout focused on data and actions.
+- **English demo data**: all sample roles, requests, opportunities, and metrics are authored in English for consistency.
 
-## 后续优化建议
-- **数据持久化**：将 `data/sampleData.js` 替换为数据库或外部 API，结合 ORM/SDK 完成 CRUD。 
-- **交互增强**：引入前端脚本或组件框架，实现表单筛选、收藏管理等动态交互。 
-- **性能优化**：压缩 CSS、启用 HTTP 缓存及图片懒加载策略，提升首屏速度。 
-- **可访问性**：继续补充 WAI-ARIA 属性、键盘导航提示以及高对比度主题。 
-- **单元测试**：针对数据接口与模板渲染添加测试用例，保障后续重构稳定性。 
+## Page Highlights
+1. **Top bar** – displays the signed-in user and a sign-out button.
+2. **Platform overview** – describes how the four roles collaborate on the platform.
+3. **User administrator workspace** – exposes account and profile creation forms (only for the admin role).
+4. **User accounts overview** – searchable table with inline editing and suspension controls.
+5. **User profiles overview** – searchable table with editable descriptions, permissions, and statuses.
+6. **CSR volunteer activity** – lists open opportunities, shortlist examples, and service history.
+7. **PIN engagement insights** – shows current requests, visibility metrics, and completed matches.
+8. **Platform operations** – summarises service categories and the latest daily/weekly/monthly reports.
+9. **Login page** – role selector plus credential inputs, reminding users to contact the administrator for new accounts.
 
+## Future Improvements
+- **Persisted data**: replace `data/sampleData.js` with a database or external API and adopt an ORM/SDK for CRUD operations.
+- **Richer interactions**: add front-end scripts or component libraries for filtering, shortlisting, and inline validation.
+- **Performance tuning**: minify CSS, enable HTTP caching, and optimise images to improve initial load.
+- **Accessibility**: extend WAI-ARIA attributes, keyboard hints, and high-contrast themes.
+- **Automated tests**: add tests around data helpers and template rendering to safeguard future refactors.

@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="en">
   <head>
-    <!-- 元信息：确保正确编码与响应式展示 -->
+    <!-- Meta information: keep the document encoded correctly and responsive -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CSR 志愿服务匹配平台控制台</title>
-    <!-- 引入简约化样式 -->
+    <title>CSR Volunteer Matching Platform Dashboard</title>
+    <!-- Minimal shared stylesheet -->
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <!-- 顶部栏：显示当前用户信息与注销入口 -->
+    <!-- Top navigation: show the current user and the logout action -->
     <header class="top-bar">
       <div class="top-bar__info">
-        <h1>CSR 志愿服务匹配平台</h1>
-        <p>当前登录：<strong><%= currentUser.displayName %>（<%= currentUser.role %>）</strong></p>
+        <h1>CSR Volunteer Matching Platform</h1>
+        <p>Signed in as <strong><%= currentUser.displayName %> (<%= currentUser.role %>)</strong></p>
       </div>
       <form class="top-bar__logout" method="post" action="/logout">
-        <button type="submit">注销登录</button>
+        <button type="submit">Sign Out</button>
       </form>
     </header>
 
-    <!-- 全局提示区域：显示成功或错误信息 -->
+    <!-- Flash message area: display success or error hints -->
     <% const flashMessage = typeof flash !== 'undefined' ? flash : null; %>
     <% if (flashMessage) { %>
       <div class="flash flash--<%= flashMessage.type %>">
@@ -28,97 +28,97 @@
       </div>
     <% } %>
 
-    <!-- 主内容容器：按照角色职责分块展示 -->
+    <!-- Main content container: group modules by responsibility -->
     <main class="content">
-      <!-- 概览区：快速理解平台功能 -->
+      <!-- Overview: quick summary of the platform capabilities -->
       <section class="section" aria-labelledby="overview-title">
-        <h2 id="overview-title">平台概览</h2>
+        <h2 id="overview-title">Platform Overview</h2>
         <p>
-          平台集成 CSR 代表、求助者（PIN）、平台管理员与用户管理员的核心操作，支持账号维护、志愿服务匹配与报表洞察。
+          The dashboard brings together the core operations for CSR representatives, persons in need (PIN), platform managers, and user administrators, covering account maintenance, volunteer matching, and reporting insights.
         </p>
       </section>
 
-      <!-- 用户管理员功能区：仅当角色为管理员时显示操作表单 -->
-      <% if (currentUser.role === '用户管理员') { %>
+      <!-- User administrator workspace: only visible to the admin role -->
+      <% if (currentUser.role === 'User Administrator') { %>
         <section class="section" aria-labelledby="account-admin-title">
-          <h2 id="account-admin-title">用户管理员工作台</h2>
+          <h2 id="account-admin-title">User Administrator Workspace</h2>
           <div class="grid">
-            <!-- 创建账户表单 -->
+            <!-- Create account form -->
             <form class="card" method="post" action="/admin/accounts/create">
-              <h3>创建用户账户</h3>
-              <label>用户名
-                <input type="text" name="username" placeholder="例如：admin.liang" required />
+              <h3>Create User Account</h3>
+              <label>Username
+                <input type="text" name="username" placeholder="e.g. admin.reed" required />
               </label>
-              <label>姓名
-                <input type="text" name="displayName" placeholder="请输入姓名" required />
+              <label>Display name
+                <input type="text" name="displayName" placeholder="Enter full name" required />
               </label>
-              <label>初始密码
-                <input type="password" name="password" placeholder="设置登录密码" required />
+              <label>Initial password
+                <input type="password" name="password" placeholder="Set a login password" required />
               </label>
-              <label>角色
+              <label>Role
                 <select name="role" required>
                   <% roles.forEach((role) => { %>
                     <option value="<%= role.name %>"><%= role.name %></option>
                   <% }) %>
                 </select>
               </label>
-              <label>状态
+              <label>Status
                 <select name="status" required>
-                  <option value="active">启用</option>
-                  <option value="suspended">停用</option>
+                  <option value="active">Active</option>
+                  <option value="suspended">Suspended</option>
                 </select>
               </label>
-              <button type="submit">创建账户</button>
+              <button type="submit">Create Account</button>
             </form>
 
-            <!-- 创建档案表单 -->
+            <!-- Create profile form -->
             <form class="card" method="post" action="/admin/profiles/create">
-              <h3>创建用户档案</h3>
-              <label>档案名称
-                <input type="text" name="name" placeholder="例如：CSR 代表" required />
+              <h3>Create User Profile</h3>
+              <label>Profile name
+                <input type="text" name="name" placeholder="e.g. CSR Representative" required />
               </label>
-              <label>档案描述
-                <textarea name="description" rows="3" placeholder="简述职责范围" required></textarea>
+              <label>Description
+                <textarea name="description" rows="3" placeholder="Summarise the responsibilities" required></textarea>
               </label>
-              <label>权限列表（用逗号分隔）
-                <input type="text" name="permissions" placeholder="创建/更新账户, 分配角色权限" />
+              <label>Permissions (comma separated)
+                <input type="text" name="permissions" placeholder="Create or update accounts, assign role permissions" />
               </label>
-              <button type="submit">创建档案</button>
+              <button type="submit">Create Profile</button>
             </form>
           </div>
         </section>
       <% } %>
 
-      <!-- 账户与档案总览：支持搜索、查看与更新 -->
+      <!-- Account and profile overview: support search, browsing, and updates -->
       <section class="section" aria-labelledby="account-list-title">
         <div class="section__header">
-          <h2 id="account-list-title">用户账户总览</h2>
+          <h2 id="account-list-title">User Accounts Overview</h2>
           <form class="inline-form" method="get" action="/dashboard">
-            <label for="account-search">关键词查询</label>
+            <label for="account-search">Keyword search</label>
             <input
               id="account-search"
               type="search"
               name="accountSearch"
               value="<%= accountKeyword %>"
-              placeholder="按用户名、姓名或角色搜索"
+              placeholder="Search by username, display name, or role"
             />
             <% if (profileKeyword) { %>
               <input type="hidden" name="profileSearch" value="<%= profileKeyword %>" />
             <% } %>
-            <button type="submit">搜索</button>
+            <button type="submit">Search</button>
           </form>
         </div>
         <div class="table-wrapper">
           <table>
             <thead>
               <tr>
-                <th>用户名</th>
-                <th>姓名</th>
-                <th>角色</th>
-                <th>状态</th>
-                <th>最近登录</th>
-                <% if (currentUser.role === '用户管理员') { %>
-                  <th>操作</th>
+                <th>Username</th>
+                <th>Display Name</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Last Login</th>
+                <% if (currentUser.role === 'User Administrator') { %>
+                  <th>Actions</th>
                 <% } %>
               </tr>
             </thead>
@@ -127,20 +127,20 @@
                 <tr>
                   <td><%= account.username %></td>
                   <td>
-                    <% if (currentUser.role === '用户管理员') { %>
+                    <% if (currentUser.role === 'User Administrator') { %>
                       <form class="table-form" method="post" action="/admin/accounts/update">
                         <input type="hidden" name="username" value="<%= account.username %>" />
                         <input type="text" name="displayName" value="<%= account.displayName %>" required />
                         <input type="hidden" name="role" value="<%= account.role %>" />
                         <input type="hidden" name="status" value="<%= account.status %>" />
-                        <button type="submit">保存姓名</button>
+                        <button type="submit">Save Name</button>
                       </form>
                     <% } else { %>
                       <%= account.displayName %>
                     <% } %>
                   </td>
                   <td>
-                    <% if (currentUser.role === '用户管理员') { %>
+                    <% if (currentUser.role === 'User Administrator') { %>
                       <form class="table-form" method="post" action="/admin/accounts/update">
                         <input type="hidden" name="username" value="<%= account.username %>" />
                         <input type="hidden" name="displayName" value="<%= account.displayName %>" />
@@ -150,34 +150,34 @@
                           <% }) %>
                         </select>
                         <input type="hidden" name="status" value="<%= account.status %>" />
-                        <button type="submit">保存角色</button>
+                        <button type="submit">Save Role</button>
                       </form>
                     <% } else { %>
                       <%= account.role %>
                     <% } %>
                   </td>
                   <td>
-                    <% if (currentUser.role === '用户管理员') { %>
+                    <% if (currentUser.role === 'User Administrator') { %>
                       <form class="table-form" method="post" action="/admin/accounts/update">
                         <input type="hidden" name="username" value="<%= account.username %>" />
                         <input type="hidden" name="displayName" value="<%= account.displayName %>" />
                         <input type="hidden" name="role" value="<%= account.role %>" />
                         <select name="status">
-                          <option value="active" <%= account.status === 'active' ? 'selected' : '' %>>启用</option>
-                          <option value="suspended" <%= account.status === 'suspended' ? 'selected' : '' %>>停用</option>
+                          <option value="active" <%= account.status === 'active' ? 'selected' : '' %>>Active</option>
+                          <option value="suspended" <%= account.status === 'suspended' ? 'selected' : '' %>>Suspended</option>
                         </select>
-                        <button type="submit">保存状态</button>
+                        <button type="submit">Save Status</button>
                       </form>
                     <% } else { %>
-                      <%= account.status === 'active' ? '启用' : '停用' %>
+                      <%= account.status === 'active' ? 'Active' : 'Suspended' %>
                     <% } %>
                   </td>
                   <td><%= account.lastLogin %></td>
-                  <% if (currentUser.role === '用户管理员') { %>
+                  <% if (currentUser.role === 'User Administrator') { %>
                     <td>
                       <form class="table-form" method="post" action="/admin/accounts/suspend">
                         <input type="hidden" name="username" value="<%= account.username %>" />
-                        <button type="submit">暂停账户</button>
+                        <button type="submit">Suspend Account</button>
                       </form>
                     </td>
                   <% } %>
@@ -190,32 +190,32 @@
 
       <section class="section" aria-labelledby="profile-list-title">
         <div class="section__header">
-          <h2 id="profile-list-title">用户档案总览</h2>
+          <h2 id="profile-list-title">User Profiles Overview</h2>
           <form class="inline-form" method="get" action="/dashboard">
-            <label for="profile-search">关键词查询</label>
+            <label for="profile-search">Keyword search</label>
             <input
               id="profile-search"
               type="search"
               name="profileSearch"
               value="<%= profileKeyword %>"
-              placeholder="按档案名称或描述搜索"
+              placeholder="Search by profile name or description"
             />
             <% if (accountKeyword) { %>
               <input type="hidden" name="accountSearch" value="<%= accountKeyword %>" />
             <% } %>
-            <button type="submit">搜索</button>
+            <button type="submit">Search</button>
           </form>
         </div>
         <div class="table-wrapper">
           <table>
             <thead>
               <tr>
-                <th>档案名称</th>
-                <th>描述</th>
-                <th>权限</th>
-                <th>状态</th>
-                <% if (currentUser.role === '用户管理员') { %>
-                  <th>操作</th>
+                <th>Profile Name</th>
+                <th>Description</th>
+                <th>Permissions</th>
+                <th>Status</th>
+                <% if (currentUser.role === 'User Administrator') { %>
+                  <th>Actions</th>
                 <% } %>
               </tr>
             </thead>
@@ -224,26 +224,26 @@
                 <tr>
                   <td><%= profile.name %></td>
                   <td>
-                    <% if (currentUser.role === '用户管理员') { %>
+                    <% if (currentUser.role === 'User Administrator') { %>
                       <form class="table-form" method="post" action="/admin/profiles/update">
                         <input type="hidden" name="name" value="<%= profile.name %>" />
                         <textarea name="description" rows="2" required><%= profile.description %></textarea>
                         <input type="hidden" name="status" value="<%= profile.status %>" />
                         <input type="hidden" name="permissions" value="<%= profile.permissions.join(', ') %>" />
-                        <button type="submit">保存描述</button>
+                        <button type="submit">Save Description</button>
                       </form>
                     <% } else { %>
                       <%= profile.description %>
                     <% } %>
                   </td>
                   <td>
-                    <% if (currentUser.role === '用户管理员') { %>
+                    <% if (currentUser.role === 'User Administrator') { %>
                       <form class="table-form" method="post" action="/admin/profiles/update">
                         <input type="hidden" name="name" value="<%= profile.name %>" />
                         <input type="hidden" name="description" value="<%= profile.description %>" />
                         <input type="hidden" name="status" value="<%= profile.status %>" />
-                        <textarea name="permissions" rows="2"><%= profile.permissions.join(', ') %></textarea>
-                        <button type="submit">保存权限</button>
+                        <textarea name="permissions" rows="2" placeholder="Enter permissions separated by commas"><%= profile.permissions.join(', ') %></textarea>
+                        <button type="submit">Save Permissions</button>
                       </form>
                     <% } else { %>
                       <ul>
@@ -254,26 +254,26 @@
                     <% } %>
                   </td>
                   <td>
-                    <% if (currentUser.role === '用户管理员') { %>
+                    <% if (currentUser.role === 'User Administrator') { %>
                       <form class="table-form" method="post" action="/admin/profiles/update">
                         <input type="hidden" name="name" value="<%= profile.name %>" />
                         <input type="hidden" name="description" value="<%= profile.description %>" />
                         <input type="hidden" name="permissions" value="<%= profile.permissions.join(', ') %>" />
                         <select name="status">
-                          <option value="active" <%= profile.status === 'active' ? 'selected' : '' %>>启用</option>
-                          <option value="suspended" <%= profile.status === 'suspended' ? 'selected' : '' %>>停用</option>
+                          <option value="active" <%= profile.status === 'active' ? 'selected' : '' %>>Active</option>
+                          <option value="suspended" <%= profile.status === 'suspended' ? 'selected' : '' %>>Suspended</option>
                         </select>
-                        <button type="submit">保存状态</button>
+                        <button type="submit">Save Status</button>
                       </form>
                     <% } else { %>
-                      <%= profile.status === 'active' ? '启用' : '停用' %>
+                      <%= profile.status === 'active' ? 'Active' : 'Suspended' %>
                     <% } %>
                   </td>
-                  <% if (currentUser.role === '用户管理员') { %>
+                  <% if (currentUser.role === 'User Administrator') { %>
                     <td>
                       <form class="table-form" method="post" action="/admin/profiles/suspend">
                         <input type="hidden" name="name" value="<%= profile.name %>" />
-                        <button type="submit">暂停档案</button>
+                        <button type="submit">Suspend Profile</button>
                       </form>
                     </td>
                   <% } %>
@@ -284,34 +284,34 @@
         </div>
       </section>
 
-      <!-- CSR 代表视角：展示志愿机会与历史 -->
+      <!-- CSR representative perspective: highlight volunteer activity -->
       <section class="section" aria-labelledby="csr-title">
-        <h2 id="csr-title">CSR 志愿服务动态</h2>
+        <h2 id="csr-title">CSR Volunteer Activity</h2>
         <div class="grid">
           <article class="card">
-            <h3>可参与的志愿机会</h3>
+            <h3>Open Volunteer Opportunities</h3>
             <ul>
               <% volunteerOpportunities.forEach((item) => { %>
                 <li>
-                  <strong><%= item.title %></strong>｜<%= item.category %>｜<%= item.location %>｜<%= item.schedule %>
+                  <strong><%= item.title %></strong> | <%= item.category %> | <%= item.location %> | <%= item.schedule %>
                 </li>
               <% }) %>
             </ul>
           </article>
           <article class="card">
-            <h3>收藏的机会（示例）</h3>
+            <h3>Shortlisted Opportunities (Sample)</h3>
             <ul>
               <% csrShortlist.forEach((item) => { %>
-                <li><strong><%= item.title %></strong>｜<%= item.desc %></li>
+                <li><strong><%= item.title %></strong> | <%= item.desc %></li>
               <% }) %>
             </ul>
           </article>
           <article class="card">
-            <h3>历史服务记录</h3>
+            <h3>Completed Service History</h3>
             <ul>
               <% csrHistory.forEach((item) => { %>
                 <li>
-                  <strong><%= item.title %></strong>｜<%= item.category %>｜<%= item.serviceDate %>｜<%= item.duration %>
+                  <strong><%= item.title %></strong> | <%= item.category %> | <%= item.serviceDate %> | <%= item.duration %>
                 </li>
               <% }) %>
             </ul>
@@ -319,34 +319,34 @@
         </div>
       </section>
 
-      <!-- PIN 视角：展示求助与匹配指标 -->
+      <!-- PIN perspective: show requests and engagement metrics -->
       <section class="section" aria-labelledby="pin-title">
-        <h2 id="pin-title">求助者（PIN）洞察</h2>
+        <h2 id="pin-title">PIN Engagement Insights</h2>
         <div class="grid">
           <article class="card">
-            <h3>求助请求</h3>
+            <h3>Active Help Requests</h3>
             <ul>
               <% pinRequests.forEach((item) => { %>
                 <li>
-                  <strong><%= item.title %></strong>｜<%= item.category %>｜状态：<%= requestStatuses[item.status].label %>｜浏览 <%= item.views %> 次｜收藏 <%= item.favorites %> 次
+                  <strong><%= item.title %></strong> | <%= item.category %> | Status: <%= requestStatuses[item.status].label %> | Views: <%= item.views %> | Shortlisted: <%= item.favorites %>
                 </li>
               <% }) %>
             </ul>
           </article>
           <article class="card">
-            <h3>曝光指标</h3>
+            <h3>Visibility Metrics</h3>
             <ul>
               <% pinMetrics.forEach((metric) => { %>
-                <li><strong><%= metric.title %></strong>：<%= metric.value %>（<%= metric.description %>）</li>
+                <li><strong><%= metric.title %></strong> | Value: <%= metric.value %> | Note: <%= metric.description %></li>
               <% }) %>
             </ul>
           </article>
           <article class="card">
-            <h3>历史匹配</h3>
+            <h3>Completed Matches</h3>
             <ul>
               <% pinMatches.forEach((match) => { %>
                 <li>
-                  <strong><%= match.service %></strong>｜CSR：<%= match.csr %>｜完成时间：<%= match.completedAt %>｜反馈：<%= match.feedback %>
+                  <strong><%= match.service %></strong> | CSR: <%= match.csr %> | Completed: <%= match.completedAt %> | Feedback: <%= match.feedback %>
                 </li>
               <% }) %>
             </ul>
@@ -354,20 +354,20 @@
         </div>
       </section>
 
-      <!-- 平台管理员视角：管理服务类别与报表 -->
+      <!-- Platform management perspective: manage categories and reports -->
       <section class="section" aria-labelledby="platform-title">
-        <h2 id="platform-title">平台运营信息</h2>
+        <h2 id="platform-title">Platform Operations</h2>
         <div class="grid">
           <article class="card">
-            <h3>服务类别列表</h3>
+            <h3>Service Categories</h3>
             <ul>
               <% serviceCategories.forEach((category) => { %>
-                <li><strong><%= category.name %></strong>｜状态：<%= requestStatuses[category.status] ? requestStatuses[category.status].label : category.status %></li>
+                <li><strong><%= category.name %></strong> | Status: <%= requestStatuses[category.status] ? requestStatuses[category.status].label : category.status %></li>
               <% }) %>
             </ul>
           </article>
           <article class="card">
-            <h3>报表摘要</h3>
+            <h3>Report Highlights</h3>
             <ul>
               <% reports.forEach((report) => { %>
                 <li>
@@ -385,9 +385,9 @@
       </section>
     </main>
 
-    <!-- 页脚：提供版权信息 -->
+    <!-- Footer: display copyright information -->
     <footer class="footer">
-      <p>© 2025 CSR 志愿服务匹配平台</p>
+      <p>© 2025 CSR Volunteer Matching Platform</p>
     </footer>
   </body>
 </html>

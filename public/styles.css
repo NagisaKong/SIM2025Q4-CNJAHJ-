@@ -1,8 +1,8 @@
-/* 导入中文无衬线字体，提升界面可读性 */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&display=swap');
+/* Import a clean sans-serif font for consistent typography */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600&display=swap');
 
 /*
- * 全局样式：使用简约的色彩与排版，确保界面清晰可读。
+ * Global styles: minimal colour palette and layout for clarity.
  */
 :root {
   --bg: #f5f7fa;
@@ -13,7 +13,7 @@
   --border: #d1d5db;
   --success: #15803d;
   --error: #b91c1c;
-  font-family: 'Noto Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Noto Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 * {
@@ -41,7 +41,7 @@ textarea {
 button,
 input[type='submit'],
 .button {
-  /* 通用按钮样式：统一圆角与配色，保持简约外观 */
+  /* Buttons: consistent rounded appearance and colour */
   cursor: pointer;
   border: none;
   background: var(--primary);
@@ -62,7 +62,7 @@ input[type='submit']:hover,
   background: #1558c0;
 }
 
-/* 顶部信息栏：展示登录用户与退出按钮 */
+/* Top bar: show the signed-in user and logout action */
 .top-bar {
   display: flex;
   align-items: center;
@@ -90,7 +90,7 @@ input[type='submit']:hover,
   background: #c81e1e;
 }
 
-/* 全局提示样式：根据类型调整颜色 */
+/* Flash messages: colour-coded for status */
 .flash {
   margin: 1rem auto;
   max-width: 960px;
@@ -110,7 +110,7 @@ input[type='submit']:hover,
   border: 1px solid #fecaca;
 }
 
-/* 主内容容器：统一控制宽度与间距 */
+/* Content wrapper: control width and spacing */
 .content {
   max-width: 1080px;
   margin: 1.5rem auto 3rem;
@@ -138,7 +138,7 @@ input[type='submit']:hover,
   gap: 1rem;
 }
 
-/* 表单排版：简洁的直排布局 */
+/* Form layout: stacked, minimal arrangement */
 .stack-form {
   display: grid;
   gap: 0.6rem;
@@ -246,7 +246,7 @@ ul {
   padding: 1.2rem;
 }
 
-/* 登录页面布局：保持内容居中且分块显示 */
+/* Login layout: centre content with defined spacing */
 .login {
   display: flex;
   align-items: center;
@@ -299,7 +299,7 @@ ul {
   font-size: 0.9rem;
 }
 
-/* 自适应处理：小屏幕时的表格滚动提示 */
+/* Responsive tweak: allow table scrolling on small screens */
 @media (max-width: 640px) {
   table {
     min-width: 480px;

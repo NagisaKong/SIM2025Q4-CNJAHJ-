@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="en">
   <head>
-    <!-- 元信息：确保页面自适应不同设备 -->
+    <!-- Meta information: keep the layout responsive across devices -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>登录 ｜ CSR 志愿服务匹配平台</title>
-    <!-- 引入统一的简约样式 -->
+    <title>Login | CSR Volunteer Matching Platform</title>
+    <!-- Shared minimal stylesheet -->
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body class="login">
-    <!-- 登录容器：水平垂直居中展示主要内容 -->
+    <!-- Login wrapper: center the main content horizontally and vertically -->
     <main class="login__container">
       <header class="login__header">
-        <h1>欢迎访问 CSR 志愿服务匹配平台</h1>
-        <p>请先选择登录身份并输入账户信息后继续。</p>
+        <h1>Welcome to the CSR Volunteer Matching Platform</h1>
+        <p>Please choose your role and enter your account credentials to proceed.</p>
       </header>
 
       <% const flashMessage = typeof flash !== 'undefined' ? flash : null; %>
@@ -36,12 +36,12 @@
         </div>
       <% } %>
 
-      <!-- 登录表单：支持所有角色使用同一入口 -->
+      <!-- Login form: the single entry point for every role -->
       <section class="login__panel" aria-labelledby="login-title">
-        <h2 id="login-title">账户登录</h2>
+        <h2 id="login-title">Account Login</h2>
         <form method="post" action="/login" class="stack-form">
-          <!-- 登录身份选择：允许用户明确以何种角色进入平台 -->
-          <label for="login-role">登录身份</label>
+          <!-- Role selector: users must specify how they want to sign in -->
+          <label for="login-role">Sign-in Role</label>
           <select id="login-role" name="role" required>
             <% roles.forEach((roleOption) => { %>
               <option
@@ -53,31 +53,31 @@
             <% }) %>
           </select>
 
-          <label for="login-username">用户名</label>
+          <label for="login-username">Username</label>
           <input
             id="login-username"
             name="username"
             type="text"
-            placeholder="请输入用户名"
+            placeholder="Enter your username"
             required
             value="<%= loginPrefill && loginPrefill.username ? loginPrefill.username : '' %>"
           />
 
-          <label for="login-password">密码</label>
+          <label for="login-password">Password</label>
           <input
             id="login-password"
             name="password"
             type="password"
-            placeholder="请输入密码"
+            placeholder="Enter your password"
             required
           />
 
-          <button type="submit">登录平台</button>
+          <button type="submit">Sign In</button>
         </form>
       </section>
 
       <footer class="login__footer">
-        <p>登录后方可访问平台主页。若需创建新账户，请联系平台用户管理员。</p>
+        <p>Only authenticated users can access the platform dashboard. Please contact the user administrator if you need a new account.</p>
       </footer>
     </main>
   </body>
