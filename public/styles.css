@@ -62,19 +62,6 @@ input[type='submit']:hover,
   background: #1558c0;
 }
 
-/* 反色按钮：用于登录页链接型操作 */
-.button--ghost {
-  /* 采用边框描边，弱化视觉权重 */
-  background: transparent;
-  color: var(--primary);
-  border: 1px solid currentColor;
-}
-
-.button--ghost:hover {
-  background: rgba(31, 111, 235, 0.08);
-  color: #0b3d91;
-}
-
 /* 顶部信息栏：展示登录用户与退出按钮 */
 .top-bar {
   display: flex;

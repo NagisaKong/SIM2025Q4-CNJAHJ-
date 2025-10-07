@@ -51,10 +51,8 @@ app.use(
 app.use((req, res, next) => {
   res.locals.flash = req.session.flash || null;
   res.locals.loginPrefill = req.session.loginPrefill || null;
-  res.locals.registerPrefill = req.session.registerPrefill || null;
   delete req.session.flash;
   delete req.session.loginPrefill;
-  delete req.session.registerPrefill;
   next();
 });
 
@@ -119,24 +117,7 @@ app.get('/login', (req, res) => {
   const loginPrefill = res.locals.loginPrefill || {};
   const defaultRole = roles.length ? roles[0].name : '';
   const selectedRole = loginPrefill.role || defaultRole;
-  res.render('login', {
-    roles,
-    flash: res.locals.flash,
-    loginPrefill,
-    selectedRole
-  });
-});
-
-// 注册页面：提供独立入口以保持登录界面简洁
-app.get('/register', (req, res) => {
-  if (req.session.user) {
-    return res.redirect('/dashboard');
-  }
-  res.render('register', {
-    roles,
-    flash: res.locals.flash,
-    registerPrefill: res.locals.registerPrefill || {}
-  });
+  res.render('login', { roles, flash: res.locals.flash, loginPrefill, selectedRole });
 });
 
 app.post('/login', (req, res) => {
@@ -172,35 +153,6 @@ app.post('/logout', requireAuth, (req, res) => {
   req.session.destroy(() => {
     res.redirect('/login');
   });
-});
-
-app.post('/register', (req, res) => {
-  const { username, displayName, password, role } = req.body;
-  if (!username || !password || !displayName || !role) {
-    setFlash(req, 'error', '请完整填写创建账户所需信息。');
-    req.session.registerPrefill = { username, displayName, role };
-    return res.redirect('/register');
-  }
-
-  const exists = Boolean(getUserAccount(username));
-  if (exists) {
-    setFlash(req, 'error', '用户名已存在，请更换后重试。');
-    req.session.registerPrefill = { username, displayName, role };
-    return res.redirect('/register');
-  }
-
-  addUserAccount({
-    username,
-    displayName,
-    role,
-    status: 'active',
-    lastLogin: '-',
-    password
-  });
-
-  setFlash(req, 'success', '账户创建成功，请使用新账户登录。');
-  req.session.loginPrefill = { username, role };
-  res.redirect('/login');
 });
 
 app.post('/admin/accounts/create', requireAdmin, (req, res) => {

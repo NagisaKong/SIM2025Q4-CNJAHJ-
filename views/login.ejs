@@ -13,7 +13,7 @@
     <main class="login__container">
       <header class="login__header">
         <h1>欢迎访问 CSR 志愿服务匹配平台</h1>
-        <p>请先登录或创建账户后继续。</p>
+        <p>请先选择登录身份并输入账户信息后继续。</p>
       </header>
 
       <% const flashMessage = typeof flash !== 'undefined' ? flash : null; %>
@@ -76,15 +76,8 @@
         </form>
       </section>
 
-      <!-- 创建账户按钮：跳转至独立的注册页面，保持登录界面简洁 -->
-      <section class="login__panel" aria-labelledby="register-title">
-        <h2 id="register-title">还没有账户？</h2>
-        <p class="login__hint">点击下方按钮，按指引完成账户注册后再返回登录。</p>
-        <a class="button button--ghost" href="/register">前往创建账户</a>
-      </section>
-
       <footer class="login__footer">
-        <p>登录后方可访问平台主页。若需要帮助，请联系平台管理员。</p>
+        <p>登录后方可访问平台主页。若需创建新账户，请联系平台用户管理员。</p>
       </footer>
     </main>
   </body>
