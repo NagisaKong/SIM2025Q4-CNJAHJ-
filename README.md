@@ -3,11 +3,12 @@
 This repository contains a **Node.js + Express + EJS** prototype for a corporate social responsibility (CSR) volunteer matching platform. The experience now requires users to authenticate before viewing the dashboard, keeps the interface minimal, and ships with English copy and demo data for every module.
 
 ## Project Structure
-- `server.js`: Express entry point that loads demo data, handles authentication, and renders the dashboard and login pages.
+- `server.js`: Class-based Express entry point that loads demo data, handles authentication, and renders the dashboard and login pages.
 - `views/index.ejs`: Dashboard template featuring tools for administrators, CSR representatives, PIN users, and platform managers.
 - `views/login.ejs`: Focused login form with role selection plus username and password fields.
 - `public/styles.css`: Global stylesheet with streamlined typography, layout, and responsive rules.
-- `data/sampleData.js`: Centralised in-memory sample data (accounts, profiles, opportunities, metrics, etc.).
+- `data/sampleData.js`: Object-oriented in-memory sample data service (accounts, profiles, opportunities, metrics, etc.).
+- `test/validateUAtest.php`: Lightweight PHP smoke test that verifies the login template retains mandatory form controls.
 - `package.json`: Node.js dependencies and scripts.
 
 ## Getting Started
