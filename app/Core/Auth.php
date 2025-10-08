@@ -19,11 +19,22 @@ class Auth
         return $id ? $this->users->find((int) $id) : null;
     }
 
-    public function attempt(string $email, string $password): bool
+    public function attempt(string $email, string $password, ?string $expectedRole = null): bool
     {
         $user = $this->users->findByEmail($email);
         if (!$user || !$user->isActive()) {
             return false;
+        }
+
+        $profile = $user->profile;
+        if ($profile && !$profile->isActive()) {
+            return false;
+        }
+
+        if ($expectedRole !== null) {
+            if ($profile === null || $profile->role !== $expectedRole) {
+                return false;
+            }
         }
 
         if (!password_verify($password, $user->password_hash)) {

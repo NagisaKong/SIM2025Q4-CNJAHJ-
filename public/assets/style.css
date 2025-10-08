@@ -8,6 +8,7 @@
     --secondary: #6c757d;
     --success: #1a7f37;
     --error: #d32f2f;
+    --muted: #4b5563;
 }
 
 * { box-sizing: border-box; }
@@ -60,6 +61,12 @@ a:hover { text-decoration: underline; }
     border-radius: 8px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
+}
+
+.tagline {
+    margin: 0 0 1rem;
+    color: var(--muted);
+    font-size: 0.95rem;
 }
 
 .card-header {
