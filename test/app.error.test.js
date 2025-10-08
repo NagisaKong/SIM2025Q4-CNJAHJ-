@@ -50,4 +50,11 @@ describe('Access control and error handling', () => {
     const loginPage = await agent.get('/login');
     expect(loginPage.text).toContain('This account is suspended and cannot sign in.');
   });
+
+  it('redirects anonymous visitors away from the user story catalogue', async () => {
+    const response = await request(appInstance.app).get('/user-stories');
+
+    expect(response.status).toBe(302);
+    expect(response.headers.location).toBe('/login');
+  });
 });

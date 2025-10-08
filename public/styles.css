@@ -56,6 +56,16 @@ input[type='submit'],
   gap: 0.4rem;
 }
 
+.button--ghost {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.button--ghost:hover {
+  background: rgba(31, 111, 235, 0.08);
+}
+
 button:hover,
 input[type='submit']:hover,
 .button:hover {
@@ -80,6 +90,16 @@ input[type='submit']:hover,
 .top-bar__info p {
   margin: 0;
   color: var(--muted);
+}
+
+.top-bar__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.top-bar__nav form {
+  margin: 0;
 }
 
 .top-bar__logout button {
@@ -238,6 +258,28 @@ th {
 ul {
   margin: 0.4rem 0 0.4rem 1rem;
   padding: 0;
+}
+
+.story-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.story-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.8rem 1rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.story-card h3 {
+  margin: 0;
+  font-size: 1rem;
 }
 
 .footer {

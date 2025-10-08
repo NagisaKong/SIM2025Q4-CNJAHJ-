@@ -8,6 +8,7 @@ const FlashMessageService = require('./services/FlashMessageService');
 const AuthController = require('./controllers/AuthController');
 const DashboardController = require('./controllers/DashboardController');
 const AdminController = require('./controllers/AdminController');
+const UserStoryController = require('./controllers/UserStoryController');
 
 class VolunteerPlatformApp {
   #dataStore;
@@ -17,6 +18,7 @@ class VolunteerPlatformApp {
   #authController;
   #dashboardController;
   #adminController;
+  #userStoryController;
 
   constructor(store) {
     this.#dataStore = store;
@@ -30,6 +32,10 @@ class VolunteerPlatformApp {
       flash: this.#flashService
     });
     this.#adminController = new AdminController({ dataStore: this.#dataStore, flash: this.#flashService });
+    this.#userStoryController = new UserStoryController({
+      dataStore: this.#dataStore,
+      flash: this.#flashService
+    });
 
     this.#configureMiddleware();
     this.#registerRoutes();
@@ -68,6 +74,11 @@ class VolunteerPlatformApp {
     this.#app.get('/', this.#authController.redirectRoot);
 
     this.#app.get('/dashboard', this.#authController.requireAuth, this.#dashboardController.showDashboard);
+    this.#app.get(
+      '/user-stories',
+      this.#authController.requireAuth,
+      this.#userStoryController.showUserStories
+    );
 
     this.#app.get('/login', this.#authController.showLogin);
     this.#app.post('/login', this.#authController.login);

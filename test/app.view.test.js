@@ -31,4 +31,23 @@ describe('View rendering', () => {
     expect(response.text).toContain('User Administrator Workspace');
     expect(response.text).toContain('Create User Account');
   });
+
+  it('displays the user story catalogue for authenticated users', async () => {
+    const agent = request.agent(appInstance.app);
+
+    await agent
+      .post('/login')
+      .type('form')
+      .send({
+        role: 'CSR Representative',
+        username: 'csr.wilson',
+        password: 'csr12345'
+      });
+
+    const response = await agent.get('/user-stories');
+
+    expect(response.status).toBe(200);
+    expect(response.text).toContain('User Story Catalogue');
+    expect(response.text).toContain('As a CSR Representative, I want to search for volunteer opportunities');
+  });
 });

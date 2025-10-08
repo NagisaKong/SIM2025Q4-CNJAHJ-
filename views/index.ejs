@@ -15,9 +15,12 @@
         <h1>CSR Volunteer Matching Platform</h1>
         <p>Signed in as <strong><%= currentUser.displayName %> (<%= currentUser.role %>)</strong></p>
       </div>
-      <form class="top-bar__logout" method="post" action="/logout">
-        <button type="submit">Sign Out</button>
-      </form>
+      <nav class="top-bar__nav" aria-label="Primary">
+        <a class="button button--ghost" href="/user-stories">User Stories</a>
+        <form class="top-bar__logout" method="post" action="/logout">
+          <button type="submit">Sign Out</button>
+        </form>
+      </nav>
     </header>
 
     <!-- Flash message area: display success or error hints -->

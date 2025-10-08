@@ -9,6 +9,7 @@ const PinMatch = require('../entities/PinMatch');
 const ServiceCategory = require('../entities/ServiceCategory');
 const Report = require('../entities/Report');
 const VolunteerOpportunity = require('../entities/VolunteerOpportunity');
+const UserStory = require('../entities/UserStory');
 
 class VolunteerPlatformDataStore {
   #requestStatuses;
@@ -23,6 +24,7 @@ class VolunteerPlatformDataStore {
   #userProfiles;
   #volunteerOpportunities;
   #reports;
+  #userStories;
 
   constructor() {
     this.#requestStatuses = {
@@ -289,6 +291,203 @@ class VolunteerPlatformDataStore {
         ]
       })
     ];
+
+    this.#userStories = [
+      {
+        role: 'User Administrator',
+        stories: [
+          new UserStory({ role: 'User Administrator', action: 'log in', benefit: 'I can access my account' }),
+          new UserStory({ role: 'User Administrator', action: 'create a user account', benefit: 'users are able to log in' }),
+          new UserStory({
+            role: 'User Administrator',
+            action: 'create a user profile',
+            benefit: 'roles, descriptions, and permissions can be assigned'
+          }),
+          new UserStory({
+            role: 'User Administrator',
+            action: 'view user accounts',
+            benefit: 'I can review every user record'
+          }),
+          new UserStory({
+            role: 'User Administrator',
+            action: 'view user profiles',
+            benefit: 'I can inspect profile details and permissions'
+          }),
+          new UserStory({
+            role: 'User Administrator',
+            action: 'update user accounts',
+            benefit: 'account information stays current'
+          }),
+          new UserStory({
+            role: 'User Administrator',
+            action: 'update user profiles',
+            benefit: 'profile information remains accurate'
+          }),
+          new UserStory({
+            role: 'User Administrator',
+            action: 'suspend a user account',
+            benefit: 'the user can no longer sign in'
+          }),
+          new UserStory({
+            role: 'User Administrator',
+            action: 'suspend a user profile',
+            benefit: 'departing users lose access to platform services'
+          }),
+          new UserStory({
+            role: 'User Administrator',
+            action: 'search user accounts',
+            benefit: 'I can locate user information quickly'
+          }),
+          new UserStory({
+            role: 'User Administrator',
+            action: 'search user profiles',
+            benefit: 'I understand every profile and its permissions'
+          }),
+          new UserStory({ role: 'User Administrator', action: 'log out', benefit: 'I can exit the platform when finished' })
+        ]
+      },
+      {
+        role: 'CSR Representative',
+        stories: [
+          new UserStory({ role: 'CSR Representative', action: 'log in', benefit: 'I can access my account' }),
+          new UserStory({
+            role: 'CSR Representative',
+            action: 'search for volunteer opportunities',
+            benefit: 'I can find requests that match my skills'
+          }),
+          new UserStory({
+            role: 'CSR Representative',
+            action: 'view volunteer request details',
+            benefit: 'I understand the needs of the PIN'
+          }),
+          new UserStory({
+            role: 'CSR Representative',
+            action: 'save opportunities to a shortlist',
+            benefit: 'I can revisit them later'
+          }),
+          new UserStory({
+            role: 'CSR Representative',
+            action: 'search my shortlist',
+            benefit: 'I can quickly find a saved request'
+          }),
+          new UserStory({
+            role: 'CSR Representative',
+            action: 'view shortlisted request details',
+            benefit: 'I can decide whether to proceed'
+          }),
+          new UserStory({
+            role: 'CSR Representative',
+            action: 'search my service history',
+            benefit: 'I can filter by service type or date'
+          }),
+          new UserStory({
+            role: 'CSR Representative',
+            action: 'view my service history',
+            benefit: 'I see what I have completed before'
+          }),
+          new UserStory({ role: 'CSR Representative', action: 'log out', benefit: 'I can exit the platform when finished' })
+        ]
+      },
+      {
+        role: 'Person in Need (PIN)',
+        stories: [
+          new UserStory({ role: 'Person in Need (PIN)', action: 'log in', benefit: 'I can access my account' }),
+          new UserStory({
+            role: 'Person in Need (PIN)',
+            action: 'create a help request',
+            benefit: 'I can receive assistance'
+          }),
+          new UserStory({
+            role: 'Person in Need (PIN)',
+            action: 'view my requests',
+            benefit: 'I can monitor their status'
+          }),
+          new UserStory({
+            role: 'Person in Need (PIN)',
+            action: 'update my requests',
+            benefit: 'I keep information accurate before completion'
+          }),
+          new UserStory({
+            role: 'Person in Need (PIN)',
+            action: 'delete my requests',
+            benefit: 'irrelevant items are removed before completion'
+          }),
+          new UserStory({
+            role: 'Person in Need (PIN)',
+            action: 'search my requests',
+            benefit: 'I can find and manage them easily'
+          }),
+          new UserStory({
+            role: 'Person in Need (PIN)',
+            action: 'review request views',
+            benefit: 'I know if CSR representatives notice my needs'
+          }),
+          new UserStory({
+            role: 'Person in Need (PIN)',
+            action: 'review shortlist counts',
+            benefit: 'I gauge interest from CSR representatives'
+          }),
+          new UserStory({
+            role: 'Person in Need (PIN)',
+            action: 'search my completed matches',
+            benefit: 'I can filter by service type or date period'
+          }),
+          new UserStory({
+            role: 'Person in Need (PIN)',
+            action: 'view my completed matches',
+            benefit: 'I review the services already fulfilled'
+          }),
+          new UserStory({ role: 'Person in Need (PIN)', action: 'log out', benefit: 'I can exit the platform when finished' })
+        ]
+      },
+      {
+        role: 'Platform Manager',
+        stories: [
+          new UserStory({ role: 'Platform Manager', action: 'log in', benefit: 'I can access my account' }),
+          new UserStory({
+            role: 'Platform Manager',
+            action: 'create service categories',
+            benefit: 'requests can be classified effectively'
+          }),
+          new UserStory({
+            role: 'Platform Manager',
+            action: 'view service categories',
+            benefit: 'I maintain accuracy and consistency'
+          }),
+          new UserStory({
+            role: 'Platform Manager',
+            action: 'update service categories',
+            benefit: 'they stay relevant to business needs'
+          }),
+          new UserStory({
+            role: 'Platform Manager',
+            action: 'suspend service categories',
+            benefit: 'redundant services can be removed'
+          }),
+          new UserStory({
+            role: 'Platform Manager',
+            action: 'search service categories',
+            benefit: 'I can locate the category I need'
+          }),
+          new UserStory({
+            role: 'Platform Manager',
+            action: 'generate a daily report',
+            benefit: 'I summarise daily activities'
+          }),
+          new UserStory({
+            role: 'Platform Manager',
+            action: 'generate a weekly report',
+            benefit: 'I review weekly volunteer performance'
+          }),
+          new UserStory({
+            role: 'Platform Manager',
+            action: 'generate a monthly report',
+            benefit: 'I measure monthly outcomes'
+          }),
+          new UserStory({ role: 'Platform Manager', action: 'log out', benefit: 'I can exit the platform when finished' })
+        ]
+      }
+    ];
   }
 
   getRequestStatuses() {
@@ -325,6 +524,21 @@ class VolunteerPlatformDataStore {
 
   getReports() {
     return this.#reports.map((report) => report.toJSON());
+  }
+
+  getUserStories() {
+    return this.#userStories.map((group) => ({
+      role: group.role,
+      stories: group.stories.map((story) => story.toJSON())
+    }));
+  }
+
+  getUserStoriesByRole(role) {
+    const group = this.#userStories.find((entry) => entry.role === role);
+    if (!group) {
+      return [];
+    }
+    return group.stories.map((story) => story.toJSON());
   }
 
   getVolunteerOpportunities() {

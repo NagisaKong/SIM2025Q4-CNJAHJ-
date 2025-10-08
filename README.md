@@ -4,11 +4,13 @@ This repository contains a **Node.js + Express + EJS** prototype for a corporate
 
 ## Project Structure
 - `server.js`: Class-based Express entry point that wires boundary/controller/entity layers together, handles authentication, and renders the dashboard and login pages.
-- `controllers/`: Houses `AuthController`, `DashboardController`, and `AdminController` to encapsulate request-handling logic.
+- `controllers/`: Houses `AuthController`, `DashboardController`, `AdminController`, and `UserStoryController` to encapsulate
+  request-handling logic.
 - `entities/`: Domain objects such as `UserAccount`, `UserProfile`, and `ServiceCategory` used by the in-memory store.
 - `services/`: Cross-cutting helpers (e.g., flash message management) shared between controllers and the Express boundary.
 - `views/index.ejs`: Dashboard template featuring tools for administrators, CSR representatives, PIN users, and platform managers.
 - `views/login.ejs`: Focused login form with role selection plus username and password fields.
+- `views/userStories.ejs`: Authenticated catalogue of user stories grouped by role for quick requirement reference.
 - `public/styles.css`: Global stylesheet with streamlined typography, layout, and responsive rules.
 - `data/sampleData.js`: Object-oriented in-memory sample data service that instantiates the entity classes (accounts, profiles, opportunities, metrics, etc.).
 - `test/validateUAtest.js`: Jest smoke test that verifies the login template retains mandatory form controls.
@@ -34,6 +36,7 @@ This repository contains a **Node.js + Express + EJS** prototype for a corporate
 4. **Access the experience**
    - Visit `http://localhost:3000/login` to select a role and enter credentials.
    - After a successful sign-in you are redirected to `http://localhost:3000/dashboard`.
+   - Browse the user stories at `http://localhost:3000/user-stories` once authenticated.
    - Demo APIs are available at `/api/pin-requests`, `/api/csr-history`, `/api/pin-matches`, `/api/service-categories`, and `/api/reports`.
 
 ### Sample Credentials
@@ -46,6 +49,7 @@ This repository contains a **Node.js + Express + EJS** prototype for a corporate
 ## Current Capabilities
 - **Authentication first**: the root route redirects to the login form and the dashboard is protected by a session check.
 - **Admin workspace**: signed-in user administrators can create, update, search, and suspend user accounts and profiles.
+- **User story catalogue**: authenticated users can review every role's user stories from a dedicated page to align feature work.
 - **Role selection on login**: the form remembers the selected role and username after a failed attempt.
 - **Streamlined UI**: cards, tables, and stacked forms provide a lightweight layout focused on data and actions.
 - **English demo data**: all sample roles, requests, opportunities, and metrics are authored in English for consistency.
