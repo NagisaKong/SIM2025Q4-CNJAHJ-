@@ -24,7 +24,7 @@ This project implements a CSR volunteer matching platform using a custom MVC sta
    cp .env.example .env
    ```
 3. **Configure database**
-   Update `.env` with your PDO DSN. MySQL and PostgreSQL DSNs are supported; SQLite can be used for quick local experiments.
+   Update `.env` with your PDO DSN. The default configuration now targets PostgreSQL (`pgsql:host=127.0.0.1;port=5432;dbname=csr_platform`). You can still point the DSN to MySQL or SQLite for local experiments if needed.
 
 4. **Run migrations and seeders**
    ```bash

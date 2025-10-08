@@ -7,10 +7,15 @@ use InvalidArgumentException;
 
 class Container
 {
-    /** @var array<string, Closure|object|string> */
+    /**
+     * @var array<string, Closure|object|string>
+     */
     private array $bindings = [];
 
-    public function set(string $id, Closure|object|string $concrete): void
+    /**
+     * @param Closure|object|string $concrete
+     */
+    public function set(string $id, mixed $concrete): void
     {
         $this->bindings[$id] = $concrete;
     }

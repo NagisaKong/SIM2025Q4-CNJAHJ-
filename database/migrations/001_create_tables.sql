@@ -1,36 +1,43 @@
+DROP TABLE IF EXISTS audit_logs CASCADE;
+DROP TABLE IF EXISTS matches CASCADE;
+DROP TABLE IF EXISTS shortlists CASCADE;
+DROP TABLE IF EXISTS pin_requests CASCADE;
+DROP TABLE IF EXISTS service_categories CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS profiles CASCADE;
+
 CREATE TABLE profiles (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id BIGSERIAL PRIMARY KEY,
     role VARCHAR(50) NOT NULL,
     description TEXT NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'active',
-    created_at DATETIME NOT NULL,
-    updated_at DATETIME NOT NULL
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    profile_id INTEGER NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
+    profile_id BIGINT NOT NULL REFERENCES profiles(id),
     name VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'active',
-    created_at DATETIME NOT NULL,
-    updated_at DATETIME NOT NULL,
-    FOREIGN KEY (profile_id) REFERENCES profiles(id)
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE service_categories (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(120) NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'active',
-    created_at DATETIME NOT NULL,
-    updated_at DATETIME NOT NULL
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE pin_requests (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    pin_id INTEGER NOT NULL,
-    category_id INTEGER NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
+    pin_id BIGINT NOT NULL REFERENCES users(id),
+    category_id BIGINT NOT NULL REFERENCES service_categories(id),
     title VARCHAR(150) NOT NULL,
     description TEXT NOT NULL,
     location VARCHAR(150) NOT NULL,
@@ -38,38 +45,31 @@ CREATE TABLE pin_requests (
     requested_date DATE NOT NULL,
     views_count INTEGER NOT NULL DEFAULT 0,
     shortlist_count INTEGER NOT NULL DEFAULT 0,
-    created_at DATETIME NOT NULL,
-    updated_at DATETIME NOT NULL,
-    FOREIGN KEY (pin_id) REFERENCES users(id),
-    FOREIGN KEY (category_id) REFERENCES service_categories(id)
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE shortlists (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    csr_id INTEGER NOT NULL,
-    request_id INTEGER NOT NULL,
-    created_at DATETIME NOT NULL,
-    UNIQUE KEY uniq_shortlist (csr_id, request_id),
-    FOREIGN KEY (csr_id) REFERENCES users(id),
-    FOREIGN KEY (request_id) REFERENCES pin_requests(id)
+    id BIGSERIAL PRIMARY KEY,
+    csr_id BIGINT NOT NULL REFERENCES users(id),
+    request_id BIGINT NOT NULL REFERENCES pin_requests(id),
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    CONSTRAINT uniq_shortlist UNIQUE (csr_id, request_id)
 );
 
 CREATE TABLE matches (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    csr_id INTEGER NOT NULL,
-    request_id INTEGER NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
+    csr_id BIGINT NOT NULL REFERENCES users(id),
+    request_id BIGINT NOT NULL REFERENCES pin_requests(id),
     status VARCHAR(20) NOT NULL,
-    matched_at DATETIME NOT NULL,
-    completed_at DATETIME NULL,
-    FOREIGN KEY (csr_id) REFERENCES users(id),
-    FOREIGN KEY (request_id) REFERENCES pin_requests(id)
+    matched_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    completed_at TIMESTAMP WITHOUT TIME ZONE NULL
 );
 
 CREATE TABLE audit_logs (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    user_id INTEGER NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id),
     action VARCHAR(120) NOT NULL,
     payload TEXT,
-    created_at DATETIME NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
 );

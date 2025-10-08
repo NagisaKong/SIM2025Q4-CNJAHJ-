@@ -8,15 +8,7 @@ $config = require __DIR__ . '/../config/database.php';
 $pdo = new PDO($config['dsn'], $config['username'], $config['password'], $config['options']);
 $faker = Factory::create();
 
-$pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
-$pdo->exec('TRUNCATE TABLE audit_logs');
-$pdo->exec('TRUNCATE TABLE matches');
-$pdo->exec('TRUNCATE TABLE shortlists');
-$pdo->exec('TRUNCATE TABLE pin_requests');
-$pdo->exec('TRUNCATE TABLE service_categories');
-$pdo->exec('TRUNCATE TABLE users');
-$pdo->exec('TRUNCATE TABLE profiles');
-$pdo->exec('SET FOREIGN_KEY_CHECKS = 1');
+$pdo->exec('TRUNCATE TABLE audit_logs, matches, shortlists, pin_requests, service_categories, users, profiles RESTART IDENTITY CASCADE');
 
 $profiles = [
     ['role' => 'user_admin', 'description' => 'User administrator with full account access'],
