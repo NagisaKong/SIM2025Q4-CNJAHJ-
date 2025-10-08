@@ -18,7 +18,7 @@ class ProfileController extends Controller
         \App\Core\Auth $auth,
         private ProfileRepository $profiles,
         private Validator $validator,
-        private Csrf $csrf
+        protected Csrf $csrf
     ) {
         parent::__construct($request, $view, $response, $session, $auth);
     }

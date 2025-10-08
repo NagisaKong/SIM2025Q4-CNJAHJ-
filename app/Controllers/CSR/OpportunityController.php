@@ -20,7 +20,7 @@ class OpportunityController extends Controller
         private RequestRepository $requests,
         private CategoryRepository $categories,
         private AccountService $accounts,
-        private Csrf $csrf
+        protected Csrf $csrf
     ) {
         parent::__construct($request, $view, $response, $session, $auth);
     }

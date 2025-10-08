@@ -16,7 +16,7 @@ class ReportController extends Controller
         \App\Core\Session $session,
         \App\Core\Auth $auth,
         private ReportingService $reports,
-        private Csrf $csrf
+        protected Csrf $csrf
     ) {
         parent::__construct($request, $view, $response, $session, $auth);
     }
