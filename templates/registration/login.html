@@ -7,12 +7,12 @@
     {{ form.non_field_errors }}
     <div class="space-y-2">
         <label class="block text-sm font-medium" for="id_username">Username</label>
-        {{ form.username.as_widget(attrs={'class': 'input'}) }}
+        {{ form.username }}
         {{ form.username.errors }}
     </div>
     <div class="space-y-2">
         <label class="block text-sm font-medium" for="id_password">Password</label>
-        {{ form.password.as_widget(attrs={'class': 'input'}) }}
+        {{ form.password }}
         {{ form.password.errors }}
     </div>
     <button type="submit" class="btn-primary w-full">Sign in</button>

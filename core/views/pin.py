@@ -38,6 +38,12 @@ class PinRequestCreateView(PinRoleRequiredMixin, CreateView):
     template_name = 'core/pin/request_form.html'
     form_class = HelpRequestForm
     success_url = reverse_lazy('core:pin_request_list')
+    title = 'New request'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cancel_url'] = self.success_url
+        return context
 
     def form_valid(self, form):
         form.instance.pin = self.request.user
@@ -50,6 +56,12 @@ class PinRequestUpdateView(PinRoleRequiredMixin, UpdateView):
     template_name = 'core/pin/request_form.html'
     form_class = HelpRequestForm
     success_url = reverse_lazy('core:pin_request_list')
+    title = 'Edit request'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cancel_url'] = self.success_url
+        return context
 
     def get_queryset(self):
         return HelpRequest.objects.for_pin(self.request.user)

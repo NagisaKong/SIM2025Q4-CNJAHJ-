@@ -43,10 +43,13 @@ class AccountCreateView(AdminRoleRequiredMixin, FormView):
     template_name = 'core/accounts/account_form.html'
     form_class = UserAccountCreateForm
     success_url = reverse_lazy('core:account_list')
+    title = 'Create account'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.setdefault('profile_form', UserProfileForm(self.request.POST or None))
+        context['account_form'] = context.get('form')
+        context['cancel_url'] = self.success_url
         return context
 
     def form_valid(self, form):
@@ -76,13 +79,15 @@ class AccountUpdateView(AdminRoleRequiredMixin, UpdateView):
     model = User
     form_class = UserAccountUpdateForm
     success_url = reverse_lazy('core:account_list')
+    title = 'Update account'
 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         profile = self.get_object().profile
         context.setdefault('profile_form', UserProfileForm(self.request.POST or None, instance=profile))
-        context['update'] = True
+        context['account_form'] = context.get('form')
+        context['cancel_url'] = self.success_url
         return context
 
     def form_valid(self, form):
@@ -135,6 +140,12 @@ class ProfileUpdateView(AdminRoleRequiredMixin, UpdateView):
     model = UserProfile
     form_class = UserProfileForm
     success_url = reverse_lazy('core:profile_list')
+    title = 'Update profile'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cancel_url'] = self.success_url
+        return context
 
     def form_valid(self, form):
         messages.success(self.request, 'Profile updated successfully.')

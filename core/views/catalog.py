@@ -41,6 +41,12 @@ class ServiceCategoryCreateView(ManagerRoleRequiredMixin, CreateView):
     template_name = 'core/catalog/category_form.html'
     form_class = ServiceCategoryForm
     success_url = reverse_lazy('core:category_list')
+    title = 'Create category'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cancel_url'] = self.success_url
+        return context
 
     def form_valid(self, form):
         messages.success(self.request, 'Category created successfully.')
@@ -52,6 +58,12 @@ class ServiceCategoryUpdateView(ManagerRoleRequiredMixin, UpdateView):
     template_name = 'core/catalog/category_form.html'
     form_class = ServiceCategoryForm
     success_url = reverse_lazy('core:category_list')
+    title = 'Update category'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cancel_url'] = self.success_url
+        return context
 
     def form_valid(self, form):
         messages.success(self.request, 'Category updated successfully.')
