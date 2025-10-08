@@ -8,7 +8,9 @@ This repository contains a **Node.js + Express + EJS** prototype for a corporate
 - `views/login.ejs`: Focused login form with role selection plus username and password fields.
 - `public/styles.css`: Global stylesheet with streamlined typography, layout, and responsive rules.
 - `data/sampleData.js`: Object-oriented in-memory sample data service (accounts, profiles, opportunities, metrics, etc.).
-- `test/validateUAtest.php`: Lightweight PHP smoke test that verifies the login template retains mandatory form controls.
+- `test/validateUAtest.js`: Jest smoke test that verifies the login template retains mandatory form controls.
+- `test/app.view.test.js`: Ensures protected views render correctly for authenticated administrators.
+- `test/app.error.test.js`: Covers middleware guards such as admin-only access and suspended account blocking.
 - `package.json`: Node.js dependencies and scripts.
 
 ## Getting Started
@@ -21,7 +23,12 @@ This repository contains a **Node.js + Express + EJS** prototype for a corporate
    npm run dev
    ```
    `nodemon` watches for changes and serves the app at [http://localhost:3000](http://localhost:3000). For a one-off run, use `npm start`.
-3. **Access the experience**
+3. **Run tests (optional)**
+   ```bash
+   npm test
+   ```
+   Executes the Jest suite covering login rendering, dashboard access, and admin guards.
+4. **Access the experience**
    - Visit `http://localhost:3000/login` to select a role and enter credentials.
    - After a successful sign-in you are redirected to `http://localhost:3000/dashboard`.
    - Demo APIs are available at `/api/pin-requests`, `/api/csr-history`, `/api/pin-matches`, `/api/service-categories`, and `/api/reports`.
@@ -56,4 +63,4 @@ This repository contains a **Node.js + Express + EJS** prototype for a corporate
 - **Richer interactions**: add front-end scripts or component libraries for filtering, shortlisting, and inline validation.
 - **Performance tuning**: minify CSS, enable HTTP caching, and optimise images to improve initial load.
 - **Accessibility**: extend WAI-ARIA attributes, keyboard hints, and high-contrast themes.
-- **Automated tests**: add tests around data helpers and template rendering to safeguard future refactors.
+- **Automated tests**: extend the current Jest suite to cover data helpers and route edge cases for future refactors.
