@@ -1,7 +1,7 @@
-__pycache__/
-*.py[cod]
-*.sqlite3
-.env
-.venv/
-staticfiles/
+/vendor/
+/.env
+/storage/logs/*.log
+/.phpunit.result.cache
+/.idea/
 .DS_Store
+/node_modules/
