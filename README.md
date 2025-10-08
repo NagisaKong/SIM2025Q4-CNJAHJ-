@@ -3,11 +3,14 @@
 This repository contains a **Node.js + Express + EJS** prototype for a corporate social responsibility (CSR) volunteer matching platform. The experience now requires users to authenticate before viewing the dashboard, keeps the interface minimal, and ships with English copy and demo data for every module.
 
 ## Project Structure
-- `server.js`: Class-based Express entry point that loads demo data, handles authentication, and renders the dashboard and login pages.
+- `server.js`: Class-based Express entry point that wires boundary/controller/entity layers together, handles authentication, and renders the dashboard and login pages.
+- `controllers/`: Houses `AuthController`, `DashboardController`, and `AdminController` to encapsulate request-handling logic.
+- `entities/`: Domain objects such as `UserAccount`, `UserProfile`, and `ServiceCategory` used by the in-memory store.
+- `services/`: Cross-cutting helpers (e.g., flash message management) shared between controllers and the Express boundary.
 - `views/index.ejs`: Dashboard template featuring tools for administrators, CSR representatives, PIN users, and platform managers.
 - `views/login.ejs`: Focused login form with role selection plus username and password fields.
 - `public/styles.css`: Global stylesheet with streamlined typography, layout, and responsive rules.
-- `data/sampleData.js`: Object-oriented in-memory sample data service (accounts, profiles, opportunities, metrics, etc.).
+- `data/sampleData.js`: Object-oriented in-memory sample data service that instantiates the entity classes (accounts, profiles, opportunities, metrics, etc.).
 - `test/validateUAtest.js`: Jest smoke test that verifies the login template retains mandatory form controls.
 - `test/app.view.test.js`: Ensures protected views render correctly for authenticated administrators.
 - `test/app.error.test.js`: Covers middleware guards such as admin-only access and suspended account blocking.
@@ -46,6 +49,7 @@ This repository contains a **Node.js + Express + EJS** prototype for a corporate
 - **Role selection on login**: the form remembers the selected role and username after a failed attempt.
 - **Streamlined UI**: cards, tables, and stacked forms provide a lightweight layout focused on data and actions.
 - **English demo data**: all sample roles, requests, opportunities, and metrics are authored in English for consistency.
+- **BCE-friendly backend**: controllers orchestrate user flows, entity classes model the domain, and services expose boundary helpers for messaging.
 
 ## Page Highlights
 1. **Top bar** – displays the signed-in user and a sign-out button.
