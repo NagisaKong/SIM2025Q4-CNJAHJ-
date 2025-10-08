@@ -11,8 +11,21 @@ const Report = require('../entities/Report');
 const VolunteerOpportunity = require('../entities/VolunteerOpportunity');
 
 class VolunteerPlatformDataStore {
+  #requestStatuses;
+  #roles;
+  #pinRequests;
+  #csrShortlist;
+  #csrHistory;
+  #pinMetrics;
+  #pinMatches;
+  #serviceCategories;
+  #userAccounts;
+  #userProfiles;
+  #volunteerOpportunities;
+  #reports;
+
   constructor() {
-    this.requestStatuses = {
+    this.#requestStatuses = {
       pending: { label: 'Awaiting Match', className: 'status-pending' },
       matched: { label: 'Matched', className: 'status-matched' },
       completed: { label: 'Completed', className: 'status-completed' },
@@ -20,7 +33,7 @@ class VolunteerPlatformDataStore {
       suspended: { label: 'Suspended', className: 'status-suspended' }
     };
 
-    this.roles = [
+    this.#roles = [
       new RoleDefinition({
         name: 'User Administrator',
         highlights: [
@@ -55,7 +68,7 @@ class VolunteerPlatformDataStore {
       })
     ];
 
-    this.pinRequests = [
+    this.#pinRequests = [
       new PinRequest({
         title: 'Hospital Follow-up Companion',
         category: 'Medical Escort',
@@ -82,7 +95,7 @@ class VolunteerPlatformDataStore {
       })
     ];
 
-    this.csrShortlist = [
+    this.#csrShortlist = [
       new ShortlistItem({
         title: 'Community Rehab Exercise Coach',
         desc: 'Service date: 2025-03-03 | Category: Health Support'
@@ -93,7 +106,7 @@ class VolunteerPlatformDataStore {
       })
     ];
 
-    this.csrHistory = [
+    this.#csrHistory = [
       new CsrHistoryEntry({
         title: 'Senior Wellness Check-ins',
         category: 'Health Support',
@@ -114,7 +127,7 @@ class VolunteerPlatformDataStore {
       })
     ];
 
-    this.pinMetrics = [
+    this.#pinMetrics = [
       new PinMetric({
         title: 'Total Views Today',
         value: '128',
@@ -132,7 +145,7 @@ class VolunteerPlatformDataStore {
       })
     ];
 
-    this.pinMatches = [
+    this.#pinMatches = [
       new PinMatch({
         service: 'Post-surgery Clinic Support',
         csr: 'Lena Torres',
@@ -153,13 +166,13 @@ class VolunteerPlatformDataStore {
       })
     ];
 
-    this.serviceCategories = [
+    this.#serviceCategories = [
       new ServiceCategory({ name: 'Medical Escort', status: 'active' }),
       new ServiceCategory({ name: 'Emotional Support', status: 'active' }),
       new ServiceCategory({ name: 'Emergency Response', status: 'suspended' })
     ];
 
-    this.userAccounts = [
+    this.#userAccounts = [
       new UserAccount({
         username: 'admin.reed',
         displayName: 'Morgan Reed',
@@ -186,7 +199,7 @@ class VolunteerPlatformDataStore {
       })
     ];
 
-    this.userProfiles = [
+    this.#userProfiles = [
       new UserProfile({
         name: 'User Administrator',
         description: 'Maintains secure access for every user account and profile.',
@@ -229,7 +242,7 @@ class VolunteerPlatformDataStore {
       })
     ];
 
-    this.volunteerOpportunities = [
+    this.#volunteerOpportunities = [
       new VolunteerOpportunity({
         title: 'Clinic Companion Volunteer',
         category: 'Medical Escort',
@@ -253,7 +266,7 @@ class VolunteerPlatformDataStore {
       })
     ];
 
-    this.reports = [
+    this.#reports = [
       new Report({
         title: 'Daily Report',
         highlights: [
@@ -279,92 +292,92 @@ class VolunteerPlatformDataStore {
   }
 
   getRequestStatuses() {
-    return this.requestStatuses;
+    return { ...this.#requestStatuses };
   }
 
   getRoles() {
-    return this.roles.map((role) => role.toJSON());
+    return this.#roles.map((role) => role.toJSON());
   }
 
   getPinRequests() {
-    return this.pinRequests.map((request) => request.toJSON());
+    return this.#pinRequests.map((request) => request.toJSON());
   }
 
   getCsrShortlist() {
-    return this.csrShortlist.map((item) => item.toJSON());
+    return this.#csrShortlist.map((item) => item.toJSON());
   }
 
   getCsrHistory() {
-    return this.csrHistory.map((entry) => entry.toJSON());
+    return this.#csrHistory.map((entry) => entry.toJSON());
   }
 
   getPinMetrics() {
-    return this.pinMetrics.map((metric) => metric.toJSON());
+    return this.#pinMetrics.map((metric) => metric.toJSON());
   }
 
   getPinMatches() {
-    return this.pinMatches.map((match) => match.toJSON());
+    return this.#pinMatches.map((match) => match.toJSON());
   }
 
   getServiceCategories() {
-    return this.serviceCategories.map((category) => category.toJSON());
+    return this.#serviceCategories.map((category) => category.toJSON());
   }
 
   getReports() {
-    return this.reports.map((report) => report.toJSON());
+    return this.#reports.map((report) => report.toJSON());
   }
 
   getVolunteerOpportunities() {
-    return this.volunteerOpportunities.map((opportunity) => opportunity.toJSON());
+    return this.#volunteerOpportunities.map((opportunity) => opportunity.toJSON());
   }
 
   authenticateUser(username, password, role) {
-    return this.userAccounts.find(
+    return this.#userAccounts.find(
       (account) =>
         account.username === username &&
-        account.password === password &&
+        account.verifyPassword(password) &&
         (!role || account.role === role)
     );
   }
 
   addUserAccount(account) {
     const entity = account instanceof UserAccount ? account : new UserAccount(account);
-    this.userAccounts.push(entity);
+    this.#userAccounts.push(entity);
     return entity;
   }
 
   updateUserAccount(username, updates) {
-    const target = this.userAccounts.find((account) => account.username === username);
+    const target = this.#userAccounts.find((account) => account.username === username);
     if (!target) return null;
     target.update(updates);
     return target;
   }
 
   getUserAccount(username) {
-    return this.userAccounts.find((account) => account.username === username);
+    return this.#userAccounts.find((account) => account.username === username);
   }
 
   searchUserAccounts(keyword) {
-    return this.userAccounts
+    return this.#userAccounts
       .filter((account) => account.matchesKeyword(keyword))
       .map((account) => account.toJSON());
   }
 
   addUserProfile(profile) {
     const entity = profile instanceof UserProfile ? profile : new UserProfile(profile);
-    this.userProfiles.push(entity);
+    this.#userProfiles.push(entity);
     return entity;
   }
 
   updateUserProfile(name, updates) {
-    const target = this.userProfiles.find((profile) => profile.name === name);
+    const target = this.#userProfiles.find((profile) => profile.name === name);
     if (!target) return null;
     target.update(updates);
     return target;
   }
 
   searchUserProfiles(keyword) {
-    return this.userProfiles
+    return this.#userProfiles
       .filter((profile) => profile.matchesKeyword(keyword))
       .map((profile) => profile.toJSON());
   }
