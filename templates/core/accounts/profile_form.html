@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Edit profile · CSR Platform{% endblock %}
+{% block content %}
+<h1 class="mb-4 text-2xl font-semibold">Edit profile</h1>
+<form method="post" class="space-y-4 rounded border border-slate-200 bg-white p-6">
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="space-y-1">
+            <label class="block text-sm font-medium" for="id_{{ field.name }}">{{ field.label }}</label>
+            {{ field.as_widget(attrs={'class': 'input'}) }}
+            <div class='text-xs text-red-600'>{{ field.errors }}</div>
+        </div>
+    {% endfor %}
+    <button type="submit" class="btn-primary">Save</button>
+</form>
+{% endblock %}

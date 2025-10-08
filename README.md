@@ -1,74 +1,120 @@
-# CSR Volunteer Matching Platform Prototype
+# CSR Volunteer Matching Platform
 
-This repository contains a **Node.js + Express + EJS** prototype for a corporate social responsibility (CSR) volunteer matching platform. The experience now requires users to authenticate before viewing the dashboard, keeps the interface minimal, and ships with English copy and demo data for every module.
+A minimalist Django 5 application that connects corporate CSR representatives with persons in need while enabling administrator and platform manager workflows. The system follows a Boundary-Control-Entity separation: Django templates/forms act as boundaries, class-based views and dedicated services provide control logic, and Django ORM models represent entities.
 
-## Project Structure
-- `server.js`: Class-based Express entry point that wires boundary/controller/entity layers together, handles authentication, and renders the dashboard and login pages.
-- `controllers/`: Houses `AuthController`, `DashboardController`, `AdminController`, and `UserStoryController` to encapsulate
-  request-handling logic.
-- `entities/`: Domain objects such as `UserAccount`, `UserProfile`, and `ServiceCategory` used by the in-memory store.
-- `services/`: Cross-cutting helpers (e.g., flash message management) shared between controllers and the Express boundary.
-- `views/index.ejs`: Dashboard template featuring tools for administrators, CSR representatives, PIN users, and platform managers.
-- `views/login.ejs`: Focused login form with role selection plus username and password fields.
-- `views/userStories.ejs`: Authenticated catalogue of user stories grouped by role for quick requirement reference.
-- `public/styles.css`: Global stylesheet with streamlined typography, layout, and responsive rules.
-- `data/sampleData.js`: Object-oriented in-memory sample data service that instantiates the entity classes (accounts, profiles, opportunities, metrics, etc.).
-- `test/validateUAtest.js`: Jest smoke test that verifies the login template retains mandatory form controls.
-- `test/app.view.test.js`: Ensures protected views render correctly for authenticated administrators.
-- `test/app.error.test.js`: Covers middleware guards such as admin-only access and suspended account blocking.
-- `package.json`: Node.js dependencies and scripts.
+## Quick start
 
-## Getting Started
-1. **Install dependencies**
-   ```bash
-   npm install
-   ```
-2. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-   `nodemon` watches for changes and serves the app at [http://localhost:3000](http://localhost:3000). For a one-off run, use `npm start`.
-3. **Run tests (optional)**
-   ```bash
-   npm test
-   ```
-   Executes the Jest suite covering login rendering, dashboard access, and admin guards.
-4. **Access the experience**
-   - Visit `http://localhost:3000/login` to select a role and enter credentials.
-   - After a successful sign-in you are redirected to `http://localhost:3000/dashboard`.
-   - Browse the user stories at `http://localhost:3000/user-stories` once authenticated.
-   - Demo APIs are available at `/api/pin-requests`, `/api/csr-history`, `/api/pin-matches`, `/api/service-categories`, and `/api/reports`.
+```bash
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py createsuperuser  # optional admin access
+python manage.py seed_demo        # load demo accounts & data
+python manage.py runserver
+```
 
-### Sample Credentials
-| Role | Username | Password |
+Demo accounts created by `seed_demo` share the password `Passw0rd!`:
+
+| Role | Username | Access |
 | --- | --- | --- |
-| User Administrator | `admin.reed` | `admin123` |
-| CSR Representative | `csr.wilson` | `csr12345` |
-| Person in Need (PIN) | `pin.jordan` | `pin12345` |
+| User Admin | admin1 | `/admin/accounts/` & `/admin/profiles/` |
+| CSR Rep | csr1 | `/csr/requests/` |
+| Person in Need | pin1 | `/pin/requests/` |
+| Platform Manager | manager1 | `/manager/categories/`, `/manager/reports/` |
 
-## Current Capabilities
-- **Authentication first**: the root route redirects to the login form and the dashboard is protected by a session check.
-- **Admin workspace**: signed-in user administrators can create, update, search, and suspend user accounts and profiles.
-- **User story catalogue**: authenticated users can review every role's user stories from a dedicated page to align feature work.
-- **Role selection on login**: the form remembers the selected role and username after a failed attempt.
-- **Streamlined UI**: cards, tables, and stacked forms provide a lightweight layout focused on data and actions.
-- **English demo data**: all sample roles, requests, opportunities, and metrics are authored in English for consistency.
-- **BCE-friendly backend**: controllers orchestrate user flows, entity classes model the domain, and services expose boundary helpers for messaging.
+For PostgreSQL-based local development you can start the optional stack:
 
-## Page Highlights
-1. **Top bar** – displays the signed-in user and a sign-out button.
-2. **Platform overview** – describes how the four roles collaborate on the platform.
-3. **User administrator workspace** – exposes account and profile creation forms (only for the admin role).
-4. **User accounts overview** – searchable table with inline editing and suspension controls.
-5. **User profiles overview** – searchable table with editable descriptions, permissions, and statuses.
-6. **CSR volunteer activity** – lists open opportunities, shortlist examples, and service history.
-7. **PIN engagement insights** – shows current requests, visibility metrics, and completed matches.
-8. **Platform operations** – summarises service categories and the latest daily/weekly/monthly reports.
-9. **Login page** – role selector plus credential inputs, reminding users to contact the administrator for new accounts.
+```bash
+docker compose up --build
+```
 
-## Future Improvements
-- **Persisted data**: replace `data/sampleData.js` with a database or external API and adopt an ORM/SDK for CRUD operations.
-- **Richer interactions**: add front-end scripts or component libraries for filtering, shortlisting, and inline validation.
-- **Performance tuning**: minify CSS, enable HTTP caching, and optimise images to improve initial load.
-- **Accessibility**: extend WAI-ARIA attributes, keyboard hints, and high-contrast themes.
-- **Automated tests**: extend the current Jest suite to cover data helpers and route edge cases for future refactors.
+## Running tests
+
+```bash
+python manage.py test
+```
+
+The suite covers core entities, access control, and representative/person-in-need happy paths.
+
+## Architecture notes
+
+- **Entities:** `ServiceCategory`, `HelpRequest`, `ShortlistItem`, `MatchRecord`, `UserProfile`, `AccountAuditLog`.
+- **Control services:** `AccountService`, `CsrService`, `PinService`, `ReportService` encapsulate transactional use-cases consumed by class-based views.
+- **Boundaries:** Django templates with Tailwind CDN & minimal CSS, plus forms that validate user input.
+- **Admin reuse:** Django admin registers every entity to keep back-office CRUD trivial.
+
+## Acceptance criteria & routes
+
+Each user story pairs Given/When/Then acceptance criteria with the primary route/template.
+
+### User Administrator
+
+| Story | Acceptance criteria | Route & template |
+| --- | --- | --- |
+| Login | Given the admin is registered, When they submit valid credentials, Then they are redirected to `/` with dashboard access. | `accounts/login/` → `registration/login.html` |
+| Create account | Given an admin on `/admin/accounts/create/`, When they submit valid account + profile data, Then a new user/profile is persisted and listed. | `/admin/accounts/create/` → `core/accounts/account_form.html` |
+| View accounts | Given an admin visits the accounts list, When the page loads, Then all users appear with status & role columns. | `/admin/accounts/` → `core/accounts/account_list.html` |
+| Update account | Given an admin views an account detail, When they edit and submit changes, Then the user & profile fields update. | `/admin/accounts/<id>/edit/` → `core/accounts/account_form.html` |
+| Suspend account | Given an admin on an account detail, When they press Suspend, Then the user becomes inactive and login is blocked. | `/admin/accounts/<id>/` → `core/accounts/account_detail.html` |
+| Search accounts | Given an admin enters keywords, When they submit, Then the list filters to matching usernames/emails. | `/admin/accounts/?q=...` |
+| Create profile | Covered by account create; profile data is captured simultaneously. | `/admin/accounts/create/` |
+| View profiles | Given an admin visits profiles list, When the page loads, Then each profile displays role/status. | `/admin/profiles/` → `core/accounts/profile_list.html` |
+| Update profile | Given an admin edits a profile, When they submit, Then role/description/groups update. | `/admin/profiles/<id>/edit/` → `core/accounts/profile_form.html` |
+| Suspend profile | Given a profile form, When the admin unticks "is active", Then the profile deactivates and access is denied. | `/admin/profiles/<id>/edit/` |
+| Search profiles | Given an admin searches on `/admin/profiles/`, When they submit, Then results filter by username/role/description. | `/admin/profiles/?q=...` |
+| Logout | Given an authenticated admin, When they hit Logout, Then the session ends and they return to login. | `/accounts/logout/` |
+
+### CSR Representative
+
+| Story | Acceptance criteria | Route & template |
+| --- | --- | --- |
+| Login | Given a CSR account, When they authenticate, Then they reach the dashboard. | `accounts/login/` |
+| Search opportunities | Given the CSR on the browse page, When they filter by category/location/date/keyword, Then matching requests are listed. | `/csr/requests/` → `core/csr/request_list.html` |
+| View request detail | Given a CSR opens a request, When the page loads, Then full description plus analytics display and view count increments. | `/csr/requests/<id>/` → `core/csr/request_detail.html` |
+| Shortlist request | Given a CSR views a request, When they click “Add to shortlist”, Then the request appears in their shortlist and count increases. | `/csr/requests/<id>/shortlist/` |
+| View shortlist | Given the CSR opens their shortlist, When it loads, Then saved requests show with quick links. | `/csr/shortlist/` → `core/csr/shortlist_list.html` |
+| Search shortlist | Given a CSR enters a keyword, When they submit, Then shortlist rows filter accordingly. | `/csr/shortlist/?keyword=...` |
+| Completed history | Given a CSR visits history, When they filter by category/date, Then only matching completed matches display. | `/csr/history/` → `core/csr/history_list.html` |
+| Logout | Same as other roles via `/accounts/logout/`. | `accounts/logout/` |
+
+### Person in Need (PIN)
+
+| Story | Acceptance criteria | Route & template |
+| --- | --- | --- |
+| Login | Given a PIN account, When they sign in, Then the dashboard renders. | `accounts/login/` |
+| Create request | Given they visit the create form, When valid data is submitted, Then a new help request exists with status. | `/pin/requests/create/` → `core/pin/request_form.html` |
+| View requests | Given the PIN visits the list, When the page loads, Then each request shows status, views, shortlist counts. | `/pin/requests/` → `core/pin/request_list.html` |
+| Update request | Given they select Edit, When they change fields and submit, Then the request updates. | `/pin/requests/<id>/edit/` |
+| Delete request | Given they choose Delete, When they confirm, Then the request disappears from the list. | `/pin/requests/<id>/delete/` → `core/pin/request_confirm_delete.html` |
+| Search requests | Given a keyword search, When submitted, Then only matching titles display. | `/pin/requests/?keyword=...` |
+| View analytics | Provided on the list page via Views/Shortlists columns updated automatically. | `/pin/requests/` |
+| Completed history | Given the PIN visits history, When they filter by category/date, Then completed matches show CSR info. | `/pin/history/` → `core/pin/history_list.html` |
+| Logout | `/accounts/logout/` |
+
+### Platform Manager
+
+| Story | Acceptance criteria | Route & template |
+| --- | --- | --- |
+| Login | Given a manager account, When they sign in, Then dashboard renders. | `accounts/login/` |
+| Create category | Given the manager opens create form, When they submit, Then the category appears in list. | `/manager/categories/create/` → `core/catalog/category_form.html` |
+| View categories | Given they open the list, When the page loads, Then categories show name/status. | `/manager/categories/` → `core/catalog/category_list.html` |
+| Update category | Given they edit a category, When saved, Then the attributes update. | `/manager/categories/<id>/edit/` |
+| Suspend category | Given they toggle is_active off, When saved, Then category hides from active filters. | `/manager/categories/<id>/edit/` |
+| Search categories | Given filters are applied, When submitted, Then list matches keyword/status selections. | `/manager/categories/?keyword=...` |
+| Daily report | Given manager selects Daily, When they submit, Then table summarizes accepted/completed counts per day. | `/manager/reports/` → `core/reports/report_view.html` |
+| Weekly report | Same flow with Weekly option summarizing ISO weeks. | `/manager/reports/` |
+| Monthly report | Same flow with Monthly option summarizing months. | `/manager/reports/` |
+| Export CSV | Given results exist, When Export CSV is pressed, Then a CSV download starts. | `/manager/reports/export/` |
+| Logout | `/accounts/logout/` |
+
+## Seeded dataset
+
+`python manage.py seed_demo` provisions roughly thirty help requests alongside five users per role and realistic shortlist/match relationships for demos and classroom walkthroughs.
+
+## Suggested improvements
+
+- Integrate real-time notifications (email/SMS) when CSR reps shortlist or accept requests.
+- Replace Tailwind CDN with a compiled subset for production hardening.
+- Extend the reporting service with cumulative metrics (hours volunteered, response times).
+- Add REST APIs (Django REST Framework) to support mobile or SPA clients.

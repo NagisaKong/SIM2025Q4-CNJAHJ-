@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load profile_tags %}
+{% block title %}Account detail · CSR Platform{% endblock %}
+{% block content %}
+<h1 class="mb-4 text-2xl font-semibold">{{ object.username }}</h1>
+<dl class="grid grid-cols-1 gap-2 text-sm">
+    <div><dt class="font-medium">Email</dt><dd>{{ object.email }}</dd></div>
+    <div><dt class="font-medium">Name</dt><dd>{{ object.get_full_name|default:'—' }}</dd></div>
+    <div><dt class="font-medium">Account status</dt><dd>{{ object.is_active|yesno:'Active,Suspended' }}</dd></div>
+    <div><dt class="font-medium">Profile status</dt><dd>{{ object|profile_status }}</dd></div>
+    <div><dt class="font-medium">Role</dt><dd>{{ object|profile_role }}</dd></div>
+</dl>
+<div class="mt-6 flex gap-3 text-sm">
+    <a href="{% url 'core:account_update' object.pk %}" class="btn-secondary">Edit account</a>
+    <form method="post" action="{% url 'core:account_suspend' object.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger">
+            {% if object.is_active %}Suspend{% else %}Reactivate{% endif %}
+        </button>
+    </form>
+</div>
+{% endblock %}

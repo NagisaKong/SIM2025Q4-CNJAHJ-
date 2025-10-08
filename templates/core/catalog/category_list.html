@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Service categories · CSR Platform{% endblock %}
+{% block content %}
+<h1 class="mb-4 text-2xl font-semibold">Service categories</h1>
+<form method="get" class="mb-4 flex flex-wrap gap-2">
+    <input type="search" name="keyword" value="{{ request.GET.keyword|default_if_none:'' }}" placeholder="Keyword" class="input">
+    <select name="is_active" class="input">
+        <option value="">All statuses</option>
+        <option value="true" {% if request.GET.is_active == 'true' %}selected{% endif %}>Active</option>
+        <option value="false" {% if request.GET.is_active == 'false' %}selected{% endif %}>Suspended</option>
+    </select>
+    <button class="btn-secondary" type="submit">Filter</button>
+    <a href="{% url 'core:category_create' %}" class="btn-primary ml-auto">New category</a>
+</form>
+<table class="simple-table">
+    <thead><tr><th>Name</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+        {% for category in object_list %}
+            <tr>
+                <td>{{ category.name }}</td>
+                <td>{{ category.is_active|yesno:'Active,Suspended' }}</td>
+                <td class="text-right"><a href="{% url 'core:category_update' category.pk %}" class="text-blue-600 hover:underline">Edit</a></td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="3" class="text-center text-sm text-slate-500">No categories.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% include 'core/pagination.html' %}
+{% endblock %}
