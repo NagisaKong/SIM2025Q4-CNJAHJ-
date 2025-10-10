@@ -42,6 +42,63 @@ This project implements a CSR volunteer matching platform using a custom MVC sta
    composer test
    ```
 
+## Windows Environment Setup Guide
+
+Follow the steps below to stand up the project on a Windows 10/11 machine. The flow mirrors the "Getting Started" section, but also covers installing the required tooling on Windows.
+
+1. **Install PHP 8.2**
+   - Download the *Thread Safe* x64 build of PHP 8.2 from [windows.php.net/download](https://windows.php.net/download/).
+   - Extract the archive to a directory such as `C:\php` and add that directory to your system `PATH` environment variable.
+   - Copy `php.ini-development` to `php.ini`, then enable the following extensions inside the file: `extension=openssl`, `extension=pdo_pgsql`, `extension=pdo_mysql`, and `extension=sqlite3` (uncomment the relevant lines). Enabling all three PDO drivers makes it easy to point the DSN to PostgreSQL, MySQL, or SQLite as needed.
+
+2. **Install Composer**
+   - Download and run the Composer installer from [getcomposer.org](https://getcomposer.org/download/).
+   - When prompted, point the installer at the `php.exe` you configured in step 1. This will add the `composer` command to your `PATH`.
+
+3. **Install Git**
+   - Grab the latest Git for Windows installer from [git-scm.com](https://git-scm.com/download/win) and accept the defaults so that `git` is available in both Command Prompt and PowerShell.
+
+4. **Clone the repository**
+   ```powershell
+   git clone https://example.com/your-org/csr-match-platform.git
+   cd csr-match-platform
+   ```
+
+5. **Install project dependencies**
+   ```powershell
+   composer install
+   ```
+
+6. **Prepare environment configuration**
+   ```powershell
+   copy .env.example .env
+   ```
+   Update the `.env` file with the DSN that matches your local database. For PostgreSQL on Windows using a default installation, the DSN is typically `pgsql:host=127.0.0.1;port=5432;dbname=csr_platform`.
+
+7. **Set up the database**
+   - Install the database engine of your choice (e.g., [PostgreSQL for Windows](https://www.postgresql.org/download/windows/)).
+   - Create an empty database named `csr_platform` (or any name that matches your DSN settings).
+   - Run the migration and seeding scripts:
+     ```powershell
+     php scripts/migrate.php
+     php scripts/generate_test_data.php
+     ```
+
+8. **Serve the application locally**
+   ```powershell
+   php -S localhost:8000 -t public
+   ```
+   Then visit `http://localhost:8000` in your browser.
+
+9. **Run the automated tests (optional)**
+   ```powershell
+   composer test
+   ```
+
+Troubleshooting tips:
+- If PowerShell does not recognize `php` or `composer`, reopen the terminal so that it reloads your PATH changes.
+- Ensure the required PHP extensions (`openssl`, `pdo_pgsql`, `pdo_mysql`, `sqlite3`) are enabled; otherwise migrations may fail when connecting to your database.
+
 ## Project Layout
 
 ```
