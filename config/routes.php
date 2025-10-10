@@ -1,6 +1,6 @@
 <?php
 
-use App\Controllers\AuthController;
+use App\Controllers\LoginController;
 use App\Controllers\DashboardController;
 use App\Controllers\Admin\UserController as AdminUserController;
 use App\Controllers\Admin\ProfileController as AdminProfileController;
@@ -12,9 +12,9 @@ use App\Controllers\PIN\HistoryController as PINHistoryController;
 use App\Controllers\Reports\ReportController;
 
 return function (\App\Core\Router $router) {
-    $router->get('/', [AuthController::class, 'showLoginForm'])->name('login');
-    $router->post('/login', [AuthController::class, 'login']);
-    $router->post('/logout', [AuthController::class, 'logout'])->middleware(['auth', 'csrf']);
+    $router->get('/', [LoginController::class, 'show'])->name('login');
+    $router->post('/login', [LoginController::class, 'submit']);
+    $router->post('/logout', [LoginController::class, 'logout'])->middleware(['auth', 'csrf']);
 
     $router->get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
 

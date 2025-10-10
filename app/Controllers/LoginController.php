@@ -9,24 +9,27 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
 use App\Core\Validator;
+use App\Core\View;
+use App\Entities\UserAccount;
 
-class AuthController extends Controller
+class LoginController extends Controller
 {
     private array $roleOptions = [];
 
     public function __construct(
         Request $request,
-        \App\Core\View $view,
+        View $view,
         Response $response,
         Session $session,
         Auth $auth,
         private Validator $validator,
-        protected Csrf $csrf
+        protected Csrf $csrf,
+        private UserAccount $userAccount
     ) {
         parent::__construct($request, $view, $response, $session, $auth);
     }
 
-    public function showLoginForm(): Response
+    public function show(): Response
     {
         return $this->render('auth/login.php', [
             'title' => 'Sign in',
@@ -37,11 +40,13 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login(): Response
+    public function submit(): Response
     {
         $data = $this->request->post();
         $role = $data['role'] ?? '';
         $email = $data['email'] ?? '';
+        $password = $data['password'] ?? '';
+
         $rememberState = function () use ($role, $email): void {
             $this->session->flash('login_role', $role);
             $this->session->flash('login_email', $email);
@@ -68,7 +73,11 @@ class AuthController extends Controller
             return $this->redirect('/');
         }
 
-        if ($this->auth->attempt($email, $data['password'], $role)) {
+        if ($this->validateLogin($email, $password, $role)) {
+            $user = $this->userAccount->authenticatedUser();
+            if ($user !== null) {
+                $this->auth->loginUser($user);
+            }
             $this->session->flash('success', 'Welcome back!');
             return $this->redirect('/dashboard');
         }
@@ -83,6 +92,11 @@ class AuthController extends Controller
         $this->auth->logout();
         $this->session->flash('success', 'You have been signed out.');
         return $this->redirect('/');
+    }
+
+    protected function validateLogin(string $username, string $password, string $role): bool
+    {
+        return $this->userAccount->validateUser($username, $password, $role);
     }
 
     /**

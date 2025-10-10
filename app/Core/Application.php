@@ -35,6 +35,10 @@ class Application
         $this->container->set(\App\Repositories\ShortlistRepository::class, fn(Container $c) => new \App\Repositories\ShortlistRepository($c->get(PDO::class)));
         $this->container->set(\App\Repositories\MatchRepository::class, fn(Container $c) => new \App\Repositories\MatchRepository($c->get(PDO::class)));
 
+        $this->container->set(\App\Entities\UserAccount::class, fn(Container $c) => new \App\Entities\UserAccount(
+            $c->get(\App\Repositories\UserRepository::class)
+        ));
+
         $this->container->set(\App\Services\AccountService::class, fn(Container $c) => new \App\Services\AccountService(
             $c->get(\App\Repositories\UserRepository::class),
             $c->get(\App\Repositories\CategoryRepository::class),

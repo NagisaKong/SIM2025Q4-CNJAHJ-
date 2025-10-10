@@ -41,14 +41,19 @@ class Auth
             return false;
         }
 
-        $this->session->put(self::SESSION_KEY, $user->id);
-        $this->session->regenerate();
+        $this->loginUser($user);
         return true;
     }
 
     public function logout(): void
     {
         $this->session->forget(self::SESSION_KEY);
+        $this->session->regenerate();
+    }
+
+    public function loginUser(User $user): void
+    {
+        $this->session->put(self::SESSION_KEY, $user->id);
         $this->session->regenerate();
     }
 
