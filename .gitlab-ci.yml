@@ -1,0 +1,39 @@
+image: php:8.2-cli
+
+stages:
+  - lint
+  - test
+
+variables:
+  COMPOSER_ALLOW_SUPERUSER: "1"
+  APP_ENV: ci
+  APP_DEBUG: "0"
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - vendor/
+    - composer.lock
+
+.install_dependencies: &install_dependencies
+  - apt-get update && apt-get install -y --no-install-recommends git unzip build-essential libpq-dev libsqlite3-dev >/dev/null
+  - docker-php-ext-install pdo_pgsql pdo_sqlite >/dev/null
+  - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  - composer install --prefer-dist --no-progress --no-interaction
+
+lint:
+  stage: lint
+  before_script: *install_dependencies
+  script:
+    - find app config database scripts tests -name '*.php' -print0 | xargs -0 -n1 -P4 php -l
+
+phpunit:
+  stage: test
+  before_script: *install_dependencies
+  script:
+    - vendor/bin/phpunit --configuration phpunit.xml --testdox
+  artifacts:
+    when: always
+    paths:
+      - storage/logs/
+    expire_in: 1 week
