@@ -1,0 +1,7 @@
+/vendor/
+/.env
+/storage/logs/*.log
+/.phpunit.result.cache
+/.idea/
+.DS_Store
+/node_modules/
