@@ -1,4 +1,3 @@
-<?php ob_start(); ?>
 <section class="card">
     <h1><?= htmlspecialchars($profile->role, ENT_QUOTES) ?></h1>
     <dl class="definition-list">
@@ -8,4 +7,3 @@
     </dl>
     <a href="/admin/profiles" class="btn-secondary">Back</a>
 </section>
-<?php $content = ob_get_clean(); include __DIR__.'/../../layouts/app.php'; ?>

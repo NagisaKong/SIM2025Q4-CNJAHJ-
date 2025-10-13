@@ -1,4 +1,3 @@
-<?php ob_start(); ?>
 <section class="card">
     <h1><?= htmlspecialchars($requestItem->title, ENT_QUOTES) ?></h1>
     <p><?= nl2br(htmlspecialchars($requestItem->description, ENT_QUOTES)) ?></p>
@@ -11,4 +10,3 @@
     </form>
     <a href="/csr/requests" class="btn-secondary">Back</a>
 </section>
-<?php $content = ob_get_clean(); include __DIR__.'/../../layouts/app.php'; ?>

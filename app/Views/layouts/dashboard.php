@@ -1,4 +1,3 @@
-<?php ob_start(); ?>
 <section class="card">
     <h1>Welcome, <?= htmlspecialchars($user->name ?? 'Guest', ENT_QUOTES) ?></h1>
     <p>Your role: <?= htmlspecialchars($user->profile?->role ?? 'N/A', ENT_QUOTES) ?></p>
@@ -23,4 +22,3 @@
         <?php endif; ?>
     </div>
 </section>
-<?php $content = ob_get_clean(); include __DIR__.'/app.php'; ?>

@@ -1,4 +1,3 @@
-<?php ob_start(); ?>
 <section class="card">
     <h1>Platform Reports</h1>
     <form class="form-inline" method="GET">
@@ -33,4 +32,3 @@
         </tbody>
     </table>
 </section>
-<?php $content = ob_get_clean(); include __DIR__.'/../layouts/app.php'; ?>

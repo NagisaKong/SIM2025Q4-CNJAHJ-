@@ -1,4 +1,3 @@
-<?php ob_start(); ?>
 <section class="card">
     <div class="card-header">
         <h1>Service Categories</h1>
@@ -39,4 +38,3 @@
         </tbody>
     </table>
 </section>
-<?php $content = ob_get_clean(); include __DIR__.'/../../layouts/app.php'; ?>

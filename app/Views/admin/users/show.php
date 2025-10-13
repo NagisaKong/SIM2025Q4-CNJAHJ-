@@ -1,4 +1,3 @@
-<?php ob_start(); ?>
 <section class="card">
     <h1><?= htmlspecialchars($user->name, ENT_QUOTES) ?></h1>
     <dl class="definition-list">
@@ -9,4 +8,3 @@
     </dl>
     <a href="/admin/users" class="btn-secondary">Back</a>
 </section>
-<?php $content = ob_get_clean(); include __DIR__.'/../../layouts/app.php'; ?>

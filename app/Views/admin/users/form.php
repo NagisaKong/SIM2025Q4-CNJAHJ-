@@ -1,4 +1,3 @@
-<?php ob_start(); ?>
 <section class="card">
     <h1><?= htmlspecialchars($title, ENT_QUOTES) ?></h1>
     <form method="POST" action="<?= isset($user) ? '/admin/users/' . $user->id : '/admin/users' ?>" class="form">
@@ -37,4 +36,3 @@
         <a href="/admin/users" class="btn-secondary">Cancel</a>
     </form>
 </section>
-<?php $content = ob_get_clean(); include __DIR__.'/../../layouts/app.php'; ?>

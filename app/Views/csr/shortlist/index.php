@@ -1,4 +1,3 @@
-<?php ob_start(); ?>
 <section class="card">
     <h1>My Shortlist</h1>
     <table class="table">
@@ -18,4 +17,3 @@
         </tbody>
     </table>
 </section>
-<?php $content = ob_get_clean(); include __DIR__.'/../../layouts/app.php'; ?>

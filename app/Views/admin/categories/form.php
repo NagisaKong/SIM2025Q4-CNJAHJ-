@@ -1,4 +1,3 @@
-<?php ob_start(); ?>
 <section class="card">
     <h1><?= htmlspecialchars($title, ENT_QUOTES) ?></h1>
     <form method="POST" action="<?= isset($category) ? '/admin/categories/' . $category->id : '/admin/categories' ?>" class="form">
@@ -16,4 +15,3 @@
         <a href="/admin/categories" class="btn-secondary">Cancel</a>
     </form>
 </section>
-<?php $content = ob_get_clean(); include __DIR__.'/../../layouts/app.php'; ?>

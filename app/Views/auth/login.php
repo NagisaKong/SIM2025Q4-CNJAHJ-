@@ -1,12 +1,4 @@
 <?php
-static $loginTemplateRendered = false;
-if ($loginTemplateRendered) {
-    return;
-}
-$loginTemplateRendered = true;
-
-ob_start();
-
 $availableRoles = $roleOptions ?? [];
 $selectedRole = $selectedRole ?? '';
 $emailValue = $emailValue ?? '';
@@ -35,4 +27,3 @@ $emailValue = $emailValue ?? '';
         <button type="submit" class="btn-primary">Sign in</button>
     </form>
 </section>
-<?php $content = ob_get_clean(); include __DIR__.'/../layouts/app.php'; ?>

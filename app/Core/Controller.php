@@ -13,7 +13,7 @@ abstract class Controller
     ) {
     }
 
-    protected function render(string $template, array $data = []): Response
+    protected function render(string $template, array $data = [], ?string $layout = 'layouts/app.php'): Response
     {
         $csrfToken = null;
         if (property_exists($this, 'csrf') && $this->csrf instanceof \App\Core\Csrf) {
@@ -22,13 +22,23 @@ abstract class Controller
             $csrfToken = $this->session->get('_csrf_token') ?? null;
         }
 
-        $content = $this->view->render($template, array_merge($data, [
+        $shared = [
             'authUser' => $this->auth->user(),
             'flash_success' => $this->session->getFlash('success'),
             'flash_error' => $this->session->getFlash('error'),
             'flash_warning' => $this->session->getFlash('warning'),
             'csrfToken' => $csrfToken,
-        ]));
+        ];
+
+        $content = $this->view->render($template, array_merge($shared, $data));
+
+        if ($layout !== null) {
+            $content = $this->view->render($layout, array_merge($shared, $data, [
+                'content' => $content,
+                'title' => $data['title'] ?? null,
+            ]));
+        }
+
         return $this->response->setContent($content);
     }
 
