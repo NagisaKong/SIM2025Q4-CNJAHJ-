@@ -12,15 +12,18 @@ use App\Core\View;
 
 class LogoutController extends Controller
 {
+    protected Csrf $csrf;
+
     public function __construct(
         Request $request,
         View $view,
         Response $response,
         Session $session,
         Auth $auth,
-        protected Csrf $csrf
+        Csrf $csrf
     ) {
         parent::__construct($request, $view, $response, $session, $auth);
+        $this->csrf = $csrf;
     }
 
     public function handle(): Response

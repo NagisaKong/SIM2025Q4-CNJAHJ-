@@ -15,6 +15,9 @@ use App\Entities\UserAccount;
 class LoginController extends Controller
 {
     private array $roleOptions = [];
+    private Validator $validator;
+    protected Csrf $csrf;
+    private UserAccount $userAccount;
 
     public function __construct(
         Request $request,
@@ -22,11 +25,14 @@ class LoginController extends Controller
         Response $response,
         Session $session,
         Auth $auth,
-        private Validator $validator,
-        protected Csrf $csrf,
-        private UserAccount $userAccount
+        Validator $validator,
+        Csrf $csrf,
+        UserAccount $userAccount
     ) {
         parent::__construct($request, $view, $response, $session, $auth);
+        $this->validator = $validator;
+        $this->csrf = $csrf;
+        $this->userAccount = $userAccount;
     }
 
     public function show(): Response
