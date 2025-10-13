@@ -42,11 +42,48 @@
     <?php if (!empty($flash_success)): ?>
         <div class="alert alert-success"><?= htmlspecialchars($flash_success, ENT_QUOTES) ?></div>
     <?php endif; ?>
-    <?php if (!empty($flash_error)): ?>
-        <div class="alert alert-error"><?= htmlspecialchars($flash_error, ENT_QUOTES) ?></div>
-    <?php endif; ?>
     <?= $content ?? '' ?>
 </main>
+
+<?php
+$popupMessages = [];
+if (!empty($flash_warning)) {
+    $popupMessages[] = ['level' => 'warning', 'message' => $flash_warning];
+}
+if (!empty($flash_error)) {
+    $popupMessages[] = ['level' => 'error', 'message' => $flash_error];
+}
+?>
+
+<?php foreach ($popupMessages as $index => $popup): ?>
+    <div class="flash-popup-overlay is-visible" data-popup="<?= $index ?>">
+        <div class="flash-popup-card flash-popup-<?= htmlspecialchars($popup['level'], ENT_QUOTES) ?>">
+            <strong class="flash-popup-title">
+                <?= $popup['level'] === 'error' ? 'Action required' : 'Please check' ?>
+            </strong>
+            <p><?= htmlspecialchars($popup['message'], ENT_QUOTES) ?></p>
+            <button type="button" class="flash-popup-close" data-popup-close="<?= $index ?>">Close</button>
+        </div>
+    </div>
+<?php endforeach; ?>
+
+<?php if ($popupMessages !== []): ?>
+    <script>
+        (function () {
+            const closeButtons = document.querySelectorAll('[data-popup-close]');
+            closeButtons.forEach((button) => {
+                button.addEventListener('click', function () {
+                    const key = this.getAttribute('data-popup-close');
+                    const overlay = document.querySelector('[data-popup="' + key + '"]');
+                    if (overlay) {
+                        overlay.classList.add('is-dismissing');
+                        window.setTimeout(() => overlay.remove(), 150);
+                    }
+                });
+            });
+        })();
+    </script>
+<?php endif; ?>
 <footer class="footer">
     <div class="container">&copy; <?= date('Y') ?> CSR Match Platform</div>
 </footer>

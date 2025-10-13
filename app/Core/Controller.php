@@ -26,6 +26,7 @@ abstract class Controller
             'authUser' => $this->auth->user(),
             'flash_success' => $this->session->getFlash('success'),
             'flash_error' => $this->session->getFlash('error'),
+            'flash_warning' => $this->session->getFlash('warning'),
             'csrfToken' => $csrfToken,
         ]));
         return $this->response->setContent($content);

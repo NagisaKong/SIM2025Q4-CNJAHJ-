@@ -59,7 +59,13 @@ class ProfileController extends Controller
             'role' => 'required',
             'description' => 'required|min:3',
         ])) {
-            $this->session->flash('error', 'Please fill all required fields.');
+            $this->session->flash('error', 'Please fill in all required fields before submitting.');
+            return $this->redirect('/admin/profiles/create');
+        }
+
+        $data['role'] = trim((string) $data['role']);
+        if ($this->profiles->findByRole($data['role']) !== null) {
+            $this->session->flash('warning', 'A profile for this role already exists.');
             return $this->redirect('/admin/profiles/create');
         }
 

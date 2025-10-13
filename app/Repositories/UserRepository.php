@@ -18,7 +18,7 @@ class UserRepository extends Repository
 
     public function findByEmail(string $email): ?User
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM users WHERE email = :email');
+        $stmt = $this->pdo->prepare('SELECT * FROM users WHERE LOWER(email) = LOWER(:email)');
         $stmt->execute(['email' => $email]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         return $data ? User::fromArray($data)->withProfile($this->loadProfile((int) $data['profile_id'])) : null;

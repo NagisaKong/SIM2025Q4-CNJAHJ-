@@ -13,10 +13,10 @@ class UserAccount
     {
     }
 
-    public function validateUser(string $username, string $password, string $role): bool
+    public function validateUser(string $email, string $password, string $role): bool
     {
         $this->authenticatedUser = null;
-        $user = $this->users->findByEmail($username);
+        $user = $this->users->findByEmail($email);
 
         if ($user === null || !$user->isActive()) {
             return false;

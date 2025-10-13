@@ -8,6 +8,7 @@ use App\Core\Validator;
 use App\Core\Csrf;
 use App\Services\AccountService;
 use App\Repositories\ProfileRepository;
+use DomainException;
 
 class UserController extends Controller
 {
@@ -61,11 +62,17 @@ class UserController extends Controller
             'password' => 'required|min:6',
             'profile_id' => 'required',
         ])) {
-            $this->session->flash('error', 'Please complete all required fields.');
+            $this->session->flash('error', 'Please fill in all required fields before submitting.');
             return $this->redirect('/admin/users/create');
         }
 
-        $this->accounts->createUser($data);
+        try {
+            $this->accounts->createUser($data);
+        } catch (DomainException $exception) {
+            $this->session->flash('warning', $exception->getMessage());
+            return $this->redirect('/admin/users/create');
+        }
+
         $this->session->flash('success', 'User created successfully.');
         return $this->redirect('/admin/users');
     }

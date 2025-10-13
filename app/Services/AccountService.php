@@ -10,6 +10,7 @@ use App\Repositories\ShortlistRepository;
 use App\Models\User;
 use App\Models\PinRequest;
 use App\Models\Shortlist;
+use DomainException;
 
 class AccountService
 {
@@ -29,6 +30,16 @@ class AccountService
 
     public function createUser(array $data): int
     {
+        $email = strtolower(trim((string) ($data['email'] ?? '')));
+        if ($email === '') {
+            throw new DomainException('Email is required.');
+        }
+
+        if ($this->users->findByEmail($email) !== null) {
+            throw new DomainException('An account with this email already exists.');
+        }
+
+        $data['email'] = $email;
         $data['password_hash'] = password_hash($data['password'], PASSWORD_BCRYPT);
         unset($data['password']);
         return $this->users->create($data);

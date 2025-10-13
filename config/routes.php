@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\LoginController;
+use App\Controllers\LogoutController;
 use App\Controllers\DashboardController;
 use App\Controllers\Admin\UserController as AdminUserController;
 use App\Controllers\Admin\ProfileController as AdminProfileController;
@@ -14,7 +15,7 @@ use App\Controllers\Reports\ReportController;
 return function (\App\Core\Router $router) {
     $router->get('/', [LoginController::class, 'show'])->name('login');
     $router->post('/login', [LoginController::class, 'submit']);
-    $router->post('/logout', [LoginController::class, 'logout'])->middleware(['auth', 'csrf']);
+    $router->post('/logout', [LogoutController::class, 'handle'])->middleware(['auth', 'csrf']);
 
     $router->get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
 

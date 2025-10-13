@@ -44,13 +44,15 @@ class LoginController extends Controller
     {
         $data = $this->request->post();
         $role = $data['role'] ?? '';
-        $email = $data['email'] ?? '';
+        $email = strtolower(trim((string) ($data['email'] ?? '')));
         $password = $data['password'] ?? '';
 
         $rememberState = function () use ($role, $email): void {
             $this->session->flash('login_role', $role);
             $this->session->flash('login_email', $email);
         };
+
+        $data['email'] = $email;
 
         if (!$this->validator->validate($data, [
             'email' => 'required|email',
@@ -87,16 +89,9 @@ class LoginController extends Controller
         return $this->redirect('/');
     }
 
-    public function logout(): Response
+    protected function validateLogin(string $email, string $password, string $role): bool
     {
-        $this->auth->logout();
-        $this->session->flash('success', 'You have been signed out.');
-        return $this->redirect('/');
-    }
-
-    protected function validateLogin(string $username, string $password, string $role): bool
-    {
-        return $this->userAccount->validateUser($username, $password, $role);
+        return $this->userAccount->validateUser($email, $password, $role);
     }
 
     /**

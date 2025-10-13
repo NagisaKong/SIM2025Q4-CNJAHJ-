@@ -85,4 +85,12 @@ class ProfileRepository extends Repository
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
     }
+
+    public function findByRole(string $role): ?Profile
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM profiles WHERE LOWER(role) = LOWER(:role) LIMIT 1');
+        $stmt->execute(['role' => $role]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? Profile::fromArray($row) : null;
+    }
 }
