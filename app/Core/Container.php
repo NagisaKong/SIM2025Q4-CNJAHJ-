@@ -4,6 +4,9 @@ namespace App\Core;
 
 use Closure;
 use InvalidArgumentException;
+use ReflectionIntersectionType;
+use ReflectionNamedType;
+use ReflectionUnionType;
 
 class Container
 {
@@ -62,9 +65,22 @@ class Container
         foreach ($constructor->getParameters() as $parameter) {
             $type = $parameter->getType();
 
-            if ($type && !$type->isBuiltin()) {
+            if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                 $dependencies[] = $this->get($type->getName());
-            } elseif ($parameter->isDefaultValueAvailable()) {
+                continue;
+            }
+
+            if ($type instanceof ReflectionUnionType || $type instanceof ReflectionIntersectionType) {
+                $message = sprintf(
+                    "Union or intersection types are not supported when resolving '%s' on '%s'.",
+                    $parameter->getName(),
+                    $class
+                );
+
+                throw new InvalidArgumentException($message);
+            }
+
+            if ($parameter->isDefaultValueAvailable()) {
                 $dependencies[] = $parameter->getDefaultValue();
             } else {
                 throw new InvalidArgumentException("Cannot resolve dependency '{$parameter->getName()}' for class '{$class}'.");
