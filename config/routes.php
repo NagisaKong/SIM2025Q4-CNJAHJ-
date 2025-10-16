@@ -15,7 +15,7 @@ use App\Controllers\Reports\ReportController;
 return function (\App\Core\Router $router) {
     $router->get('/', [LoginController::class, 'show'])->name('login');
     $router->post('/login', [LoginController::class, 'submit']);
-    $router->post('/logout', [LogoutController::class, 'handle'])->middleware(['auth', 'csrf']);
+    $router->post('/logout', [LogoutController::class, 'logout'])->middleware(['auth', 'csrf']);
 
     $router->get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
 

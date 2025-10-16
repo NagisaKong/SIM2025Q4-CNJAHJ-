@@ -26,7 +26,7 @@ class LogoutController extends Controller
         $this->csrf = $csrf;
     }
 
-    public function handle(): Response
+    public function logout(): Response
     {
         $data = $this->request->post();
         if (!$this->csrf->validate($data['_token'] ?? null)) {
