@@ -17,6 +17,7 @@ class ProfileController extends Controller
         \App\Core\Auth $auth,
         private ProfileRepository $profiles,
         private CreateProfileController $createProfileController,
+        private ViewProfilesController $viewProfilesController,
         protected Csrf $csrf
     ) {
         parent::__construct($request, $view, $response, $session, $auth);
@@ -25,10 +26,11 @@ class ProfileController extends Controller
     public function index(): Response
     {
         $page = (int) ($this->request->query()['page'] ?? 1);
-        [$profiles, $total] = $this->profiles->paginate($page, 20, [
+        $filters = [
             'role' => $this->request->query()['role'] ?? null,
             'status' => $this->request->query()['status'] ?? null,
-        ]);
+        ];
+        [$profiles, $total] = $this->viewProfilesController->viewProfiles($filters, $page, 20);
         return $this->render('admin/profiles/index.php', [
             'title' => 'User Profiles',
             'profiles' => $profiles,
