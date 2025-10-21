@@ -29,10 +29,6 @@
                     <td class="actions">
                         <a href="/admin/categories/<?= $category->id ?>">View</a>
                         <a href="/admin/categories/<?= $category->id ?>/edit">Edit</a>
-                        <form method="POST" action="/admin/categories/<?= $category->id ?>/delete">
-                            <input type="hidden" name="_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES) ?>">
-                            <button type="submit" class="link">Suspend</button>
-                        </form>
                     </td>
                 </tr>
             <?php endforeach; ?>
