@@ -4,6 +4,20 @@
         <h1>User Profiles</h1>
         <a class="btn-primary" href="/admin/profiles/create">New Profile</a>
     </div>
+    <form method="GET" action="/admin/profiles" class="form-inline">
+        <input
+            id="profile-search"
+            type="search"
+            name="q"
+            placeholder="Search profiles"
+            aria-label="Search profiles"
+            value="<?= htmlspecialchars($filters['q'] ?? '', ENT_QUOTES) ?>"
+        >
+        <button type="submit" class="btn-primary">Search</button>
+        <?php if (!empty($filters['q'])): ?>
+            <a href="/admin/profiles" class="btn-secondary">Clear</a>
+        <?php endif; ?>
+    </form>
     <table class="table">
         <thead>
             <tr>
@@ -15,6 +29,11 @@
             </tr>
         </thead>
         <tbody>
+            <?php if (empty($profileDetails ?? [])): ?>
+                <tr>
+                    <td colspan="5" style="text-align: center;">No profiles found.</td>
+                </tr>
+            <?php endif; ?>
             <?php foreach (($profileDetails ?? []) as $detail): ?>
                 <?php $profile = $detail['profile']; ?>
                 <tr>
