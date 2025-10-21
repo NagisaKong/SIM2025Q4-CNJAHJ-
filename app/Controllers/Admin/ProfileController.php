@@ -101,7 +101,26 @@ class ProfileController extends Controller
             return $this->redirect("/admin/profiles/{$id}/edit");
         }
 
-        $this->profiles->update($id, $data);
+        unset($data['_token']);
+        $allowedKeys = ['role', 'description', 'status'];
+        $payload = array_intersect_key($data, array_flip($allowedKeys));
+
+        foreach ($payload as $key => $value) {
+            if (is_string($value)) {
+                $payload[$key] = trim($value);
+            }
+
+            if ($payload[$key] === '' || $payload[$key] === null) {
+                unset($payload[$key]);
+            }
+        }
+
+        if ($payload === []) {
+            $this->session->flash('error', 'No valid data was provided for update.');
+            return $this->redirect("/admin/profiles/{$id}/edit");
+        }
+
+        $this->profiles->update($id, $payload);
         $this->session->flash('success', 'Profile updated.');
         return $this->redirect('/admin/profiles');
     }

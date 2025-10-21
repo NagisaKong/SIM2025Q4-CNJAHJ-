@@ -105,7 +105,30 @@ class UserController extends Controller
             return $this->redirect("/admin/users/{$id}/edit");
         }
 
-        $this->accounts->updateUser($id, $data);
+        unset($data['_token']);
+        $allowedKeys = ['name', 'email', 'password', 'profile_id', 'status'];
+        $payload = array_intersect_key($data, array_flip($allowedKeys));
+
+        if (array_key_exists('password', $payload) && trim((string) $payload['password']) === '') {
+            unset($payload['password']);
+        }
+
+        foreach ($payload as $key => $value) {
+            if (is_string($value)) {
+                $payload[$key] = trim($value);
+            }
+
+            if ($payload[$key] === '' || $payload[$key] === null) {
+                unset($payload[$key]);
+            }
+        }
+
+        if ($payload === []) {
+            $this->session->flash('error', 'No valid data was provided for update.');
+            return $this->redirect("/admin/users/{$id}/edit");
+        }
+
+        $this->accounts->updateUser($id, $payload);
         $this->session->flash('success', 'User updated.');
         return $this->redirect('/admin/users');
     }

@@ -184,6 +184,7 @@ textarea {
 
 .actions form {
     display: inline;
+    margin: 0;
 }
 
 .actions form button.link {
