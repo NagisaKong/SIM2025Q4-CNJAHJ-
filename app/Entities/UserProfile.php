@@ -12,6 +12,11 @@ class UserProfile
     {
     }
 
+    public function getUserProfileList(int $page = 1, int $perPage = 20, array $filters = []): array
+    {
+        return $this->profiles->paginate($page, $perPage, $filters);
+    }
+
     public function registerUserProfile(string $role, string $description, string $status = 'active'): bool
     {
         $this->lastError = null;
