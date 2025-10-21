@@ -176,6 +176,11 @@ textarea {
     background: var(--surface-muted);
 }
 
+.table th.status-col,
+.table td.status-col {
+    text-align: center;
+}
+
 .actions {
     display: flex;
     gap: 0.5rem;
@@ -184,6 +189,7 @@ textarea {
 
 .actions form {
     display: inline;
+    margin: 0;
 }
 
 .actions form button.link {
