@@ -17,15 +17,15 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Status</th>
-                <th></th>
+                <th class="status-col">Status</th>
+                <th class="actions">Actions</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($categories as $category): ?>
                 <tr>
                     <td><?= htmlspecialchars($category->name, ENT_QUOTES) ?></td>
-                    <td><span class="tag tag-<?= $category->status ?>"><?= htmlspecialchars($category->status, ENT_QUOTES) ?></span></td>
+                    <td class="status-col"><span class="tag tag-<?= $category->status ?>"><?= htmlspecialchars($category->status, ENT_QUOTES) ?></span></td>
                     <td class="actions">
                         <a href="/admin/categories/<?= $category->id ?>">View</a>
                         <a href="/admin/categories/<?= $category->id ?>/edit">Edit</a>

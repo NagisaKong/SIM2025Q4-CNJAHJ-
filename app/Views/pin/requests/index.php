@@ -8,17 +8,17 @@
         <thead>
             <tr>
                 <th>Title</th>
-                <th>Status</th>
+                <th class="status-col">Status</th>
                 <th>Views</th>
                 <th>Shortlisted</th>
-                <th></th>
+                <th class="actions">Actions</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($requests as $requestItem): ?>
                 <tr>
                     <td><?= htmlspecialchars($requestItem->title, ENT_QUOTES) ?></td>
-                    <td><span class="tag tag-<?= $requestItem->status ?>"><?= htmlspecialchars($requestItem->status, ENT_QUOTES) ?></span></td>
+                    <td class="status-col"><span class="tag tag-<?= $requestItem->status ?>"><?= htmlspecialchars($requestItem->status, ENT_QUOTES) ?></span></td>
                     <td><?= $requestItem->views_count ?></td>
                     <td><?= $requestItem->shortlist_count ?></td>
                     <td class="actions">

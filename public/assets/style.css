@@ -170,23 +170,37 @@ textarea {
     padding: 0.75rem;
     border-bottom: 1px solid var(--border);
     text-align: left;
+    vertical-align: middle;
 }
 
 .table th {
     background: var(--surface-muted);
 }
 
-.actions {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
+.table th.status-col,
+.table td.status-col {
+    text-align: center;
+    white-space: nowrap;
+    width: 1%;
 }
 
-.actions form {
+.table th.actions,
+.table td.actions {
+    text-align: right;
+    white-space: nowrap;
+    width: 1%;
+}
+
+.table td.actions > * + * {
+    margin-left: 0.5rem;
+}
+
+.table td.actions form {
     display: inline;
+    margin: 0;
 }
 
-.actions form button.link {
+.table td.actions form button.link {
     background: none;
     border: none;
     color: var(--secondary);
