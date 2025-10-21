@@ -17,6 +17,9 @@ class ProfileRepository extends Repository
         if (!empty($filters['status'])) {
             $sql .= ' AND status = :status';
         }
+        if (!empty($filters['q'])) {
+            $sql .= ' AND (role LIKE :q OR description LIKE :q)';
+        }
         $sql .= ' ORDER BY created_at DESC LIMIT :limit OFFSET :offset';
         $stmt = $this->pdo->prepare($sql);
         if (!empty($filters['role'])) {
@@ -24,6 +27,9 @@ class ProfileRepository extends Repository
         }
         if (!empty($filters['status'])) {
             $stmt->bindValue(':status', $filters['status']);
+        }
+        if (!empty($filters['q'])) {
+            $stmt->bindValue(':q', '%' . $filters['q'] . '%');
         }
         $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
@@ -37,12 +43,18 @@ class ProfileRepository extends Repository
         if (!empty($filters['status'])) {
             $countSql .= ' AND status = :status';
         }
+        if (!empty($filters['q'])) {
+            $countSql .= ' AND (role LIKE :q OR description LIKE :q)';
+        }
         $countStmt = $this->pdo->prepare($countSql);
         if (!empty($filters['role'])) {
             $countStmt->bindValue(':role', $filters['role']);
         }
         if (!empty($filters['status'])) {
             $countStmt->bindValue(':status', $filters['status']);
+        }
+        if (!empty($filters['q'])) {
+            $countStmt->bindValue(':q', '%' . $filters['q'] . '%');
         }
         $countStmt->execute();
         $total = (int) $countStmt->fetchColumn();

@@ -106,7 +106,39 @@ class RequestController extends Controller
             return $this->redirect("/pin/requests/{$id}/edit");
         }
 
-        $this->requests->update($id, $data);
+        unset($data['_token']);
+        $allowedKeys = ['title', 'description', 'location', 'requested_date', 'category_id', 'status'];
+        $payload = [];
+        foreach ($allowedKeys as $key) {
+            if (!array_key_exists($key, $data)) {
+                continue;
+            }
+
+            $value = $data[$key];
+            if (is_string($value)) {
+                $value = trim($value);
+            }
+
+            if ($key === 'category_id') {
+                $value = (int) $value;
+                if ($value <= 0) {
+                    continue;
+                }
+            }
+
+            if ($value === '' || $value === null) {
+                continue;
+            }
+
+            $payload[$key] = $value;
+        }
+
+        if ($payload === []) {
+            $this->session->flash('error', 'No valid data was provided for update.');
+            return $this->redirect("/pin/requests/{$id}/edit");
+        }
+
+        $this->requests->update($id, $payload);
         $this->session->flash('success', 'Request updated.');
         return $this->redirect('/pin/requests');
     }

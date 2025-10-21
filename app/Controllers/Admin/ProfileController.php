@@ -25,10 +25,13 @@ class ProfileController extends Controller
 
     public function index(): Response
     {
-        $page = (int) ($this->request->query()['page'] ?? 1);
+        $queryParams = $this->request->query();
+        $page = (int) ($queryParams['page'] ?? 1);
+        $search = isset($queryParams['q']) ? trim((string) $queryParams['q']) : null;
         $filters = [
-            'role' => $this->request->query()['role'] ?? null,
-            'status' => $this->request->query()['status'] ?? null,
+            'role' => isset($queryParams['role']) ? trim((string) $queryParams['role']) : null,
+            'status' => isset($queryParams['status']) ? trim((string) $queryParams['status']) : null,
+            'q' => $search === '' ? null : $search,
         ];
         [$profiles, $total] = $this->viewProfilesController->viewProfiles($filters, $page, 20);
         $profileDetails = $this->viewProfilesController->describeCollection($profiles);
@@ -38,6 +41,7 @@ class ProfileController extends Controller
             'profileDetails' => $profileDetails,
             'total' => $total,
             'page' => $page,
+            'filters' => $filters,
             'csrfToken' => $this->csrf->token(),
         ]);
     }
