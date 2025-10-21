@@ -13,7 +13,7 @@
             <input type="text" name="location" value="<?= htmlspecialchars($requestItem->location ?? '', ENT_QUOTES) ?>" required>
         </label>
         <label>Requested Date
-            <input type="date" name="requested_date" value="<?= htmlspecialchars($requestItem->requested_date ?? '', ENT_QUOTES) ?>" required>
+            <input type="date" name="requested_date" lang="en" placeholder="YYYY-MM-DD" value="<?= htmlspecialchars($requestItem->requested_date ?? '', ENT_QUOTES) ?>" required>
         </label>
         <label>Category
             <select name="category_id" required>
