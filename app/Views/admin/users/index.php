@@ -13,7 +13,7 @@
             <tr>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Status</th>
+                <th class="status-col">Status</th>
                 <th>Role</th>
                 <th></th>
             </tr>
@@ -23,15 +23,11 @@
                 <tr>
                     <td><?= htmlspecialchars($user->name, ENT_QUOTES) ?></td>
                     <td><?= htmlspecialchars($user->email, ENT_QUOTES) ?></td>
-                    <td><span class="tag tag-<?= $user->status ?>"><?= htmlspecialchars($user->status, ENT_QUOTES) ?></span></td>
+                    <td class="status-col"><span class="tag tag-<?= $user->status ?>"><?= htmlspecialchars($user->status, ENT_QUOTES) ?></span></td>
                     <td><?= htmlspecialchars($user->profile?->role ?? 'N/A', ENT_QUOTES) ?></td>
                     <td class="actions">
                         <a href="/admin/users/<?= $user->id ?>">View</a>
                         <a href="/admin/users/<?= $user->id ?>/edit">Edit</a>
-                        <form method="POST" action="/admin/users/<?= $user->id ?>/suspend">
-                            <input type="hidden" name="_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES) ?>">
-                            <button type="submit" class="link">Suspend</button>
-                        </form>
                     </td>
                 </tr>
             <?php endforeach; ?>
