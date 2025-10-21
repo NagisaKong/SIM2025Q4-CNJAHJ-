@@ -17,6 +17,7 @@ class ProfileController extends Controller
         \App\Core\Auth $auth,
         private ProfileRepository $profiles,
         private CreateProfileController $createProfileController,
+        private ViewProfilesController $viewProfilesController,
         protected Csrf $csrf
     ) {
         parent::__construct($request, $view, $response, $session, $auth);
@@ -25,13 +26,16 @@ class ProfileController extends Controller
     public function index(): Response
     {
         $page = (int) ($this->request->query()['page'] ?? 1);
-        [$profiles, $total] = $this->profiles->paginate($page, 20, [
+        $filters = [
             'role' => $this->request->query()['role'] ?? null,
             'status' => $this->request->query()['status'] ?? null,
-        ]);
+        ];
+        [$profiles, $total] = $this->viewProfilesController->viewProfiles($filters, $page, 20);
+        $profileDetails = $this->viewProfilesController->describeCollection($profiles);
         return $this->render('admin/profiles/index.php', [
             'title' => 'User Profiles',
             'profiles' => $profiles,
+            'profileDetails' => $profileDetails,
             'total' => $total,
             'page' => $page,
             'csrfToken' => $this->csrf->token(),
@@ -71,10 +75,15 @@ class ProfileController extends Controller
 
     public function show(int $id): Response
     {
-        $profile = $this->profiles->find($id);
+        $profileDetail = $this->viewProfilesController->detail($id);
+        if ($profileDetail === null) {
+            $this->session->flash('error', 'Profile not found.');
+            return $this->redirect('/admin/profiles');
+        }
         return $this->render('admin/profiles/show.php', [
             'title' => 'Profile Detail',
-            'profile' => $profile,
+            'profile' => $profileDetail['profile'],
+            'profileDetail' => $profileDetail,
         ]);
     }
 

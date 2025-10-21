@@ -4,11 +4,9 @@ namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 use App\Core\Response;
-use App\Core\Validator;
 use App\Core\Csrf;
 use App\Services\AccountService;
 use App\Repositories\ProfileRepository;
-use DomainException;
 
 class UserController extends Controller
 {
@@ -20,7 +18,7 @@ class UserController extends Controller
         \App\Core\Auth $auth,
         private AccountService $accounts,
         private ProfileRepository $profiles,
-        private Validator $validator,
+        private CreateAccountController $createAccountController,
         protected Csrf $csrf
     ) {
         parent::__construct($request, $view, $response, $session, $auth);
@@ -56,25 +54,21 @@ class UserController extends Controller
             return $this->redirect('/admin/users');
         }
 
-        if (!$this->validator->validate($data, [
-            'name' => 'required|min:3',
-            'email' => 'required|email',
-            'password' => 'required|min:6',
-            'profile_id' => 'required',
-        ])) {
-            $this->session->flash('error', 'Please fill in all required fields before submitting.');
-            return $this->redirect('/admin/users/create');
+        $email = (string) ($data['email'] ?? '');
+        $name = (string) ($data['name'] ?? '');
+        $password = (string) ($data['password'] ?? '');
+        $profileId = $data['profile_id'] ?? 0;
+        $status = $data['status'] ?? 'active';
+
+        if ($this->createAccountController->createAccount($email, $name, $password, $profileId, $status)) {
+            $this->session->flash('success', 'User created successfully.');
+            return $this->redirect('/admin/users');
         }
 
-        try {
-            $this->accounts->createUser($data);
-        } catch (DomainException $exception) {
-            $this->session->flash('warning', $exception->getMessage());
-            return $this->redirect('/admin/users/create');
-        }
-
-        $this->session->flash('success', 'User created successfully.');
-        return $this->redirect('/admin/users');
+        $message = $this->createAccountController->errorMessage() ?? 'Unable to create user.';
+        $flashType = $this->createAccountController->errorType();
+        $this->session->flash($flashType, $message);
+        return $this->redirect('/admin/users/create');
     }
 
     public function show(int $id): Response
