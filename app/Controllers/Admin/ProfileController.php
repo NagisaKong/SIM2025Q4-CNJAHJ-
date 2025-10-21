@@ -4,7 +4,6 @@ namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 use App\Core\Response;
-use App\Core\Validator;
 use App\Core\Csrf;
 use App\Repositories\ProfileRepository;
 
@@ -17,7 +16,7 @@ class ProfileController extends Controller
         \App\Core\Session $session,
         \App\Core\Auth $auth,
         private ProfileRepository $profiles,
-        private Validator $validator,
+        private CreateProfileController $createProfileController,
         protected Csrf $csrf
     ) {
         parent::__construct($request, $view, $response, $session, $auth);
@@ -55,23 +54,19 @@ class ProfileController extends Controller
             return $this->redirect('/admin/profiles');
         }
 
-        if (!$this->validator->validate($data, [
-            'role' => 'required',
-            'description' => 'required|min:3',
-        ])) {
-            $this->session->flash('error', 'Please fill in all required fields before submitting.');
-            return $this->redirect('/admin/profiles/create');
+        $role = (string) ($data['role'] ?? '');
+        $description = (string) ($data['description'] ?? '');
+        $status = $data['status'] ?? 'active';
+
+        if ($this->createProfileController->createProfile($role, $description, $status)) {
+            $this->session->flash('success', 'Profile created.');
+            return $this->redirect('/admin/profiles');
         }
 
-        $data['role'] = trim((string) $data['role']);
-        if ($this->profiles->findByRole($data['role']) !== null) {
-            $this->session->flash('warning', 'A profile for this role already exists.');
-            return $this->redirect('/admin/profiles/create');
-        }
-
-        $this->profiles->create($data);
-        $this->session->flash('success', 'Profile created.');
-        return $this->redirect('/admin/profiles');
+        $message = $this->createProfileController->errorMessage() ?? 'Unable to create profile.';
+        $flashType = $this->createProfileController->errorType();
+        $this->session->flash($flashType, $message);
+        return $this->redirect('/admin/profiles/create');
     }
 
     public function show(int $id): Response
