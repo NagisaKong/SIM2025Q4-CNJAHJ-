@@ -1,4 +1,9 @@
-<?php ob_start(); ?>
+<?php
+
+use App\Views\Format\DateFormatter;
+
+ob_start();
+?>
 <section class="card">
     <h1>Volunteer Opportunities</h1>
     <form class="form-inline" method="GET">
@@ -11,8 +16,8 @@
                 </option>
             <?php endforeach; ?>
         </select>
-        <input type="date" name="from" value="<?= htmlspecialchars($filters['from'] ?? '', ENT_QUOTES) ?>">
-        <input type="date" name="to" value="<?= htmlspecialchars($filters['to'] ?? '', ENT_QUOTES) ?>">
+        <input type="date" name="from" lang="en" placeholder="YYYY-MM-DD" value="<?= htmlspecialchars($filters['from'] ?? '', ENT_QUOTES) ?>">
+        <input type="date" name="to" lang="en" placeholder="YYYY-MM-DD" value="<?= htmlspecialchars($filters['to'] ?? '', ENT_QUOTES) ?>">
         <button type="submit" class="btn-secondary">Filter</button>
     </form>
     <table class="table">
@@ -31,7 +36,8 @@
                 <tr>
                     <td><?= htmlspecialchars($requestItem->title, ENT_QUOTES) ?></td>
                     <td><?= htmlspecialchars($requestItem->location, ENT_QUOTES) ?></td>
-                    <td><?= htmlspecialchars($requestItem->requested_date, ENT_QUOTES) ?></td>
+                    <?php $requestedDate = DateFormatter::date($requestItem->requested_date); ?>
+                    <td><?= htmlspecialchars($requestedDate ?? $requestItem->requested_date, ENT_QUOTES) ?></td>
                     <td><?= $requestItem->views_count ?></td>
                     <td><?= $requestItem->shortlist_count ?></td>
                     <td><a href="/csr/requests/<?= $requestItem->id ?>">View</a></td>
