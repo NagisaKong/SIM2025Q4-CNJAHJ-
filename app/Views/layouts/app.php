@@ -84,6 +84,57 @@ if (!empty($flash_error)) {
         })();
     </script>
 <?php endif; ?>
+<script>
+    (function () {
+        const requiredFields = document.querySelectorAll('input[required], textarea[required], select[required]');
+        if (requiredFields.length === 0) {
+            return;
+        }
+
+        const getMessage = (field, validityState) => {
+            if (field.tagName === 'SELECT') {
+                return 'Please choose an option before continuing.';
+            }
+
+            switch (field.type) {
+                case 'email':
+                    return validityState === 'typeMismatch'
+                        ? 'Please enter a valid email address.'
+                        : 'Please enter an email address.';
+                case 'password':
+                    return 'Please provide a password.';
+                case 'number':
+                    return 'Please enter a valid number.';
+                case 'date':
+                case 'datetime-local':
+                    return 'Please select a valid date.';
+                default:
+                    return 'Please fill out this field.';
+            }
+        };
+
+        requiredFields.forEach((field) => {
+            field.addEventListener('invalid', function () {
+                this.setCustomValidity('');
+
+                if (this.validity.valueMissing) {
+                    this.setCustomValidity(getMessage(this, 'valueMissing'));
+                } else if (this.validity.typeMismatch) {
+                    this.setCustomValidity(getMessage(this, 'typeMismatch'));
+                } else if (this.validity.patternMismatch) {
+                    this.setCustomValidity('Please match the requested format.');
+                }
+            });
+
+            const resetMessage = function () {
+                this.setCustomValidity('');
+            };
+
+            field.addEventListener('input', resetMessage);
+            field.addEventListener('change', resetMessage);
+        });
+    })();
+</script>
 <footer class="footer">
     <div class="container">&copy; <?= date('Y') ?> CSR Match Platform</div>
 </footer>
