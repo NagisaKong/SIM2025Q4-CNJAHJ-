@@ -56,6 +56,7 @@ class Router
         $path = $request->path();
 
         foreach ($this->routes[$method] ?? [] as $route) {
+            $params = [];
             if ($route->matches($path, $params)) {
                 return $this->runRoute($route, $request, $params);
             }
