@@ -31,9 +31,11 @@ class ProfileController extends Controller
             'status' => $this->request->query()['status'] ?? null,
         ];
         [$profiles, $total] = $this->viewProfilesController->viewProfiles($filters, $page, 20);
+        $profileDetails = $this->viewProfilesController->describeCollection($profiles);
         return $this->render('admin/profiles/index.php', [
             'title' => 'User Profiles',
             'profiles' => $profiles,
+            'profileDetails' => $profileDetails,
             'total' => $total,
             'page' => $page,
             'csrfToken' => $this->csrf->token(),
@@ -73,10 +75,15 @@ class ProfileController extends Controller
 
     public function show(int $id): Response
     {
-        $profile = $this->profiles->find($id);
+        $profileDetail = $this->viewProfilesController->detail($id);
+        if ($profileDetail === null) {
+            $this->session->flash('error', 'Profile not found.');
+            return $this->redirect('/admin/profiles');
+        }
         return $this->render('admin/profiles/show.php', [
             'title' => 'Profile Detail',
-            'profile' => $profile,
+            'profile' => $profileDetail['profile'],
+            'profileDetail' => $profileDetail,
         ]);
     }
 

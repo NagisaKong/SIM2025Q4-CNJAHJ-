@@ -7,18 +7,34 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Role</th>
-                <th>Description</th>
+                <th>Profile</th>
+                <th>Information</th>
+                <th>Permissions</th>
                 <th class="status-col">Status</th>
                 <th class="actions">Actions</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($profiles as $profile): ?>
+            <?php foreach (($profileDetails ?? []) as $detail): ?>
+                <?php $profile = $detail['profile']; ?>
                 <tr>
-                    <td><?= htmlspecialchars($profile->role, ENT_QUOTES) ?></td>
-                    <td><?= htmlspecialchars($profile->description, ENT_QUOTES) ?></td>
-                    <td class="status-col"><span class="tag tag-<?= $profile->status ?>"><?= htmlspecialchars($profile->status, ENT_QUOTES) ?></span></td>
+                    <td>
+                        <strong><?= htmlspecialchars($detail['label'], ENT_QUOTES) ?></strong>
+                        <div><small>Identifier: <?= htmlspecialchars($detail['role'], ENT_QUOTES) ?></small></div>
+                    </td>
+                    <td><?= htmlspecialchars($detail['information'], ENT_QUOTES) ?></td>
+                    <td>
+                        <?php if ($detail['permissions'] === []): ?>
+                            <em>No permissions assigned</em>
+                        <?php else: ?>
+                            <ul>
+                                <?php foreach ($detail['permissions'] as $permission): ?>
+                                    <li><?= htmlspecialchars($permission, ENT_QUOTES) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                    </td>
+                    <td class="status-col"><span class="tag tag-<?= $profile->status ?>"><?= htmlspecialchars($detail['status'], ENT_QUOTES) ?></span></td>
                     <td class="actions">
                         <a href="/admin/profiles/<?= $profile->id ?>">View</a>
                         <a href="/admin/profiles/<?= $profile->id ?>/edit">Edit</a>
