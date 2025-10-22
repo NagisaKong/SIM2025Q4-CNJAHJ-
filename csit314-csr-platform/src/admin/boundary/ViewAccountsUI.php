@@ -1,9 +1,7 @@
 <?php
 require_once __DIR__ . '/../controller/viewAccountsController.php';
-require_once __DIR__ . '/../controller/createAccountController.php';
 require_once __DIR__ . '/../controller/updateAccountController.php';
 
-use CSRPlatform\Admin\Controller\createAccountController;
 use CSRPlatform\Admin\Controller\updateAccountController;
 use CSRPlatform\Admin\Controller\viewAccountsController;
 use CSRPlatform\Shared\Entity\UserAccount;
@@ -36,9 +34,8 @@ $accounts = new UserAccount();
 $profiles = new UserProfiles();
 $validator = new Validation();
 $viewController = new viewAccountsController($accounts);
-$createController = new createAccountController($accounts, $profiles, $validator);
 $updateController = new updateAccountController($accounts, $validator);
-$availableProfiles = $createController->profiles();
+$availableProfiles = $profiles->listProfiles('active');
 if ($availableProfiles === []) {
     $availableProfiles = [
         ['role' => 'admin'],
@@ -49,7 +46,6 @@ if ($availableProfiles === []) {
 }
 $defaultRole = $availableProfiles[0]['role'] ?? 'admin';
 
-$showCreateForm = isset($_GET['create']);
 $editingId = isset($_GET['edit']) ? (int) $_GET['edit'] : 0;
 $editingUser = $editingId > 0 ? $viewController->find($editingId) : null;
 $formValues = [
@@ -70,21 +66,7 @@ if ($editingUser) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formType = $_POST['form_type'] ?? '';
-    if ($formType === 'create') {
-        if ($createController->create($_POST)) {
-            $_SESSION['flash_success'] = 'Account created successfully.';
-            header('Location: /index.php?page=admin-accounts');
-            exit();
-        }
-        $_SESSION['flash_error'] = implode(' ', array_map(static fn($errors) => implode(' ', (array) $errors), $createController->errors()));
-        $showCreateForm = true;
-        $formValues = array_merge($formValues, [
-            'name' => (string) ($_POST['name'] ?? ''),
-            'email' => (string) ($_POST['email'] ?? ''),
-            'role' => (string) ($_POST['role'] ?? 'admin'),
-            'status' => (string) ($_POST['status'] ?? 'active'),
-        ]);
-    } elseif ($formType === 'update') {
+    if ($formType === 'update') {
         $userId = (int) ($_POST['user_id'] ?? 0);
         if ($userId > 0 && $updateController->update($userId, $_POST)) {
             $_SESSION['flash_success'] = 'Account updated successfully.';
@@ -100,13 +82,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'role' => (string) ($_POST['role'] ?? ($editingUser['role'] ?? 'admin')),
             'status' => (string) ($_POST['status'] ?? ($editingUser['status'] ?? 'active')),
         ]);
-    } elseif ($formType === 'suspend') {
-        $userId = (int) ($_POST['user_id'] ?? 0);
-        if ($userId > 0 && $viewController->suspend($userId)) {
-            $_SESSION['flash_warning'] = 'Account suspended.';
-        }
-        header('Location: /index.php?page=admin-accounts');
-        exit();
     }
 }
 
@@ -132,7 +107,7 @@ include __DIR__ . '/../../shared/boundary/header.php';
             <p class="muted">Review and maintain every user account across the platform.</p>
         </div>
         <div class="card-actions">
-            <a class="btn-primary" href="/index.php?page=admin-accounts&amp;create=1#account-form">New User</a>
+            <a class="btn-primary" href="/index.php?page=admin-account-create">New User</a>
         </div>
     </div>
     <form class="form-inline" method="GET" action="/index.php">
@@ -168,35 +143,26 @@ include __DIR__ . '/../../shared/boundary/header.php';
                 <td><?= htmlspecialchars(ucwords(str_replace('_', ' ', (string) ($user['role'] ?? 'N/A'))), ENT_QUOTES) ?></td>
                 <td class="actions">
                     <a class="link-button" href="/index.php?page=admin-accounts&amp;edit=<?= (int) $user['id'] ?>#account-form">Edit</a>
-                    <?php if (($user['status'] ?? '') !== 'suspended'): ?>
-                    <form method="POST" action="/index.php?page=admin-accounts" class="inline-form">
-                        <input type="hidden" name="form_type" value="suspend">
-                        <input type="hidden" name="user_id" value="<?= (int) $user['id'] ?>">
-                        <button type="submit" class="link-button">Suspend</button>
-                    </form>
-                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
         </tbody>
     </table>
 </section>
-<?php if ($showCreateForm || $editingUser): ?>
+<?php if ($editingUser): ?>
 <section class="card" id="account-form">
     <div class="card-heading">
         <div>
-            <h2><?= $editingUser ? 'Edit Account' : 'Create New Account' ?></h2>
-            <p class="muted">Complete the form to <?= $editingUser ? 'update the selected user.' : 'add a new platform user.' ?></p>
+            <h2>Edit Account</h2>
+            <p class="muted">Update the selected account details.</p>
         </div>
         <div class="card-actions">
             <a class="btn-secondary" href="/index.php?page=admin-accounts">Cancel</a>
         </div>
     </div>
     <form method="POST" action="/index.php?page=admin-accounts" class="form-grid">
-        <input type="hidden" name="form_type" value="<?= $editingUser ? 'update' : 'create' ?>">
-        <?php if ($editingUser): ?>
-            <input type="hidden" name="user_id" value="<?= (int) $editingUser['id'] ?>">
-        <?php endif; ?>
+        <input type="hidden" name="form_type" value="update">
+        <input type="hidden" name="user_id" value="<?= (int) $editingUser['id'] ?>">
         <label>Name
             <input type="text" name="name" value="<?= htmlspecialchars($formValues['name'], ENT_QUOTES) ?>" required>
         </label>
@@ -204,7 +170,7 @@ include __DIR__ . '/../../shared/boundary/header.php';
             <input type="email" name="email" value="<?= htmlspecialchars($formValues['email'], ENT_QUOTES) ?>" required>
         </label>
         <label>Password
-            <input type="password" name="password" <?= $editingUser ? '' : 'required' ?> placeholder="<?= $editingUser ? 'Leave blank to keep current password' : 'Must include letters and numbers' ?>">
+            <input type="password" name="password" placeholder="Leave blank to keep current password">
         </label>
         <label>Role
             <select name="role" required>
@@ -222,7 +188,7 @@ include __DIR__ . '/../../shared/boundary/header.php';
                 <option value="suspended" <?= $formValues['status'] === 'suspended' ? 'selected' : '' ?>>Suspended</option>
             </select>
         </label>
-        <button type="submit" class="btn-primary"><?= $editingUser ? 'Update Account' : 'Create Account' ?></button>
+        <button type="submit" class="btn-primary">Update Account</button>
     </form>
 </section>
 <?php endif; ?>

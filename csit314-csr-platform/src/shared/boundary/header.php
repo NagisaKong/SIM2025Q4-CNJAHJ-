@@ -6,6 +6,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 $currentUser = $_SESSION['user'] ?? null;
 $pageTitle = $pageTitle ?? 'CSR Platform';
 $navLinks = $navLinks ?? [];
+$showGuestNav = $showGuestNav ?? true;
 $baseUrl = '/';
 $flashSuccess = $_SESSION['flash_success'] ?? null;
 $flashWarning = $_SESSION['flash_warning'] ?? null;
@@ -40,7 +41,7 @@ unset($_SESSION['flash_success'], $_SESSION['flash_warning'], $_SESSION['flash_i
                     <a href="<?= htmlspecialchars($link['href'], ENT_QUOTES) ?>"><?= htmlspecialchars($link['label'], ENT_QUOTES) ?></a>
                 <?php endforeach; ?>
                 <a href="?action=logout" class="logout-link">Logout</a>
-            <?php else: ?>
+            <?php elseif ($showGuestNav): ?>
                 <a href="/">Sign in</a>
             <?php endif; ?>
         </nav>

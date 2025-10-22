@@ -57,6 +57,7 @@ if ($message !== null && $message !== '') {
 
 $pageTitle = 'Sign in';
 $navLinks = [];
+$showGuestNav = false;
 include __DIR__ . '/../../shared/boundary/header.php';
 ?>
 <section class="card">
@@ -84,7 +85,7 @@ include __DIR__ . '/../../shared/boundary/header.php';
                 <span class="form-error"><?= htmlspecialchars(implode(' ', $errors['password']), ENT_QUOTES) ?></span>
             <?php endif; ?>
         </label>
-        <button type="submit" class="btn-primary">Sign in</button>
+        <button type="submit" class="btn-primary btn-rounded">Sign in</button>
     </form>
 </section>
 <?php include __DIR__ . '/../../shared/boundary/footer.php'; ?>

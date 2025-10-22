@@ -54,6 +54,20 @@ a:hover {
     align-items: center;
 }
 
+.top-nav nav a.logout-link {
+    background: var(--logout);
+    color: #fff;
+    padding: 0.45rem 1.15rem;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.top-nav nav a.logout-link:hover {
+    filter: brightness(1.05);
+    text-decoration: none;
+    color: #fff;
+}
+
 .logout-form {
     display: inline;
 }
@@ -140,6 +154,11 @@ textarea {
     font: inherit;
     padding: 0.5rem 1rem;
     border-radius: 4px;
+}
+
+.btn-rounded {
+    border-radius: 999px !important;
+    padding: 0.6rem 1.5rem;
 }
 
 .btn-primary,
