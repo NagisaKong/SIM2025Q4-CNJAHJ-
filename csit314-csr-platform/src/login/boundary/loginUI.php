@@ -49,6 +49,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+$message = $message !== null ? trim($message) : null;
+if ($message !== null && $message !== '') {
+    $_SESSION['flash_error'] = $message;
+    $message = null;
+}
+
 $pageTitle = 'Sign in';
 $navLinks = [];
 include __DIR__ . '/../../shared/boundary/header.php';
@@ -56,9 +62,6 @@ include __DIR__ . '/../../shared/boundary/header.php';
 <section class="card">
     <h1>Sign in</h1>
     <p class="tagline">Welcome to the CSR Match Platform. Choose your account type to continue.</p>
-    <?php if ($message): ?>
-        <div class="alert alert-error"><?= htmlspecialchars($message, ENT_QUOTES) ?></div>
-    <?php endif; ?>
     <form method="POST" action="/index.php?page=login" class="form">
         <label for="role">I am logging in as
             <select id="role" name="role" required>

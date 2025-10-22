@@ -219,8 +219,23 @@ textarea {
 }
 
 .alert-error {
-    background: var(--alert-light);
-    color: var(--primary);
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+}
+
+.form-error {
+    display: block;
+    margin-top: 0.35rem;
+    color: #b91c1c;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.field-error,
+.field-error:focus {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.2);
 }
 
 .flash-popup-overlay {
@@ -248,6 +263,19 @@ textarea {
     box-shadow: 0 20px 40px rgba(17, 24, 39, 0.2);
     padding: 1.5rem;
     text-align: center;
+}
+
+.flash-popup-card.flash-error {
+    background: #fee2e2;
+    border-color: #f87171;
+}
+
+.flash-popup-card.flash-error .flash-popup-title {
+    color: #7f1d1d;
+}
+
+.flash-popup-card.flash-error p {
+    color: #991b1b;
 }
 
 .flash-popup-title {

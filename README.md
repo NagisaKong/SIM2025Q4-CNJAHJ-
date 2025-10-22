@@ -26,18 +26,25 @@ Refer to the `config/` directory for database and application settings. PostgreS
    ```bash
    composer install
    ```
-2. Create the PostgreSQL schema:
+2. Create the PostgreSQL schema and seed data:
    ```bash
    psql -U csr_user -d csr_platform -f create_data_table.sql
    ```
-3. (Optional) Seed demo data:
-   ```bash
-   php scripts/generate-test-data.php
-   ```
-4. Start the PHP built-in server:
+3. Start the PHP built-in server:
    ```bash
    php -S localhost:8000 -t public
    ```
+
+## Demo accounts
+
+The seed data created by `create_data_table.sql` provisions these credentials:
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Administrator | `admin@example.com` | `Password1` |
+| CSR Representative | `csr@example.com` | `Password1` |
+| Person in Need | `pin@example.com` | `Password1` |
+| Project Manager | `pm@example.com` | `Password1` |
 
 ## Testing
 
