@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $_SESSION['user'];
         switch ($user['role'] ?? '') {
             case 'admin':
-                header('Location: /index.php?page=admin-accounts');
+                header('Location: /index.php?page=admin-dashboard');
                 break;
             case 'csr':
                 header('Location: /index.php?page=csr-requests');

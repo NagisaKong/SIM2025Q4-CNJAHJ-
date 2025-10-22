@@ -54,6 +54,21 @@ a:hover {
     align-items: center;
 }
 
+.logout-link {
+    background: var(--logout);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-weight: 600;
+    transition: filter 0.2s ease;
+}
+
+.logout-link:hover,
+.logout-link:focus {
+    text-decoration: none;
+    filter: brightness(1.05);
+}
+
 .logout-form {
     display: inline;
 }
@@ -87,6 +102,70 @@ a:hover {
     box-shadow: 0 2px 8px rgba(17, 24, 39, 0.05);
 }
 
+.card-heading {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+}
+
+.card-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.card-actions .btn-primary,
+.card-actions .btn-secondary {
+    white-space: nowrap;
+}
+
+.muted {
+    color: var(--muted);
+    margin: 0.25rem 0 0;
+}
+
+.dashboard-card h1 {
+    margin: 0;
+}
+
+.dashboard-actions {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.dashboard-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    background: var(--surface-muted);
+    padding: 1.25rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-weight: 600;
+}
+
+.dashboard-tile:hover,
+.dashboard-tile:focus {
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(17, 24, 39, 0.08);
+}
+
+.dashboard-tile .tile-title {
+    font-size: 1.1rem;
+}
+
+.dashboard-tile .tile-meta {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 400;
+}
+
 .tagline {
     margin: 0 0 1rem;
     color: var(--muted);
@@ -109,6 +188,19 @@ a:hover {
 
 .form-inline {
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.form-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.form-grid label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-weight: 600;
 }
 
 input,
@@ -158,6 +250,26 @@ textarea {
     background: transparent;
     color: var(--secondary);
     border: 1px solid var(--border);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+    text-decoration: none;
+    background: var(--surface-muted);
+}
+
+.link-button {
+    color: var(--primary);
+    font-weight: 600;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.link-button:hover,
+.link-button:focus {
+    text-decoration: underline;
 }
 
 .table {

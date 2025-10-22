@@ -5,6 +5,7 @@ $page = $_GET['page'] ?? 'login';
 
 $routes = [
     'login' => __DIR__ . '/../csit314-csr-platform/src/login/boundary/loginUI.php',
+    'admin-dashboard' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/DashboardUI.php',
     'admin-accounts' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/ViewAccountsUI.php',
     'admin-profiles' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/ViewProfilesUI.php',
     'csr-requests' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/SearchRequestsUI.php',
