@@ -1,22 +1,26 @@
 <?php
-
 require __DIR__ . '/../vendor/autoload.php';
 
-use App\Core\Application;
-use App\Core\Container;
+$page = $_GET['page'] ?? 'login';
 
-$envFile = __DIR__ . '/../.env';
-if (file_exists($envFile)) {
-    foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
-        if (str_starts_with(trim($line), '#')) {
-            continue;
-        }
-        [$key, $value] = array_map('trim', explode('=', $line, 2));
-        putenv("{$key}={$value}");
-    }
+$routes = [
+    'login' => __DIR__ . '/../csit314-csr-platform/src/login/boundary/loginUI.php',
+    'admin-accounts' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/ViewAccountsUI.php',
+    'admin-profiles' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/ViewProfilesUI.php',
+    'csr-requests' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/SearchRequestsUI.php',
+    'csr-shortlist' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/ShortlistUI.php',
+    'csr-history' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/HistoryUI.php',
+    'pin-requests' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/RequestManagementUI.php',
+    'pin-history' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/HistoryUI.php',
+    'pm-categories' => __DIR__ . '/../csit314-csr-platform/src/PM/boundary/ServiceCategoryUI.php',
+    'pm-report-daily' => __DIR__ . '/../csit314-csr-platform/src/PM/boundary/DailyReportUI.php',
+    'pm-report-weekly' => __DIR__ . '/../csit314-csr-platform/src/PM/boundary/WeeklyReportUI.php',
+];
+
+if (!array_key_exists($page, $routes)) {
+    http_response_code(404);
+    echo '<h1>404 Not Found</h1>';
+    exit();
 }
 
-$container = new Container();
-$app = new Application($container);
-$app->bootstrap();
-$app->handle();
+require $routes[$page];
