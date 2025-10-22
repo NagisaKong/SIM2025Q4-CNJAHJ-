@@ -196,7 +196,7 @@ FROM "userProfiles";
 CREATE OR REPLACE VIEW users AS
 SELECT
     "accountID" AS id,
-    "profileID",
+    "profileID" AS profile_id,
     "username" AS name,
     "email",
     "password_hash",
