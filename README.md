@@ -44,17 +44,25 @@ This project implements a CSR volunteer matching platform using a custom MVC sta
 
 ## Project Layout
 
+Boundary–Control–Entity artifacts are grouped by user role under `src/`, ensuring each persona (Admin, CSR Rep, PIN, Platform Manager) has dedicated `Boundary/` and `Controller/` layers backed by shared `Entity` classes that connect to the database.
+
 ```
 project-root/
 ├─ public/                     # Front controller and assets
-├─ app/
-│  ├─ Core/                    # Framework kernel
-│  ├─ Controllers/             # Boundary layer
-│  ├─ Http/Middleware/         # Request guards
-│  ├─ Models/                  # Entity layer
+├─ src/
+│  ├─ Core/                    # Framework kernel and base controller
+│  ├─ Entity/                  # Database-aware entity objects
+│  ├─ Models/                  # ORM-style models
 │  ├─ Repositories/            # Persistence helpers
 │  ├─ Services/                # Control layer
-│  └─ Views/                   # Templates
+│  ├─ Http/                    # Middleware and request utilities
+│  ├─ Shared/Boundary/         # Shared layouts and UI helpers
+│  ├─ Auth/                    # Authentication boundary & controller
+│  ├─ Common/                  # Common controllers (e.g. dashboard)
+│  ├─ Admin/                   # User admin boundary & controller
+│  ├─ CSR/                     # CSR representative boundary & controller
+│  ├─ PIN/                     # Person in need boundary & controller
+│  └─ Manager/                 # Platform manager boundary & controller
 ├─ config/                     # Routes, database, roles
 ├─ database/                   # Migrations, seeders
 ├─ scripts/                    # CLI utilities (migrate, seed)

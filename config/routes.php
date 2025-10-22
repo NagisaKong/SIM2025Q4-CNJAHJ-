@@ -1,16 +1,16 @@
 <?php
 
-use App\Controllers\LoginController;
-use App\Controllers\LogoutController;
-use App\Controllers\DashboardController;
-use App\Controllers\Admin\UserController as AdminUserController;
-use App\Controllers\Admin\ProfileController as AdminProfileController;
-use App\Controllers\Admin\CategoryController;
-use App\Controllers\CSR\OpportunityController;
-use App\Controllers\CSR\HistoryController as CSRHistoryController;
-use App\Controllers\PIN\RequestController;
-use App\Controllers\PIN\HistoryController as PINHistoryController;
-use App\Controllers\Reports\ReportController;
+use App\Auth\Controller\LoginController;
+use App\Auth\Controller\LogoutController;
+use App\Common\Controller\DashboardController;
+use App\Admin\Controller\UserController as AdminUserController;
+use App\Admin\Controller\ProfileController as AdminProfileController;
+use App\Admin\Controller\CategoryController;
+use App\CSR\Controller\OpportunityController;
+use App\CSR\Controller\HistoryController as CSRHistoryController;
+use App\PIN\Controller\RequestController;
+use App\PIN\Controller\HistoryController as PINHistoryController;
+use App\Manager\Controller\ReportController;
 
 return function (\App\Core\Router $router) {
     $router->get('/', [LoginController::class, 'show'])->name('login');
