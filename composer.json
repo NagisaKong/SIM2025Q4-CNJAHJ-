@@ -1,6 +1,6 @@
 {
-  "name": "sim/csr-platform",
-  "description": "Minimal CSR matching platform in pure PHP",
+  "name": "csit314/csr-platform",
+  "description": "CSR platform structured by modules without framework",
   "type": "project",
   "require": {
     "php": "^8.2",
@@ -12,12 +12,12 @@
   },
   "autoload": {
     "psr-4": {
-      "App\\": "app/"
+      "CSRPlatform\\": "csit314-csr-platform/src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "App\\Tests\\": "tests/"
+      "CSRPlatform\\Tests\\": "csit314-csr-platform/src/tests/"
     }
   },
   "scripts": {
