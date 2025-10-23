@@ -5,11 +5,16 @@ $page = $_GET['page'] ?? 'login';
 
 $routes = [
     'login' => __DIR__ . '/../csit314-csr-platform/src/login/boundary/loginUI.php',
-    'admin-dashboard' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/DashboardUI.php',
+    'dashboard' => __DIR__ . '/../csit314-csr-platform/src/shared/boundary/DashboardUI.php',
+    'admin-dashboard' => __DIR__ . '/../csit314-csr-platform/src/shared/boundary/DashboardUI.php',
     'admin-accounts' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/ViewAccountsUI.php',
     'admin-account-create' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/CreateAccountUI.php',
+    'admin-account-view' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/ViewUserAccountUI.php',
+    'admin-account-edit' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/EditUserAccountUI.php',
     'admin-profiles' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/ViewProfilesUI.php',
     'admin-profile-create' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/CreateProfileUI.php',
+    'admin-profile-view' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/ViewProfileUI.php',
+    'admin-profile-edit' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/EditProfileUI.php',
     'csr-requests' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/SearchRequestsUI.php',
     'csr-shortlist' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/ShortlistUI.php',
     'csr-history' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/HistoryUI.php',

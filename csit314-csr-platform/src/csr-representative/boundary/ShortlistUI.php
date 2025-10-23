@@ -50,6 +50,7 @@ $requests = $searchQuery === ''
 
 $pageTitle = 'My Shortlist';
 $navLinks = [
+    ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
     ['href' => '/index.php?page=csr-requests', 'label' => 'Opportunities'],
     ['href' => '/index.php?page=csr-shortlist', 'label' => 'Shortlist'],
     ['href' => '/index.php?page=csr-history', 'label' => 'History'],

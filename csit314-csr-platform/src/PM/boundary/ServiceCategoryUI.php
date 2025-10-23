@@ -79,15 +79,15 @@ $categories = $viewController->list('all', $searchQuery);
 
 $pageTitle = 'Service categories';
 if ($isAdmin) {
-    $baseUrl = '/index.php?page=admin-dashboard';
     $navLinks = [
-        ['href' => '/index.php?page=admin-dashboard', 'label' => 'Dashboard'],
+        ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
         ['href' => '/index.php?page=admin-accounts', 'label' => 'Users'],
         ['href' => '/index.php?page=admin-profiles', 'label' => 'Profiles'],
         ['href' => '/index.php?page=pm-categories', 'label' => 'Categories'],
     ];
 } else {
     $navLinks = [
+        ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
         ['href' => '/index.php?page=pm-categories', 'label' => 'Categories'],
         ['href' => '/index.php?page=pm-report-daily', 'label' => 'Daily report'],
         ['href' => '/index.php?page=pm-report-weekly', 'label' => 'Weekly report'],

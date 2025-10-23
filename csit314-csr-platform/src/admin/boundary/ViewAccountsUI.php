@@ -1,12 +1,11 @@
 <?php
 require_once __DIR__ . '/../controller/viewAccountsController.php';
-require_once __DIR__ . '/../controller/updateAccountController.php';
+require_once __DIR__ . '/../../shared/entity/UserAccount.php';
+require_once __DIR__ . '/../../shared/entity/UserProfiles.php';
 
-use CSRPlatform\Admin\Controller\updateAccountController;
 use CSRPlatform\Admin\Controller\viewAccountsController;
 use CSRPlatform\Shared\Entity\UserAccount;
 use CSRPlatform\Shared\Entity\UserProfiles;
-use CSRPlatform\Shared\Utils\Validation;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -32,10 +31,11 @@ if (!$currentUser || ($currentUser['role'] ?? '') !== 'admin') {
 
 $accounts = new UserAccount();
 $profiles = new UserProfiles();
-$validator = new Validation();
 $viewController = new viewAccountsController($accounts);
-$updateController = new updateAccountController($accounts, $validator);
 $availableProfiles = $profiles->listProfiles('active');
+if ($availableProfiles === []) {
+    $availableProfiles = $profiles->listProfiles('all');
+}
 if ($availableProfiles === []) {
     $availableProfiles = [
         ['role' => 'admin'],
@@ -44,46 +44,6 @@ if ($availableProfiles === []) {
         ['role' => 'pm'],
     ];
 }
-$defaultRole = $availableProfiles[0]['role'] ?? 'admin';
-
-$editingId = isset($_GET['edit']) ? (int) $_GET['edit'] : 0;
-$editingUser = $editingId > 0 ? $viewController->find($editingId) : null;
-$formValues = [
-    'name' => '',
-    'email' => '',
-    'role' => (string) $defaultRole,
-    'status' => 'active',
-];
-
-if ($editingUser) {
-    $formValues = array_merge($formValues, [
-        'name' => (string) ($editingUser['name'] ?? ''),
-        'email' => (string) ($editingUser['email'] ?? ''),
-        'role' => (string) ($editingUser['role'] ?? 'admin'),
-        'status' => (string) ($editingUser['status'] ?? 'active'),
-    ]);
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $formType = $_POST['form_type'] ?? '';
-    if ($formType === 'update') {
-        $userId = (int) ($_POST['user_id'] ?? 0);
-        if ($userId > 0 && $updateController->update($userId, $_POST)) {
-            $_SESSION['flash_success'] = 'Account updated successfully.';
-            header('Location: /index.php?page=admin-accounts');
-            exit();
-        }
-        $_SESSION['flash_error'] = implode(' ', array_map(static fn($errors) => implode(' ', (array) $errors), $updateController->errors()));
-        $editingId = $userId;
-        $editingUser = $viewController->find($userId);
-        $formValues = array_merge($formValues, [
-            'name' => (string) ($_POST['name'] ?? ($editingUser['name'] ?? '')),
-            'email' => (string) ($_POST['email'] ?? ($editingUser['email'] ?? '')),
-            'role' => (string) ($_POST['role'] ?? ($editingUser['role'] ?? 'admin')),
-            'status' => (string) ($_POST['status'] ?? ($editingUser['status'] ?? 'active')),
-        ]);
-    }
-}
 
 $filterRole = $_GET['role'] ?? null;
 $normalizedRole = $filterRole !== null ? strtolower((string) $filterRole) : 'all';
@@ -91,9 +51,8 @@ $searchQuery = $_GET['q'] ?? null;
 $users = $viewController->list($filterRole, $searchQuery);
 
 $pageTitle = 'Manage users';
-$baseUrl = '/index.php?page=admin-dashboard';
 $navLinks = [
-    ['href' => '/index.php?page=admin-dashboard', 'label' => 'Dashboard'],
+    ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
     ['href' => '/index.php?page=admin-accounts', 'label' => 'Users'],
     ['href' => '/index.php?page=admin-profiles', 'label' => 'Profiles'],
     ['href' => '/index.php?page=pm-categories', 'label' => 'Categories'],
@@ -131,7 +90,7 @@ include __DIR__ . '/../../shared/boundary/header.php';
             <th>Email</th>
             <th class="status-col">Status</th>
             <th>Role</th>
-            <th class="actions">Actions</th>
+            <th class="actions">Action</th>
         </tr>
         </thead>
         <tbody>
@@ -142,54 +101,17 @@ include __DIR__ . '/../../shared/boundary/header.php';
                 <td class="status-col"><span class="tag tag-<?= htmlspecialchars((string) $user['status'], ENT_QUOTES) ?>"><?= htmlspecialchars((string) $user['status'], ENT_QUOTES) ?></span></td>
                 <td><?= htmlspecialchars(ucwords(str_replace('_', ' ', (string) ($user['role'] ?? 'N/A'))), ENT_QUOTES) ?></td>
                 <td class="actions">
-                    <a class="link-button" href="/index.php?page=admin-accounts&amp;edit=<?= (int) $user['id'] ?>#account-form">Edit</a>
+                    <a class="link-button" href="/index.php?page=admin-account-edit&amp;id=<?= (int) $user['id'] ?>">Edit</a>
+                    <a class="link-button" href="/index.php?page=admin-account-view&amp;id=<?= (int) $user['id'] ?>">View</a>
                 </td>
             </tr>
         <?php endforeach; ?>
+        <?php if ($users === []): ?>
+            <tr>
+                <td colspan="5" style="text-align: center;">No accounts found.</td>
+            </tr>
+        <?php endif; ?>
         </tbody>
     </table>
 </section>
-<?php if ($editingUser): ?>
-<section class="card" id="account-form">
-    <div class="card-heading">
-        <div>
-            <h2>Edit Account</h2>
-            <p class="muted">Update the selected account details.</p>
-        </div>
-        <div class="card-actions">
-            <a class="btn-secondary" href="/index.php?page=admin-accounts">Cancel</a>
-        </div>
-    </div>
-    <form method="POST" action="/index.php?page=admin-accounts" class="form-grid">
-        <input type="hidden" name="form_type" value="update">
-        <input type="hidden" name="user_id" value="<?= (int) $editingUser['id'] ?>">
-        <label>Name
-            <input type="text" name="name" value="<?= htmlspecialchars($formValues['name'], ENT_QUOTES) ?>" required>
-        </label>
-        <label>Email
-            <input type="email" name="email" value="<?= htmlspecialchars($formValues['email'], ENT_QUOTES) ?>" required>
-        </label>
-        <label>Password
-            <input type="password" name="password" placeholder="Leave blank to keep current password">
-        </label>
-        <label>Role
-            <select name="role" required>
-                <?php foreach ($availableProfiles as $profileOption): ?>
-                    <?php $profileRole = (string) ($profileOption['role'] ?? ''); ?>
-                    <option value="<?= htmlspecialchars($profileRole, ENT_QUOTES) ?>" <?= strtolower($formValues['role']) === strtolower($profileRole) ? 'selected' : '' ?>>
-                        <?= htmlspecialchars(ucwords(str_replace('_', ' ', $profileRole)), ENT_QUOTES) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </label>
-        <label>Status
-            <select name="status">
-                <option value="active" <?= $formValues['status'] === 'active' ? 'selected' : '' ?>>Active</option>
-                <option value="suspended" <?= $formValues['status'] === 'suspended' ? 'selected' : '' ?>>Suspended</option>
-            </select>
-        </label>
-        <button type="submit" class="btn-primary">Update Account</button>
-    </form>
-</section>
-<?php endif; ?>
 <?php include __DIR__ . '/../../shared/boundary/footer.php'; ?>

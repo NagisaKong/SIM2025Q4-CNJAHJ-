@@ -30,6 +30,7 @@ $report = $controller->generate();
 
 $pageTitle = 'Weekly report';
 $navLinks = [
+    ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
     ['href' => '/index.php?page=pm-categories', 'label' => 'Categories'],
     ['href' => '/index.php?page=pm-report-daily', 'label' => 'Daily report'],
     ['href' => '/index.php?page=pm-report-weekly', 'label' => 'Weekly report'],

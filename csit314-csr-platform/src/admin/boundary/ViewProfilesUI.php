@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../controller/viewProfilesController.php';
+require_once __DIR__ . '/../../shared/entity/UserProfiles.php';
 
 use CSRPlatform\Admin\Controller\viewProfilesController;
 use CSRPlatform\Shared\Entity\UserProfiles;
@@ -33,9 +34,8 @@ $searchQuery = $_GET['q'] ?? null;
 $profiles = $viewController->list(null, $searchQuery);
 
 $pageTitle = 'Manage profiles';
-$baseUrl = '/index.php?page=admin-dashboard';
 $navLinks = [
-    ['href' => '/index.php?page=admin-dashboard', 'label' => 'Dashboard'],
+    ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
     ['href' => '/index.php?page=admin-accounts', 'label' => 'Users'],
     ['href' => '/index.php?page=admin-profiles', 'label' => 'Profiles'],
     ['href' => '/index.php?page=pm-categories', 'label' => 'Categories'],
@@ -71,9 +71,9 @@ include __DIR__ . '/../../shared/boundary/header.php';
         <thead>
             <tr>
                 <th>Profile</th>
-                <th>Description</th>
+                <th>Permissions</th>
                 <th class="status-col">Status</th>
-                <th class="actions">Actions</th>
+                <th class="actions">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -90,7 +90,10 @@ include __DIR__ . '/../../shared/boundary/header.php';
                     </td>
                     <td><?= htmlspecialchars((string) $profile['description'], ENT_QUOTES) ?></td>
                     <td class="status-col"><span class="tag tag-<?= htmlspecialchars((string) $profile['status'], ENT_QUOTES) ?>"><?= htmlspecialchars((string) $profile['status'], ENT_QUOTES) ?></span></td>
-                    <td class="actions"><span class="muted">No actions</span></td>
+                    <td class="actions">
+                        <a class="link-button" href="/index.php?page=admin-profile-edit&amp;id=<?= (int) $profile['id'] ?>">Edit</a>
+                        <a class="link-button" href="/index.php?page=admin-profile-view&amp;id=<?= (int) $profile['id'] ?>">View</a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

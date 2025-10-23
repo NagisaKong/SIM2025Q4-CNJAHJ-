@@ -31,6 +31,7 @@ $history = $viewController->history((int) $currentUser['id']);
 
 $pageTitle = 'Request History';
 $navLinks = [
+    ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
     ['href' => '/index.php?page=pin-requests', 'label' => 'My Requests'],
     ['href' => '/index.php?page=pin-history', 'label' => 'History'],
 ];

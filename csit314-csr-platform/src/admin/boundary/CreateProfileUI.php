@@ -55,9 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $pageTitle = 'Create profile';
-$baseUrl = '/index.php?page=admin-dashboard';
 $navLinks = [
-    ['href' => '/index.php?page=admin-dashboard', 'label' => 'Dashboard'],
+    ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
     ['href' => '/index.php?page=admin-accounts', 'label' => 'Users'],
     ['href' => '/index.php?page=admin-profiles', 'label' => 'Profiles'],
     ['href' => '/index.php?page=pm-categories', 'label' => 'Categories'],

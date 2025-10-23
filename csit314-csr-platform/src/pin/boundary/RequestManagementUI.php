@@ -60,6 +60,7 @@ $shortlistSummary = $shortlistSummaryController->list((int) $currentUser['id']);
 
 $pageTitle = 'My Requests';
 $navLinks = [
+    ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
     ['href' => '/index.php?page=pin-requests', 'label' => 'My Requests'],
     ['href' => '/index.php?page=pin-history', 'label' => 'History'],
 ];

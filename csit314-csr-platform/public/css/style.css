@@ -58,7 +58,7 @@ a:hover {
     background: var(--logout);
     color: #fff;
     padding: 0.45rem 1.15rem;
-    border-radius: 999px;
+    border-radius: 12px;
     font-weight: 600;
 }
 
@@ -224,6 +224,23 @@ textarea {
     border: none;
     color: var(--secondary);
     cursor: pointer;
+}
+
+.link-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem 0.85rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-weight: 600;
+    color: var(--primary);
+    background: #ffffff;
+}
+
+.link-button:hover {
+    text-decoration: none;
+    background: var(--surface-muted);
 }
 
 .alert {
@@ -408,6 +425,52 @@ textarea {
 
 .definition-list dd {
     margin: 0;
+}
+
+.dashboard-card .card-heading {
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-actions {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.dashboard-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+    box-shadow: 0 4px 12px rgba(17, 24, 39, 0.06);
+    color: inherit;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dashboard-tile:hover {
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(17, 24, 39, 0.12);
+}
+
+.tile-title {
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+.tile-meta {
+    font-size: 0.85rem;
+    color: var(--secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tile-description {
+    font-size: 0.9rem;
+    color: var(--muted);
 }
 
 .footer {

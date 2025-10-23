@@ -21,23 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $role = trim($_POST['role'] ?? '');
 
     if ($controller->login($email, $password, $role)) {
-        $user = $_SESSION['user'];
-        switch ($user['role'] ?? '') {
-            case 'admin':
-                header('Location: /index.php?page=admin-dashboard');
-                break;
-            case 'csr':
-                header('Location: /index.php?page=csr-requests');
-                break;
-            case 'pin':
-                header('Location: /index.php?page=pin-requests');
-                break;
-            case 'pm':
-                header('Location: /index.php?page=pm-categories');
-                break;
-            default:
-                header('Location: /index.php?page=login');
-        }
+        header('Location: /index.php?page=dashboard');
         exit();
     }
 
