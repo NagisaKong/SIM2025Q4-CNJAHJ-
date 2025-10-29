@@ -1,6 +1,8 @@
 <?php
+require_once __DIR__ . '/../controller/viewProfilesController.php';
 require_once __DIR__ . '/../../shared/entity/UserProfiles.php';
 
+use CSRPlatform\Admin\Controller\viewProfilesController;
 use CSRPlatform\Shared\Entity\UserProfiles;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -33,7 +35,8 @@ if ($profileId <= 0) {
 }
 
 $profilesEntity = new UserProfiles();
-$profile = $profilesEntity->findById($profileId);
+$profilesController = new viewProfilesController($profilesEntity);
+$profile = $profilesController->viewUserProfile($profileId);
 
 if ($profile === null) {
     $_SESSION['flash_error'] = 'Profile not found.';

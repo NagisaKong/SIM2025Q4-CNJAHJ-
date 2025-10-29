@@ -53,14 +53,28 @@ $formValues = [
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $formValues = array_merge($formValues, [
+    $payload = [
         'name' => (string) ($_POST['name'] ?? ''),
         'email' => (string) ($_POST['email'] ?? ''),
         'role' => (string) ($_POST['role'] ?? ($formValues['role'] ?? 'admin')),
         'status' => (string) ($_POST['status'] ?? 'active'),
+        'password' => (string) ($_POST['password'] ?? ''),
+    ];
+
+    $formValues = array_merge($formValues, [
+        'name' => $payload['name'],
+        'email' => $payload['email'],
+        'role' => $payload['role'],
+        'status' => $payload['status'],
     ]);
 
-    if ($createController->create($_POST)) {
+    if ($createController->createUserAccount(
+        $payload['role'],
+        $payload['name'],
+        $payload['email'],
+        $payload['password'],
+        $payload['status']
+    )) {
         $_SESSION['flash_success'] = 'Account created successfully.';
         header('Location: /index.php?page=admin-accounts');
         exit();
@@ -115,7 +129,7 @@ include __DIR__ . '/../../shared/boundary/header.php';
                 <option value="suspended" <?= $formValues['status'] === 'suspended' ? 'selected' : '' ?>>Suspended</option>
             </select>
         </label>
-        <button type="submit" class="btn-primary">Save</button>
+        <button type="submit" class="btn-primary">Create account</button>
     </form>
 </section>
 <?php include __DIR__ . '/../../shared/boundary/footer.php'; ?>

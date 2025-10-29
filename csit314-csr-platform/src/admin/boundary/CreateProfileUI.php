@@ -39,12 +39,18 @@ $formValues = [
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $formValues = array_merge($formValues, [
+    $payload = [
         'role' => (string) ($_POST['role'] ?? ''),
         'description' => (string) ($_POST['description'] ?? ''),
+        'status' => 'active',
+    ];
+
+    $formValues = array_merge($formValues, [
+        'role' => $payload['role'],
+        'description' => $payload['description'],
     ]);
 
-    if ($createController->create($_POST)) {
+    if ($createController->createUserProfile($payload['role'], $payload['description'], $payload['status'])) {
         $_SESSION['flash_success'] = 'Profile created successfully.';
         header('Location: /index.php?page=admin-profiles');
         exit();
@@ -80,7 +86,7 @@ include __DIR__ . '/../../shared/boundary/header.php';
         <label>Description
             <textarea name="description" rows="4" required placeholder="Describe the permissions granted to this profile."><?= htmlspecialchars($formValues['description'], ENT_QUOTES) ?></textarea>
         </label>
-        <button type="submit" class="btn-primary">Save</button>
+        <button type="submit" class="btn-primary">Create profile</button>
     </form>
 </section>
 <?php include __DIR__ . '/../../shared/boundary/footer.php'; ?>

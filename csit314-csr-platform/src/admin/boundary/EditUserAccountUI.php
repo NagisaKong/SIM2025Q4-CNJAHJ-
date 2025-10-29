@@ -49,7 +49,7 @@ if ($availableProfiles === []) {
     $availableProfiles = $profiles->listProfiles('all');
 }
 
-$account = $viewController->find($userId);
+$account = $viewController->viewUserAccount($userId);
 if ($account === null) {
     $_SESSION['flash_error'] = 'Account not found.';
     header('Location: /index.php?page=admin-accounts');
@@ -78,7 +78,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'status' => (string) $payload['status'],
     ]);
 
-    if ($updateController->update($userId, $payload)) {
+    if ($updateController->updateUserAccount(
+        $userId,
+        (string) $payload['name'],
+        (string) $payload['email'],
+        (string) $payload['password'],
+        (string) $payload['status'],
+        (string) $payload['role']
+    )) {
         $_SESSION['flash_success'] = 'Account updated successfully.';
         header('Location: /index.php?page=admin-account-view&id=' . $userId);
         exit();

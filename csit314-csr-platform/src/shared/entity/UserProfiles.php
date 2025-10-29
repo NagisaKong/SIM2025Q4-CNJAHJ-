@@ -10,6 +10,11 @@ final class UserProfiles
 {
     public function listProfiles(?string $status = null): array
     {
+        return $this->getUserProfileList($status);
+    }
+
+    public function getUserProfileList(?string $status = null): array
+    {
         $pdo = DatabaseConnection::get();
         if ($status === null || $status === 'all') {
             $sql = 'SELECT * FROM profiles ORDER BY id DESC';
@@ -32,6 +37,11 @@ final class UserProfiles
 
     public function findById(int $id): ?array
     {
+        return $this->getUserProfile($id);
+    }
+
+    public function getUserProfile(int $id): ?array
+    {
         $pdo = DatabaseConnection::get();
         $stmt = $pdo->prepare('SELECT * FROM profiles WHERE id = :id LIMIT 1');
         $stmt->execute([':id' => $id]);
@@ -41,12 +51,17 @@ final class UserProfiles
 
     public function createProfile(string $role, string $description, string $status = 'active'): bool
     {
+        return $this->registerUserProfile($role, $description, $status);
+    }
+
+    public function registerUserProfile(string $role, string $description, string $status = 'active'): bool
+    {
         $pdo = DatabaseConnection::get();
         $stmt = $pdo->prepare('INSERT INTO profiles(role, description, status) VALUES (:role, :description, :status)');
         return $stmt->execute([
             ':role' => strtolower(trim($role)),
             ':description' => trim($description),
-            ':status' => $status,
+            ':status' => strtolower(trim($status)),
         ]);
     }
 
@@ -55,6 +70,7 @@ final class UserProfiles
         if ($payload === []) {
             return false;
         }
+
         $fields = [];
         $params = [':id' => $id];
         foreach ($payload as $key => $value) {
@@ -67,7 +83,28 @@ final class UserProfiles
         return $stmt->execute($params);
     }
 
+    public function updateUserProfile(int $id, string $role, string $description, string $status): bool
+    {
+        return $this->updateProfile($id, [
+            'role' => strtolower(trim($role)),
+            'description' => trim($description),
+            'status' => strtolower(trim($status)),
+        ]);
+    }
+
+    public function holdUserProfile(int $profileId, string $status): bool
+    {
+        return $this->updateProfile($profileId, [
+            'status' => strtolower(trim($status)),
+        ]);
+    }
+
     public function search(string $query): array
+    {
+        return $this->searchProfileList($query);
+    }
+
+    public function searchProfileList(string $query): array
     {
         $pdo = DatabaseConnection::get();
         $stmt = $pdo->prepare("SELECT * FROM profiles WHERE role ILIKE :q OR description ILIKE :q ORDER BY id DESC");

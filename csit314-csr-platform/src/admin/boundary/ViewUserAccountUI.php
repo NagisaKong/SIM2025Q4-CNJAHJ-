@@ -35,7 +35,7 @@ if ($userId <= 0) {
 }
 
 $controller = new viewAccountsController(new UserAccount());
-$account = $controller->find($userId);
+$account = $controller->viewUserAccount($userId);
 if ($account === null) {
     $_SESSION['flash_error'] = 'Account not found.';
     header('Location: /index.php?page=admin-accounts');

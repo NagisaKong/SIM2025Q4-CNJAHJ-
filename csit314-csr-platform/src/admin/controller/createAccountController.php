@@ -20,10 +20,23 @@ final class createAccountController
     ) {
     }
 
-    public function create(array $input): bool
-    {
+    public function createUserAccount(
+        string $role,
+        string $username,
+        string $email,
+        string $password,
+        string $status = 'active'
+    ): bool {
         $this->errors = [];
         $this->message = null;
+
+        $input = [
+            'role' => $role,
+            'name' => $username,
+            'email' => $email,
+            'password' => $password,
+        ];
+
         if (!$this->validator->validate($input, [
             'role' => 'required',
             'name' => 'required|min:3',
@@ -34,8 +47,7 @@ final class createAccountController
             return false;
         }
 
-        $status = $input['status'] ?? 'active';
-        if (!$this->accounts->registerUA($input['role'], $input['name'], $input['email'], $input['password'], $status)) {
+        if (!$this->accounts->registerUserAccount($role, $username, $email, $password, $status)) {
             $error = $this->accounts->lastError();
             $this->errors['account'][] = match ($error) {
                 'duplicate_email' => 'Email already exists for another user.',
@@ -48,6 +60,18 @@ final class createAccountController
 
         $this->message = 'Account created successfully.';
         return true;
+    }
+
+    public function create(array $input): bool
+    {
+        $status = (string) ($input['status'] ?? 'active');
+        return $this->createUserAccount(
+            (string) ($input['role'] ?? ''),
+            (string) ($input['name'] ?? ''),
+            (string) ($input['email'] ?? ''),
+            (string) ($input['password'] ?? ''),
+            $status
+        );
     }
 
     public function profiles(): array

@@ -50,9 +50,15 @@ final class UserAccount
 
     public function registerUA(string $role, string $name, string $email, string $password, string $status = 'active'): bool
     {
+        return $this->registerUserAccount($role, $name, $email, $password, $status);
+    }
+
+    public function registerUserAccount(string $role, string $username, string $email, string $password, string $status = 'active'): bool
+    {
         $this->lastError = null;
         $pdo = DatabaseConnection::get();
-        $profile = (new UserProfiles())->findByRole($role);
+        $roleKey = strtolower(trim($role));
+        $profile = (new UserProfiles())->findByRole($roleKey);
         if ($profile === null) {
             $this->lastError = 'profile_missing';
             return false;
@@ -74,15 +80,20 @@ final class UserAccount
             VALUES (:profile_id, :name, :email, :password_hash, :status)');
         $insert->execute([
             ':profile_id' => $profile['id'],
-            ':name' => trim($name),
+            ':name' => trim($username),
             ':email' => strtolower(trim($email)),
             ':password_hash' => password_hash($password, PASSWORD_BCRYPT),
-            ':status' => $status,
+            ':status' => strtolower(trim($status)),
         ]);
         return true;
     }
 
     public function listAccounts(?string $roleFilter = null, ?string $search = null): array
+    {
+        return $this->getUserAccountList($roleFilter, $search);
+    }
+
+    public function getUserAccountList(?string $roleFilter = null, ?string $search = null): array
     {
         $pdo = DatabaseConnection::get();
         $conditions = [];
@@ -108,7 +119,17 @@ final class UserAccount
         return $stmt->fetchAll();
     }
 
+    public function searchAccountList(string $searchQuery): array
+    {
+        return $this->getUserAccountList(null, $searchQuery);
+    }
+
     public function find(int $id): ?array
+    {
+        return $this->getUserAccount($id);
+    }
+
+    public function getUserAccount(int $id): ?array
     {
         $pdo = DatabaseConnection::get();
         $stmt = $pdo->prepare('SELECT u.*, p.role FROM users u INNER JOIN profiles p ON p.id = u.profile_id WHERE u.id = :id');
@@ -167,11 +188,41 @@ final class UserAccount
         return $stmt->execute($params);
     }
 
+    public function updateUserAccount(
+        int $accountId,
+        string $username,
+        string $email,
+        ?string $password,
+        string $status,
+        ?string $role = null
+    ): bool {
+        $payload = [
+            'name' => trim($username),
+            'email' => strtolower(trim($email)),
+            'status' => strtolower(trim($status)),
+        ];
+
+        if ($password !== null) {
+            $payload['password'] = $password;
+        }
+
+        if ($role !== null && $role !== '') {
+            $payload['role'] = strtolower(trim($role));
+        }
+
+        return $this->updateAccount($accountId, $payload);
+    }
+
     public function suspendAccount(int $id): bool
+    {
+        return $this->holdUserAccount($id);
+    }
+
+    public function holdUserAccount(int $id, string $status = 'suspended'): bool
     {
         $pdo = DatabaseConnection::get();
         $stmt = $pdo->prepare('UPDATE users SET status = :status, updated_at = NOW() WHERE id = :id');
-        return $stmt->execute([':status' => 'suspended', ':id' => $id]);
+        return $stmt->execute([':status' => strtolower(trim($status)), ':id' => $id]);
     }
 
     public function lastError(): ?string

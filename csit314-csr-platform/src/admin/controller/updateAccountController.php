@@ -17,36 +17,68 @@ final class updateAccountController
     ) {
     }
 
-    public function update(int $id, array $payload): bool
-    {
+    public function updateUserAccount(
+        int $accountId,
+        string $username,
+        string $email,
+        string $password,
+        string $status,
+        string $role
+    ): bool {
         $this->errors = [];
-        $rules = [
-            'email' => 'email',
-            'name' => 'min:3',
-        ];
-        $filtered = [];
-        foreach ($payload as $key => $value) {
-            if (is_string($value)) {
-                $payload[$key] = trim($value);
-            }
-            if ($payload[$key] === '' || $payload[$key] === null) {
-                continue;
-            }
-            $filtered[$key] = $payload[$key];
-        }
 
-        $dataToValidate = array_intersect_key($filtered, $rules);
-        if ($dataToValidate !== [] && !$this->validator->validate($dataToValidate, array_intersect_key($rules, $dataToValidate))) {
+        $validated = [
+            'name' => trim($username),
+            'email' => trim($email),
+            'password' => $password,
+        ];
+
+        if (!$this->validator->validate(
+            ['name' => $validated['name'], 'email' => $validated['email']],
+            ['name' => 'required|min:3', 'email' => 'required|email']
+        )) {
             $this->errors = $this->validator->errors();
             return false;
         }
 
-        if (!$this->accounts->updateAccount($id, $filtered)) {
+        if ($status === '') {
+            $this->errors['status'][] = 'Status is required.';
+            return false;
+        }
+
+        if ($role === '') {
+            $this->errors['role'][] = 'Role is required.';
+            return false;
+        }
+
+        $passwordValue = trim($validated['password']);
+        $passwordArg = $passwordValue === '' ? null : $passwordValue;
+
+        if (!$this->accounts->updateUserAccount(
+            $accountId,
+            $validated['name'],
+            $validated['email'],
+            $passwordArg,
+            $status,
+            $role
+        )) {
             $this->errors['account'][] = 'Unable to update account: ' . ($this->accounts->lastError() ?? 'unknown error');
             return false;
         }
 
         return true;
+    }
+
+    public function update(int $id, array $payload): bool
+    {
+        return $this->updateUserAccount(
+            $id,
+            (string) ($payload['name'] ?? ''),
+            (string) ($payload['email'] ?? ''),
+            (string) ($payload['password'] ?? ''),
+            (string) ($payload['status'] ?? 'active'),
+            (string) ($payload['role'] ?? '')
+        );
     }
 
     public function errors(): array

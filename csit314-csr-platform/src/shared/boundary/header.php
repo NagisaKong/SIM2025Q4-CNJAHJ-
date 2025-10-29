@@ -7,16 +7,10 @@ $currentUser = $_SESSION['user'] ?? null;
 $pageTitle = $pageTitle ?? 'CSR Platform';
 $navLinks = $navLinks ?? [];
 $showGuestNav = $showGuestNav ?? true;
-$roleHomeRoutes = [
-    'admin' => '/index.php?page=admin-accounts',
-    'csr' => '/index.php?page=csr-requests',
-    'pin' => '/index.php?page=pin-requests',
-    'pm' => '/index.php?page=pm-categories',
-];
+$dashboardRoute = '/index.php?page=dashboard';
 
 if ($currentUser) {
-    $roleKey = strtolower((string) ($currentUser['role'] ?? ''));
-    $baseUrl = $baseUrl ?? ($roleHomeRoutes[$roleKey] ?? '/index.php?page=dashboard');
+    $baseUrl = $baseUrl ?? $dashboardRoute;
 } else {
     $baseUrl = $baseUrl ?? '/index.php?page=login';
 }

@@ -1,9 +1,11 @@
 <?php
 require_once __DIR__ . '/../controller/updateProfileController.php';
+require_once __DIR__ . '/../controller/viewProfilesController.php';
 require_once __DIR__ . '/../../shared/entity/UserProfiles.php';
 require_once __DIR__ . '/../../shared/utils/Validation.php';
 
 use CSRPlatform\Admin\Controller\updateProfileController;
+use CSRPlatform\Admin\Controller\viewProfilesController;
 use CSRPlatform\Shared\Entity\UserProfiles;
 use CSRPlatform\Shared\Utils\Validation;
 
@@ -37,7 +39,8 @@ if ($profileId <= 0) {
 }
 
 $profiles = new UserProfiles();
-$profile = $profiles->findById($profileId);
+$viewController = new viewProfilesController($profiles);
+$profile = $viewController->viewUserProfile($profileId);
 if ($profile === null) {
     $_SESSION['flash_error'] = 'Profile not found.';
     header('Location: /index.php?page=admin-profiles');
@@ -63,7 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'status' => (string) $payload['status'],
     ];
 
-    if ($controller->update($profileId, $payload)) {
+    if ($controller->updateUserProfile(
+        $profileId,
+        (string) $payload['role'],
+        (string) $payload['description'],
+        (string) $payload['status']
+    )) {
         $_SESSION['flash_success'] = 'Profile updated successfully.';
         header('Location: /index.php?page=admin-profile-view&id=' . $profileId);
         exit();

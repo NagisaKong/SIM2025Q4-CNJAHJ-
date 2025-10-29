@@ -48,7 +48,7 @@ if ($availableProfiles === []) {
 $filterRole = $_GET['role'] ?? null;
 $normalizedRole = $filterRole !== null ? strtolower((string) $filterRole) : 'all';
 $searchQuery = $_GET['q'] ?? null;
-$users = $viewController->list($filterRole, $searchQuery);
+$users = $viewController->viewUserAccountList($filterRole, $searchQuery);
 
 $pageTitle = 'Manage users';
 $navLinks = [

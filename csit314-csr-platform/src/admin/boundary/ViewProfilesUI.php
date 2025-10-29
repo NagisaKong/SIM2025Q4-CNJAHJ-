@@ -31,7 +31,7 @@ $profilesEntity = new UserProfiles();
 $viewController = new viewProfilesController($profilesEntity);
 
 $searchQuery = $_GET['q'] ?? null;
-$profiles = $viewController->list(null, $searchQuery);
+$profiles = $viewController->viewUserProfileList(null, $searchQuery);
 
 $pageTitle = 'Manage profiles';
 $navLinks = [
@@ -86,7 +86,6 @@ include __DIR__ . '/../../shared/boundary/header.php';
                 <tr>
                     <td>
                         <strong><?= htmlspecialchars(ucwords(str_replace('_', ' ', (string) $profile['role'])), ENT_QUOTES) ?></strong>
-                        <div><small>Identifier: <?= htmlspecialchars((string) $profile['role'], ENT_QUOTES) ?></small></div>
                     </td>
                     <td><?= htmlspecialchars((string) $profile['description'], ENT_QUOTES) ?></td>
                     <td class="status-col"><span class="tag tag-<?= htmlspecialchars((string) $profile['status'], ENT_QUOTES) ?>"><?= htmlspecialchars((string) $profile['status'], ENT_QUOTES) ?></span></td>

@@ -17,48 +17,50 @@ final class updateProfileController
     ) {
     }
 
-    public function update(int $id, array $payload): bool
+    public function updateUserProfile(int $profileId, string $role, string $description, string $status): bool
     {
         $this->errors = [];
 
-        $data = [
-            'role' => strtolower(trim((string) ($payload['role'] ?? ''))),
-            'description' => trim((string) ($payload['description'] ?? '')),
-            'status' => strtolower(trim((string) ($payload['status'] ?? ''))),
+        $normalized = [
+            'role' => strtolower(trim($role)),
+            'description' => trim($description),
+            'status' => strtolower(trim($status)),
         ];
 
-        $rules = [
-            'role' => 'required|min:2',
-            'description' => 'required|min:5',
-        ];
-
-        if (!$this->validator->validate($data, $rules)) {
+        if (!$this->validator->validate(
+            ['role' => $normalized['role'], 'description' => $normalized['description']],
+            ['role' => 'required|min:2', 'description' => 'required|min:5']
+        )) {
             $this->errors = $this->validator->errors();
             return false;
         }
 
-        if ($data['status'] === '') {
+        if ($normalized['status'] === '') {
             $this->errors['status'][] = 'Status is required.';
             return false;
         }
 
-        if (!in_array($data['status'], ['active', 'suspended'], true)) {
+        if (!in_array($normalized['status'], ['active', 'suspended'], true)) {
             $this->errors['status'][] = 'Status must be active or suspended.';
             return false;
         }
 
-        $updatePayload = [
-            'role' => $data['role'],
-            'description' => $data['description'],
-            'status' => $data['status'],
-        ];
-
-        if (!$this->profiles->updateProfile($id, $updatePayload)) {
+        if (!$this->profiles->updateUserProfile($profileId, $normalized['role'], $normalized['description'], $normalized['status'])) {
             $this->errors['profile'][] = 'Unable to update profile.';
             return false;
         }
 
         return true;
+    }
+
+    public function update(int $id, array $payload): bool
+    {
+        return $this->updateUserProfile(
+            $id,
+            (string) ($payload['role'] ?? ''),
+            (string) ($payload['description'] ?? ''),
+            (string) ($payload['status'] ?? '')
+        );
     }
 
     public function errors(): array

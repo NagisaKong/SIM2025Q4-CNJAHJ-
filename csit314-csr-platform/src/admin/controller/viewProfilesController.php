@@ -12,11 +12,28 @@ final class viewProfilesController
     {
     }
 
-    public function list(?string $status = null, ?string $query = null): array
+    public function viewUserProfileList(?string $status = null, ?string $query = null): array
     {
         if ($query !== null && trim($query) !== '') {
-            return $this->profiles->search($query);
+            return $this->profiles->searchProfileList($query);
         }
-        return $this->profiles->listProfiles($status);
+
+        return $this->profiles->getUserProfileList($status);
+    }
+
+    public function searchProfileList(string $query): array
+    {
+        return $this->profiles->searchProfileList($query);
+    }
+
+    public function viewUserProfile(int $profileId): ?array
+    {
+        return $this->profiles->getUserProfile($profileId);
+    }
+
+    /** @deprecated */
+    public function list(?string $status = null, ?string $query = null): array
+    {
+        return $this->viewUserProfileList($status, $query);
     }
 }

@@ -12,8 +12,14 @@ final class suspendProfileController
     {
     }
 
+    public function suspendUserProfile(int $profileId, string $status = 'suspended'): bool
+    {
+        return $this->profiles->holdUserProfile($profileId, $status);
+    }
+
+    /** @deprecated */
     public function suspend(int $profileId): bool
     {
-        return $this->profiles->updateProfile($profileId, ['status' => 'suspended']);
+        return $this->suspendUserProfile($profileId);
     }
 }
