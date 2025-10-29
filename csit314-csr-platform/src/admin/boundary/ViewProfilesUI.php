@@ -24,7 +24,15 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 $currentUser = $_SESSION['user'] ?? null;
 $roleKey = strtolower((string) ($currentUser['role'] ?? ''));
 if ($roleKey !== 'admin') {
-    header('Location: /index.php?page=login');
+    if (!isset($_SESSION['flash_error'])) {
+        $_SESSION['flash_error'] = 'You need an administrator session to manage profiles.';
+    }
+
+    if ($currentUser) {
+        header('Location: /index.php?page=dashboard');
+    } else {
+        header('Location: /index.php?page=login');
+    }
     exit();
 }
 
