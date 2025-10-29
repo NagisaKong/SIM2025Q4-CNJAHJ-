@@ -26,7 +26,8 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 }
 
 $currentUser = $_SESSION['user'] ?? null;
-if (!$currentUser || ($currentUser['role'] ?? '') !== 'admin') {
+$roleKey = strtolower((string) ($currentUser['role'] ?? ''));
+if ($roleKey !== 'admin') {
     header('Location: /index.php?page=login');
     exit();
 }
@@ -86,7 +87,6 @@ $navLinks = [
     ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
     ['href' => '/index.php?page=admin-accounts', 'label' => 'Users'],
     ['href' => '/index.php?page=admin-profiles', 'label' => 'Profiles'],
-    ['href' => '/index.php?page=pm-categories', 'label' => 'Categories'],
 ];
 include __DIR__ . '/../../shared/boundary/header.php';
 ?>

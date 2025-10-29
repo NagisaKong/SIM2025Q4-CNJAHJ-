@@ -42,7 +42,6 @@ $navByRole = [
         ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
         ['href' => '/index.php?page=admin-accounts', 'label' => 'Users'],
         ['href' => '/index.php?page=admin-profiles', 'label' => 'Profiles'],
-        ['href' => '/index.php?page=pm-categories', 'label' => 'Categories'],
     ],
     'csr' => [
         ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
@@ -76,7 +75,6 @@ $cardSets = [
     'admin' => [
         ['href' => '/index.php?page=admin-accounts', 'title' => 'Manage Users', 'meta' => '', 'description' => 'Create, update, or suspend user accounts.'],
         ['href' => '/index.php?page=admin-profiles', 'title' => 'Manage Profiles', 'meta' => '', 'description' => 'Define roles and review profile permissions.'],
-        ['href' => '/index.php?page=pm-categories', 'title' => 'Service Categories', 'meta' => '', 'description' => 'Review the catalogue used to classify requests.'],
     ],
     'csr' => [
         ['href' => '/index.php?page=csr-requests', 'title' => 'Search Opportunities', 'meta' => '', 'description' => 'Filter active requests to find your next match.'],

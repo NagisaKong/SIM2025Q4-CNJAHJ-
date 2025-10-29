@@ -29,10 +29,9 @@ if (!$currentUser) {
     exit();
 }
 
-$isAdmin = ($currentUser['role'] ?? '') === 'admin';
-$isPm = ($currentUser['role'] ?? '') === 'pm';
-if (!$isAdmin && !$isPm) {
-    header('Location: /index.php?page=login');
+$roleKey = strtolower((string) ($currentUser['role'] ?? ''));
+if ($roleKey !== 'pm') {
+    header('Location: /index.php?page=dashboard');
     exit();
 }
 
@@ -78,21 +77,12 @@ $searchQuery = $_GET['q'] ?? '';
 $categories = $viewController->list('all', $searchQuery);
 
 $pageTitle = 'Service categories';
-if ($isAdmin) {
-    $navLinks = [
-        ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
-        ['href' => '/index.php?page=admin-accounts', 'label' => 'Users'],
-        ['href' => '/index.php?page=admin-profiles', 'label' => 'Profiles'],
-        ['href' => '/index.php?page=pm-categories', 'label' => 'Categories'],
-    ];
-} else {
-    $navLinks = [
-        ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
-        ['href' => '/index.php?page=pm-categories', 'label' => 'Categories'],
-        ['href' => '/index.php?page=pm-report-daily', 'label' => 'Daily report'],
-        ['href' => '/index.php?page=pm-report-weekly', 'label' => 'Weekly report'],
-    ];
-}
+$navLinks = [
+    ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
+    ['href' => '/index.php?page=pm-categories', 'label' => 'Categories'],
+    ['href' => '/index.php?page=pm-report-daily', 'label' => 'Daily report'],
+    ['href' => '/index.php?page=pm-report-weekly', 'label' => 'Weekly report'],
+];
 include __DIR__ . '/../../shared/boundary/header.php';
 ?>
 <section class="card">

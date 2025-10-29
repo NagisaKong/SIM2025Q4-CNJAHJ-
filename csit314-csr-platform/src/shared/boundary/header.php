@@ -8,6 +8,12 @@ $pageTitle = $pageTitle ?? 'CSR Platform';
 $navLinks = $navLinks ?? [];
 $showGuestNav = $showGuestNav ?? true;
 $dashboardRoute = '/index.php?page=dashboard';
+$currentPageParam = $_GET['page'] ?? null;
+
+if (!isset($logoutTarget)) {
+    $targetPage = $currentPageParam ?? 'login';
+    $logoutTarget = '/index.php?page=' . rawurlencode((string) $targetPage) . '&action=logout';
+}
 
 if ($currentUser) {
     $baseUrl = $baseUrl ?? $dashboardRoute;
@@ -46,7 +52,7 @@ unset($_SESSION['flash_success'], $_SESSION['flash_warning'], $_SESSION['flash_i
                 <?php foreach ($navLinks as $link): ?>
                     <a href="<?= htmlspecialchars($link['href'], ENT_QUOTES) ?>"><?= htmlspecialchars($link['label'], ENT_QUOTES) ?></a>
                 <?php endforeach; ?>
-                <a href="?action=logout" class="logout-link">Logout</a>
+                <a href="<?= htmlspecialchars($logoutTarget, ENT_QUOTES) ?>" class="logout-link">Logout</a>
             <?php elseif ($showGuestNav): ?>
                 <a href="/">Sign in</a>
             <?php endif; ?>
