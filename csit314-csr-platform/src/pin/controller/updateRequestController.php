@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace CSRPlatform\PIN\Controller;
 
-use CSRPlatform\Shared\Entity\Request;
 use CSRPlatform\Shared\Boundary\FormValidator;
+use CSRPlatform\Shared\Entity\Request;
 
-final class createRequestController
+final class updateRequestController
 {
     private array $errors = [];
 
@@ -17,19 +17,26 @@ final class createRequestController
     ) {
     }
 
-    public function createRequest(int $pinId, int $serviceId, string $additionalDetails, array $options = []): bool
-    {
+    public function updateRequest(
+        int $pinId,
+        int $requestId,
+        int $serviceId,
+        string $additionalDetails,
+        string $status,
+        array $options = []
+    ): bool {
         $payload = $options + [
             'service_id' => $serviceId,
             'additional_details' => $additionalDetails,
+            'status' => $status,
         ];
 
-        return $this->persist($pinId, $payload);
+        return $this->persist($pinId, $requestId, $payload);
     }
 
-    public function create(int $pinId, array $input): bool
+    public function update(int $pinId, int $requestId, array $input): bool
     {
-        return $this->persist($pinId, $input);
+        return $this->persist($pinId, $requestId, $input);
     }
 
     public function errors(): array
@@ -37,35 +44,37 @@ final class createRequestController
         return $this->errors;
     }
 
-    private function persist(int $pinId, array $input): bool
+    private function persist(int $pinId, int $requestId, array $input): bool
     {
         $this->errors = [];
 
         $sanitised = [
             'service_id' => $input['service_id'] ?? $input['category_id'] ?? null,
             'additional_details' => $input['additional_details'] ?? $input['description'] ?? '',
+            'status' => $input['status'] ?? null,
             'title' => $input['title'] ?? null,
             'location' => $input['location'] ?? null,
             'requested_date' => $input['requested_date'] ?? null,
-            'status' => $input['status'] ?? null,
         ];
 
         if (!$this->validator->validate($sanitised, [
             'service_id' => 'required|integer',
             'additional_details' => 'required|min:5',
+            'status' => 'required',
         ])) {
             $this->errors = $this->validator->errors();
             return false;
         }
 
-        return $this->requests->registerRequest(
+        return $this->requests->updateRequestDetails(
             $pinId,
+            $requestId,
             (int) $sanitised['service_id'],
             (string) $sanitised['additional_details'],
+            (string) $sanitised['status'],
             $sanitised['title'] !== null ? (string) $sanitised['title'] : null,
             $sanitised['location'] !== null ? (string) $sanitised['location'] : null,
-            $sanitised['requested_date'] !== null ? (string) $sanitised['requested_date'] : null,
-            $sanitised['status'] !== null ? (string) $sanitised['status'] : null
+            $sanitised['requested_date'] !== null ? (string) $sanitised['requested_date'] : null
         );
     }
 }

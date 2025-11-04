@@ -12,6 +12,11 @@ final class viewRequestShortlistCountController
     {
     }
 
+    public function viewRequestShortlistCount(int $requestId): int
+    {
+        return $this->requests->getRequestShortlistCount($requestId);
+    }
+
     public function list(int $pinId): array
     {
         return $this->requests->shortlistCountsForPin($pinId);

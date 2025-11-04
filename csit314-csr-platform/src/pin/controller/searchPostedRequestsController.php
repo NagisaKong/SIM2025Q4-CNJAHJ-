@@ -12,16 +12,17 @@ final class searchPostedRequestsController
     {
     }
 
+    public function searchPostedRequests(
+        int $pinId,
+        ?string $query = null,
+        ?string $status = null,
+        ?int $serviceId = null
+    ): array {
+        return $this->requests->searchPostedRequests($pinId, $query, $status, $serviceId);
+    }
+
     public function search(int $pinId, ?string $query = null): array
     {
-        $all = $this->requests->listRequestsByPin($pinId);
-        if ($query === null || trim($query) === '') {
-            return $all;
-        }
-        $query = strtolower($query);
-        return array_values(array_filter($all, static function (array $row) use ($query): bool {
-            return str_contains(strtolower((string) $row['title']), $query) ||
-                str_contains(strtolower((string) $row['description']), $query);
-        }));
+        return $this->searchPostedRequests($pinId, $query);
     }
 }

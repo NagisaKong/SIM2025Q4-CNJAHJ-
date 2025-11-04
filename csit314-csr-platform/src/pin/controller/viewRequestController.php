@@ -12,6 +12,15 @@ final class viewRequestController
     {
     }
 
+    public function viewPostedRequest(int $pinId, int $requestId, bool $incrementView = false): ?array
+    {
+        if ($incrementView) {
+            $this->requests->incrementView($requestId);
+        }
+
+        return $this->requests->getPostedRequest($pinId, $requestId);
+    }
+
     public function view(int $requestId, bool $incrementView = true): ?array
     {
         if ($incrementView) {

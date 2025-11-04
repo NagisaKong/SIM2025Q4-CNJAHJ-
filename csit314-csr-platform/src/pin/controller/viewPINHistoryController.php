@@ -12,8 +12,13 @@ final class viewPINHistoryController
     {
     }
 
+    public function viewPINHistory(int $pinId): array
+    {
+        return $this->requests->getPINHistory($pinId);
+    }
+
     public function history(int $pinId): array
     {
-        return $this->requests->requestHistory($pinId);
+        return $this->viewPINHistory($pinId);
     }
 }
