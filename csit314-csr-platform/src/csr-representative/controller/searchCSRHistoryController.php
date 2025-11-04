@@ -4,24 +4,26 @@ declare(strict_types=1);
 
 namespace CSRPlatform\CSRRepresentative\Controller;
 
-use CSRPlatform\Shared\Entity\Shortlist;
+use CSRPlatform\Shared\Entity\Request;
 
 final class searchCSRHistoryController
 {
-    public function __construct(private Shortlist $shortlists)
+    public function __construct(private Request $requests)
     {
+    }
+
+    public function searchCSRHistory(
+        int $csrId,
+        ?string $searchQuery = null,
+        ?string $startDate = null,
+        ?string $endDate = null,
+        ?int $serviceId = null
+    ): array {
+        return $this->requests->searchCSRHistory($csrId, $searchQuery, $startDate, $endDate, $serviceId);
     }
 
     public function search(int $csrId, string $query): array
     {
-        $history = $this->shortlists->csrHistory($csrId);
-        if (trim($query) === '') {
-            return $history;
-        }
-        $query = strtolower($query);
-        return array_values(array_filter($history, static function (array $row) use ($query): bool {
-            return str_contains(strtolower((string) $row['title']), $query) ||
-                str_contains(strtolower((string) ($row['status'] ?? '')), $query);
-        }));
+        return $this->searchCSRHistory($csrId, $query);
     }
 }

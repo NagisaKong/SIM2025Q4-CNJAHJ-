@@ -3,13 +3,13 @@ require_once __DIR__ . '/../controller/updateAccountController.php';
 require_once __DIR__ . '/../controller/viewAccountsController.php';
 require_once __DIR__ . '/../../shared/entity/UserAccount.php';
 require_once __DIR__ . '/../../shared/entity/UserProfiles.php';
-require_once __DIR__ . '/../../shared/utils/Validation.php';
+require_once __DIR__ . '/../../shared/boundary/FormValidator.php';
 
 use CSRPlatform\Admin\Controller\updateAccountController;
 use CSRPlatform\Admin\Controller\viewAccountsController;
 use CSRPlatform\Shared\Entity\UserAccount;
 use CSRPlatform\Shared\Entity\UserProfiles;
-use CSRPlatform\Shared\Utils\Validation;
+use CSRPlatform\Shared\Boundary\FormValidator;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -44,7 +44,7 @@ if ($userId <= 0) {
 $accounts = new UserAccount();
 $profiles = new UserProfiles();
 $viewController = new viewAccountsController($accounts);
-$updateController = new updateAccountController($accounts, new Validation());
+$updateController = new updateAccountController($accounts, new FormValidator());
 $availableProfiles = $profiles->listProfiles('active');
 if ($availableProfiles === []) {
     $availableProfiles = $profiles->listProfiles('all');

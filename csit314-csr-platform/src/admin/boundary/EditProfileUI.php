@@ -2,12 +2,12 @@
 require_once __DIR__ . '/../controller/updateProfileController.php';
 require_once __DIR__ . '/../controller/viewProfilesController.php';
 require_once __DIR__ . '/../../shared/entity/UserProfiles.php';
-require_once __DIR__ . '/../../shared/utils/Validation.php';
+require_once __DIR__ . '/../../shared/boundary/FormValidator.php';
 
 use CSRPlatform\Admin\Controller\updateProfileController;
 use CSRPlatform\Admin\Controller\viewProfilesController;
 use CSRPlatform\Shared\Entity\UserProfiles;
-use CSRPlatform\Shared\Utils\Validation;
+use CSRPlatform\Shared\Boundary\FormValidator;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -48,7 +48,7 @@ if ($profile === null) {
     exit();
 }
 
-$controller = new updateProfileController($profiles, new Validation());
+$controller = new updateProfileController($profiles, new FormValidator());
 $formValues = [
     'role' => (string) ($profile['role'] ?? ''),
     'description' => (string) ($profile['description'] ?? ''),

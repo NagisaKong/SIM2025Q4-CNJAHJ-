@@ -37,7 +37,7 @@ $saveController = new saveRequestController(new Shortlist(), new Request());
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['shortlist_id'])) {
     $requestId = (int) $_POST['shortlist_id'];
     if ($requestId > 0) {
-        if ($saveController->shortlist((int) $currentUser['id'], $requestId)) {
+        if ($saveController->saveRequest((int) $currentUser['id'], $requestId)) {
             $_SESSION['flash_success'] = 'Request added to your shortlist.';
         } else {
             $_SESSION['flash_warning'] = 'Request already shortlisted.';
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['shortlist_id'])) {
 $searchQuery = $_GET['q'] ?? null;
 $categoryId = isset($_GET['category_id']) && $_GET['category_id'] !== '' ? (int) $_GET['category_id'] : null;
 $status = $_GET['status'] ?? null;
-$requests = $searchController->search($searchQuery, $status, $categoryId);
+$requests = $searchController->searchRequests((string) ($searchQuery ?? ''), $status, $categoryId);
 $categories = $categoriesEntity->listCategories('active');
 
 $pageTitle = 'Volunteer Opportunities';

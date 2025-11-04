@@ -6,7 +6,7 @@ namespace CSRPlatform\Admin\Controller;
 
 use CSRPlatform\Shared\Entity\UserAccount;
 use CSRPlatform\Shared\Entity\UserProfiles;
-use CSRPlatform\Shared\Utils\Validation;
+use CSRPlatform\Shared\Boundary\FormValidator;
 
 final class createAccountController
 {
@@ -16,7 +16,7 @@ final class createAccountController
     public function __construct(
         private UserAccount $accounts,
         private UserProfiles $profiles,
-        private Validation $validator
+        private FormValidator $validator
     ) {
     }
 

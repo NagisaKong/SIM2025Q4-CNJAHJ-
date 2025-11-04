@@ -5,7 +5,7 @@ require_once __DIR__ . '/../controller/updateServiceCategoryController.php';
 use CSRPlatform\PM\Controller\updateServiceCategoryController;
 use CSRPlatform\PM\Controller\viewServiceCategoryController;
 use CSRPlatform\Shared\Entity\ServiceCategories;
-use CSRPlatform\Shared\Utils\Validation;
+use CSRPlatform\Shared\Boundary\FormValidator;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -37,7 +37,7 @@ if ($roleKey !== 'pm') {
 
 $categoriesEntity = new ServiceCategories();
 $viewController = new viewServiceCategoryController($categoriesEntity);
-$updateController = new updateServiceCategoryController($categoriesEntity, new Validation());
+$updateController = new updateServiceCategoryController($categoriesEntity, new FormValidator());
 
 $showCreateForm = isset($_GET['create']);
 $categoryNameValue = '';

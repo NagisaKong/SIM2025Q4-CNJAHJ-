@@ -30,8 +30,9 @@ if (!$currentUser) {
 }
 
 $shortlistEntity = new Shortlist();
-$viewController = new viewShortlistedRequestController($shortlistEntity);
-$searchController = new searchShortlistController($shortlistEntity);
+$requestEntity = new Request();
+$viewController = new viewShortlistedRequestController($requestEntity);
+$searchController = new searchShortlistController($requestEntity);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_id'])) {
     $requestId = (int) $_POST['remove_id'];
@@ -45,8 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_id'])) {
 
 $searchQuery = $_GET['q'] ?? '';
 $requests = $searchQuery === ''
-    ? $viewController->list((int) $currentUser['id'])
-    : $searchController->search((int) $currentUser['id'], $searchQuery);
+    ? $viewController->listShortlistedRequests((int) $currentUser['id'])
+    : $searchController->searchShortlists((int) $currentUser['id'], $searchQuery);
 
 $pageTitle = 'My Shortlist';
 $navLinks = [

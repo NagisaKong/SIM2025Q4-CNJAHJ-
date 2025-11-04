@@ -15,12 +15,17 @@ final class saveRequestController
     ) {
     }
 
-    public function shortlist(int $csrId, int $requestId): bool
+    public function saveRequest(int $accountId, int $requestId): bool
     {
-        $saved = $this->shortlists->addToShortlist($csrId, $requestId);
+        $saved = $this->shortlists->addToShortlist($accountId, $requestId);
         if ($saved) {
-            $this->requests->updateShortlistCount($requestId);
+            $this->requests->increaseShortlistCount($requestId);
         }
         return $saved;
+    }
+
+    public function shortlist(int $csrId, int $requestId): bool
+    {
+        return $this->saveRequest($csrId, $requestId);
     }
 }

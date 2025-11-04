@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace CSRPlatform\PIN\Controller;
 
 use CSRPlatform\Shared\Entity\Request;
-use CSRPlatform\Shared\Utils\Validation;
+use CSRPlatform\Shared\Boundary\FormValidator;
 
 final class createRequestController
 {
@@ -13,7 +13,7 @@ final class createRequestController
 
     public function __construct(
         private Request $requests,
-        private Validation $validator
+        private FormValidator $validator
     ) {
     }
 

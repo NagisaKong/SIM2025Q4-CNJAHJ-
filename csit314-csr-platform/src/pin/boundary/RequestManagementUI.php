@@ -3,6 +3,7 @@ require_once __DIR__ . '/../controller/createRequestController.php';
 require_once __DIR__ . '/../controller/searchPostedRequestsController.php';
 require_once __DIR__ . '/../controller/viewRequestController.php';
 require_once __DIR__ . '/../controller/viewRequestShortlistCountController.php';
+require_once __DIR__ . '/../../shared/boundary/FormValidator.php';
 
 use CSRPlatform\PIN\Controller\createRequestController;
 use CSRPlatform\PIN\Controller\searchPostedRequestsController;
@@ -10,7 +11,7 @@ use CSRPlatform\PIN\Controller\viewRequestController;
 use CSRPlatform\PIN\Controller\viewRequestShortlistCountController;
 use CSRPlatform\Shared\Entity\Request;
 use CSRPlatform\Shared\Entity\ServiceCategories;
-use CSRPlatform\Shared\Utils\Validation;
+use CSRPlatform\Shared\Boundary\FormValidator;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -36,7 +37,7 @@ if (!$currentUser) {
 
 $requestEntity = new Request();
 $categoriesEntity = new ServiceCategories();
-$validator = new Validation();
+$validator = new FormValidator();
 $createController = new createRequestController($requestEntity, $validator);
 $searchController = new searchPostedRequestsController($requestEntity);
 $viewController = new viewRequestController($requestEntity);

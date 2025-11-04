@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace CSRPlatform\Shared\Entity;
 
 use CSRPlatform\Shared\Database\DatabaseConnection;
-use PDOException;
 
 final class Shortlist
 {
@@ -25,43 +24,16 @@ final class Shortlist
 
     public function shortlistedRequests(int $csrId): array
     {
-        $pdo = DatabaseConnection::get();
-        $sql = 'SELECT pr.*, sc.name AS category_name, sl.created_at AS shortlisted_at
-                FROM shortlists sl
-                INNER JOIN pin_requests pr ON pr.id = sl.request_id
-                INNER JOIN service_categories sc ON sc.id = pr.category_id
-                WHERE sl.csr_id = :csr_id
-                ORDER BY sl.created_at DESC';
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([':csr_id' => $csrId]);
-        return $stmt->fetchAll();
+        return (new Request())->listShortlistedRequests($csrId);
     }
 
     public function searchShortlist(int $csrId, string $query): array
     {
-        $pdo = DatabaseConnection::get();
-        $sql = 'SELECT pr.*, sc.name AS category_name, sl.created_at AS shortlisted_at
-                FROM shortlists sl
-                INNER JOIN pin_requests pr ON pr.id = sl.request_id
-                INNER JOIN service_categories sc ON sc.id = pr.category_id
-                WHERE sl.csr_id = :csr_id
-                AND (pr.title ILIKE :query OR pr.description ILIKE :query OR pr.location ILIKE :query)
-                ORDER BY sl.created_at DESC';
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([':csr_id' => $csrId, ':query' => '%' . $query . '%']);
-        return $stmt->fetchAll();
+        return (new Request())->searchShortlistedRequests($csrId, $query);
     }
 
     public function csrHistory(int $csrId): array
     {
-        $pdo = DatabaseConnection::get();
-        $sql = 'SELECT pr.title, pr.status, sl.created_at, pr.updated_at
-                FROM shortlists sl
-                INNER JOIN pin_requests pr ON pr.id = sl.request_id
-                WHERE sl.csr_id = :csr_id
-                ORDER BY sl.created_at DESC';
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([':csr_id' => $csrId]);
-        return $stmt->fetchAll();
+        return (new Request())->searchCSRHistory($csrId);
     }
 }

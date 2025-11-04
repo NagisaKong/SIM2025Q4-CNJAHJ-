@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace CSRPlatform\Admin\Controller;
 
 use CSRPlatform\Shared\Entity\UserProfiles;
-use CSRPlatform\Shared\Utils\Validation;
+use CSRPlatform\Shared\Boundary\FormValidator;
 
 final class updateProfileController
 {
@@ -13,7 +13,7 @@ final class updateProfileController
 
     public function __construct(
         private UserProfiles $profiles,
-        private Validation $validator
+        private FormValidator $validator
     ) {
     }
 

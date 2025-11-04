@@ -4,7 +4,7 @@ require_once __DIR__ . '/../controller/searchCSRHistoryController.php';
 
 use CSRPlatform\CSRRepresentative\Controller\searchCSRHistoryController;
 use CSRPlatform\CSRRepresentative\Controller\viewCSRHistoryController;
-use CSRPlatform\Shared\Entity\Shortlist;
+use CSRPlatform\Shared\Entity\Request;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -28,14 +28,14 @@ if (!$currentUser) {
     exit();
 }
 
-$shortlistEntity = new Shortlist();
-$viewController = new viewCSRHistoryController($shortlistEntity);
-$searchController = new searchCSRHistoryController($shortlistEntity);
+$requestEntity = new Request();
+$viewController = new viewCSRHistoryController($requestEntity);
+$searchController = new searchCSRHistoryController($requestEntity);
 
 $searchQuery = $_GET['q'] ?? '';
 $history = $searchQuery === ''
-    ? $viewController->history((int) $currentUser['id'])
-    : $searchController->search((int) $currentUser['id'], $searchQuery);
+    ? $viewController->viewHistory((int) $currentUser['id'])
+    : $searchController->searchCSRHistory((int) $currentUser['id'], $searchQuery);
 
 $pageTitle = 'CSR History';
 $navLinks = [

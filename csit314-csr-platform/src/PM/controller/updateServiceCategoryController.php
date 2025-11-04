@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace CSRPlatform\PM\Controller;
 
 use CSRPlatform\Shared\Entity\ServiceCategories;
-use CSRPlatform\Shared\Utils\Validation;
+use CSRPlatform\Shared\Boundary\FormValidator;
 
 final class updateServiceCategoryController
 {
@@ -13,7 +13,7 @@ final class updateServiceCategoryController
 
     public function __construct(
         private ServiceCategories $categories,
-        private Validation $validator
+        private FormValidator $validator
     ) {
     }
 

@@ -2,12 +2,10 @@
 require_once __DIR__ . '/../entity/UserAccount.php';
 require_once __DIR__ . '/../entity/UserProfiles.php';
 require_once __DIR__ . '/../entity/Request.php';
-require_once __DIR__ . '/../entity/Shortlist.php';
 require_once __DIR__ . '/../entity/serviceCategories.php';
 
 use CSRPlatform\Shared\Entity\Request;
 use CSRPlatform\Shared\Entity\ServiceCategories;
-use CSRPlatform\Shared\Entity\Shortlist;
 use CSRPlatform\Shared\Entity\UserAccount;
 use CSRPlatform\Shared\Entity\UserProfiles;
 
@@ -100,8 +98,8 @@ if ($roleKey === 'admin') {
     $cardSets['admin'][0]['meta'] = count($accounts) . ' total accounts';
     $cardSets['admin'][1]['meta'] = count($profiles) . ' profiles defined';
 } elseif ($roleKey === 'csr') {
-    $shortlistEntity = new Shortlist();
-    $shortlisted = $shortlistEntity->shortlistedRequests($userId);
+    $requestEntity = new Request();
+    $shortlisted = $requestEntity->listShortlistedRequests($userId);
     $cardSets['csr'][1]['meta'] = count($shortlisted) . ' saved';
 } elseif ($roleKey === 'pin') {
     $requestEntity = new Request();

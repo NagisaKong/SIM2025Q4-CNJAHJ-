@@ -3,13 +3,13 @@ require_once __DIR__ . '/../controller/LoginController.php';
 
 use CSRPlatform\Login\Controller\LoginController;
 use CSRPlatform\Shared\Entity\UserAccount;
-use CSRPlatform\Shared\Utils\Validation;
+use CSRPlatform\Shared\Boundary\FormValidator;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-$controller = new LoginController(new UserAccount(), new Validation());
+$controller = new LoginController(new UserAccount(), new FormValidator());
 $message = null;
 $errors = [];
 $selectedRole = $_POST['role'] ?? '';

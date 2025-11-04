@@ -12,8 +12,14 @@ final class searchRequestController
     {
     }
 
+    public function searchRequests(string $searchQuery, ?string $status = null, ?int $categoryId = null): array
+    {
+        return $this->requests->searchRequestsByCriteria($searchQuery, $status, $categoryId);
+    }
+
     public function search(?string $query = null, ?string $status = null, ?int $categoryId = null): array
     {
-        return $this->requests->searchRequests($query, $status, $categoryId);
+        $query ??= '';
+        return $this->searchRequests($query, $status, $categoryId);
     }
 }

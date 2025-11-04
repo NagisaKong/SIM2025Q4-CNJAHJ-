@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace CSRPlatform\Login\Controller;
 
 use CSRPlatform\Shared\Entity\UserAccount;
-use CSRPlatform\Shared\Utils\Validation;
+use CSRPlatform\Shared\Boundary\FormValidator;
 
 final class LoginController
 {
@@ -13,7 +13,7 @@ final class LoginController
 
     public function __construct(
         private UserAccount $accounts,
-        private Validation $validator
+        private FormValidator $validator
     ) {
     }
 

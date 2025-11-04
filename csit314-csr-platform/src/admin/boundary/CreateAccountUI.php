@@ -1,12 +1,12 @@
 <?php
 require_once __DIR__ . '/../controller/createAccountController.php';
 require_once __DIR__ . '/../../shared/entity/UserProfiles.php';
-require_once __DIR__ . '/../../shared/utils/Validation.php';
+require_once __DIR__ . '/../../shared/boundary/FormValidator.php';
 
 use CSRPlatform\Admin\Controller\createAccountController;
 use CSRPlatform\Shared\Entity\UserAccount;
 use CSRPlatform\Shared\Entity\UserProfiles;
-use CSRPlatform\Shared\Utils\Validation;
+use CSRPlatform\Shared\Boundary\FormValidator;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -33,7 +33,7 @@ if ($roleKey !== 'admin') {
 
 $accounts = new UserAccount();
 $profiles = new UserProfiles();
-$validator = new Validation();
+$validator = new FormValidator();
 $createController = new createAccountController($accounts, $profiles, $validator);
 
 $availableProfiles = $profiles->listProfiles('active');
