@@ -80,11 +80,22 @@ include __DIR__ . '/../../shared/boundary/header.php';
         </thead>
         <tbody>
             <?php foreach ($requests as $request): ?>
+                <?php
+                $shortlistedAtRaw = (string) ($request['shortlisted_at'] ?? '');
+                $shortlistedAtFormatted = $shortlistedAtRaw;
+                if ($shortlistedAtRaw !== '') {
+                    try {
+                        $shortlistedAtFormatted = (new DateTime($shortlistedAtRaw))->format('Y-m-d H:i:s');
+                    } catch (Exception $exception) {
+                        $shortlistedAtFormatted = $shortlistedAtRaw;
+                    }
+                }
+                ?>
                 <tr>
                     <td><?= htmlspecialchars((string) $request['title'], ENT_QUOTES) ?></td>
                     <td><?= htmlspecialchars((string) ($request['category_name'] ?? 'N/A'), ENT_QUOTES) ?></td>
                     <td><?= htmlspecialchars((string) $request['location'], ENT_QUOTES) ?></td>
-                    <td><?= htmlspecialchars((string) $request['shortlisted_at'], ENT_QUOTES) ?></td>
+                    <td><?= htmlspecialchars($shortlistedAtFormatted, ENT_QUOTES) ?></td>
                     <td>
                         <form method="POST" action="/index.php?page=csr-shortlist" class="inline-form">
                             <input type="hidden" name="remove_id" value="<?= (int) $request['id'] ?>">

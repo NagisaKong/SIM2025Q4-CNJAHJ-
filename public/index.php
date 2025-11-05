@@ -16,6 +16,7 @@ $routes = [
     'admin-profile-view' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/ViewProfileUI.php',
     'admin-profile-edit' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/EditProfileUI.php',
     'csr-requests' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/SearchRequestsUI.php',
+    'csr-request-view' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/ViewRequestUI.php',
     'csr-shortlist' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/ShortlistUI.php',
     'csr-history' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/HistoryUI.php',
     'pin-requests' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/viewRequestsUI.php',

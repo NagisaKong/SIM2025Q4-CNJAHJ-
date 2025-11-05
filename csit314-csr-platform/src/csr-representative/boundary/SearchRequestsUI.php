@@ -91,7 +91,7 @@ include __DIR__ . '/../../shared/boundary/header.php';
                 <th>Date</th>
                 <th>Views</th>
                 <th>Shortlisted</th>
-                <th></th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -102,7 +102,8 @@ include __DIR__ . '/../../shared/boundary/header.php';
                     <td><?= htmlspecialchars((string) $requestItem['requested_date'], ENT_QUOTES) ?></td>
                     <td><?= (int) $requestItem['views_count'] ?></td>
                     <td><?= (int) $requestItem['shortlist_count'] ?></td>
-                    <td>
+                    <td class="table-actions">
+                        <a class="btn-secondary" href="/index.php?page=csr-request-view&amp;id=<?= (int) $requestItem['id'] ?>">View</a>
                         <form method="POST" action="/index.php?page=csr-requests" class="inline-form">
                             <input type="hidden" name="shortlist_id" value="<?= (int) $requestItem['id'] ?>">
                             <button type="submit" class="btn-primary">Shortlist</button>
