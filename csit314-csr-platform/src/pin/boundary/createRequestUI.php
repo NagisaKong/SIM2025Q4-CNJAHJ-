@@ -38,8 +38,10 @@ $categoriesEntity = new ServiceCategories();
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $serviceId = isset($_POST['service_id']) ? (int) $_POST['service_id'] : 0;
-    $additionalDetails = (string) ($_POST['additional_details'] ?? '');
+    $serviceId = isset($_POST['service_id']) ? (int) $_POST['service_id'] : (isset($_POST['type']) ? (int) $_POST['type'] : 0);
+    $additionalDetails = isset($_POST['additional_details'])
+        ? (string) $_POST['additional_details']
+        : (string) ($_POST['additionalDetails'] ?? '');
 
     if ($createController->createRequest((int) $currentUser['id'], $serviceId, $additionalDetails)) {
         $_SESSION['flash_success'] = 'Request created successfully.';
@@ -74,16 +76,17 @@ include __DIR__ . '/../../shared/boundary/header.php';
         <a href="/index.php?page=pin-requests" class="btn-secondary">Back to requests</a>
     </div>
     <form method="POST" class="form-grid">
-        <label>Service
-            <select name="service_id" required>
-                <option value="">Select a service</option>
+        <label>Type
+            <select name="type" required>
+                <option value="">Select a type</option>
                 <?php foreach ($categories as $category): ?>
-                    <option value="<?= (int) $category['id'] ?>" <?= isset($_POST['service_id']) && (int) $_POST['service_id'] === (int) $category['id'] ? 'selected' : '' ?>><?= htmlspecialchars((string) $category['name'], ENT_QUOTES) ?></option>
+                    <?php $selected = isset($_POST['service_id']) ? (int) $_POST['service_id'] === (int) $category['id'] : (isset($_POST['type']) && (int) $_POST['type'] === (int) $category['id']); ?>
+                    <option value="<?= (int) $category['id'] ?>" <?= $selected ? 'selected' : '' ?>><?= htmlspecialchars((string) $category['name'], ENT_QUOTES) ?></option>
                 <?php endforeach; ?>
             </select>
         </label>
         <label>Additional details
-            <textarea name="additional_details" rows="6" placeholder="Describe the support you need" required><?= isset($_POST['additional_details']) ? htmlspecialchars((string) $_POST['additional_details'], ENT_QUOTES) : '' ?></textarea>
+            <textarea name="additionalDetails" rows="6" placeholder="Describe the support you need" required><?= isset($_POST['additional_details']) ? htmlspecialchars((string) $_POST['additional_details'], ENT_QUOTES) : (isset($_POST['additionalDetails']) ? htmlspecialchars((string) $_POST['additionalDetails'], ENT_QUOTES) : '') ?></textarea>
         </label>
         <button type="submit" class="btn-primary">Create request</button>
     </form>

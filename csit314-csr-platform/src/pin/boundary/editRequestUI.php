@@ -55,13 +55,15 @@ if (!$requestDetails) {
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $serviceId = isset($_POST['service_id']) ? (int) $_POST['service_id'] : 0;
-    $additionalDetails = (string) ($_POST['additional_details'] ?? '');
+    $serviceId = isset($_POST['service_id']) ? (int) $_POST['service_id'] : (isset($_POST['type']) ? (int) $_POST['type'] : 0);
+    $additionalDetails = isset($_POST['additional_details'])
+        ? (string) $_POST['additional_details']
+        : (string) ($_POST['additionalDetails'] ?? '');
     $status = (string) ($_POST['status'] ?? 'open');
 
     if ($updateController->updateRequest((int) $currentUser['id'], $requestId, $serviceId, $additionalDetails, $status)) {
         $_SESSION['flash_success'] = 'Request updated successfully.';
-        header('Location: /index.php?page=pin-requests&view=' . $requestId);
+        header('Location: /index.php?page=pin-request-view&id=' . $requestId);
         exit();
     }
 
@@ -93,12 +95,12 @@ include __DIR__ . '/../../shared/boundary/header.php';
             <h1>Edit request</h1>
             <p>Update the service category or status for this request.</p>
         </div>
-        <a href="/index.php?page=pin-requests&amp;view=<?= $requestId ?>" class="btn-secondary">Back to request</a>
+        <a href="/index.php?page=pin-request-view&amp;id=<?= $requestId ?>" class="btn-secondary">Back to request</a>
     </div>
     <form method="POST" class="form-grid">
-        <label>Service
-            <select name="service_id" required>
-                <option value="">Select a service</option>
+        <label>Type
+            <select name="type" required>
+                <option value="">Select a type</option>
                 <?php foreach ($categories as $category): ?>
                     <option value="<?= (int) $category['id'] ?>" <?= (int) ($requestDetails['category_id'] ?? 0) === (int) $category['id'] ? 'selected' : '' ?>><?= htmlspecialchars((string) $category['name'], ENT_QUOTES) ?></option>
                 <?php endforeach; ?>
@@ -113,7 +115,7 @@ include __DIR__ . '/../../shared/boundary/header.php';
             </select>
         </label>
         <label>Additional details
-            <textarea name="additional_details" rows="6" required><?= htmlspecialchars((string) ($requestDetails['additional_details'] ?? $requestDetails['description']), ENT_QUOTES) ?></textarea>
+            <textarea name="additionalDetails" rows="6" required><?= htmlspecialchars((string) ($requestDetails['additional_details'] ?? $requestDetails['description']), ENT_QUOTES) ?></textarea>
         </label>
         <button type="submit" class="btn-primary">Save changes</button>
     </form>

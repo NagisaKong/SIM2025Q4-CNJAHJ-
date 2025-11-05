@@ -20,6 +20,7 @@ $routes = [
     'csr-history' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/HistoryUI.php',
     'pin-requests' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/viewRequestsUI.php',
     'pin-request-create' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/createRequestUI.php',
+    'pin-request-view' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/viewRequestUI.php',
     'pin-request-edit' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/editRequestUI.php',
     'pin-request-shortlist' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/viewRequestShortlistCountUI.php',
     'pin-request-views' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/viewRequestViewCountUI.php',

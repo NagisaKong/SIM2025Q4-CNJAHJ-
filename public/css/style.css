@@ -258,6 +258,42 @@ textarea {
     background: var(--surface-muted);
 }
 
+.btn-filter {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.metric-grid {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.metric-card {
+    background: var(--surface-muted);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.metric-label {
+    display: block;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--secondary);
+    margin-bottom: 0.25rem;
+}
+
+.metric-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
 .link-button {
     color: var(--primary);
     font-weight: 600;

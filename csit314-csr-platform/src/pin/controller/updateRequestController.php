@@ -49,8 +49,8 @@ final class updateRequestController
         $this->errors = [];
 
         $sanitised = [
-            'service_id' => $input['service_id'] ?? $input['category_id'] ?? null,
-            'additional_details' => $input['additional_details'] ?? $input['description'] ?? '',
+            'service_id' => $input['service_id'] ?? $input['category_id'] ?? $input['type'] ?? null,
+            'additional_details' => $input['additional_details'] ?? $input['description'] ?? $input['additionalDetails'] ?? '',
             'status' => $input['status'] ?? null,
             'title' => $input['title'] ?? null,
             'location' => $input['location'] ?? null,

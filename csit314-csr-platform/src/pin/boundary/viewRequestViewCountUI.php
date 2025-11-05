@@ -62,7 +62,7 @@ include __DIR__ . '/../../shared/boundary/header.php';
             <h1>View count</h1>
             <p><?= htmlspecialchars((string) $requestDetails['title'], ENT_QUOTES) ?></p>
         </div>
-        <a href="/index.php?page=pin-requests&amp;view=<?= $requestId ?>" class="btn-secondary">Back to request</a>
+        <a href="/index.php?page=pin-request-view&amp;id=<?= $requestId ?>" class="btn-secondary">Back to request</a>
     </div>
     <p><strong>Total views recorded</strong></p>
     <p><span class="tag tag-open"><?= $viewCount ?></span></p>

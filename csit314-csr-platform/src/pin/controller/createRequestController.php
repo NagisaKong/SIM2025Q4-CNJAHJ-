@@ -42,8 +42,8 @@ final class createRequestController
         $this->errors = [];
 
         $sanitised = [
-            'service_id' => $input['service_id'] ?? $input['category_id'] ?? null,
-            'additional_details' => $input['additional_details'] ?? $input['description'] ?? '',
+            'service_id' => $input['service_id'] ?? $input['category_id'] ?? $input['type'] ?? null,
+            'additional_details' => $input['additional_details'] ?? $input['description'] ?? $input['additionalDetails'] ?? '',
             'title' => $input['title'] ?? null,
             'location' => $input['location'] ?? null,
             'requested_date' => $input['requested_date'] ?? null,

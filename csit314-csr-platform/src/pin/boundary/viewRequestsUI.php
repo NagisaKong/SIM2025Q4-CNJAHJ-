@@ -1,10 +1,8 @@
 <?php
 require_once __DIR__ . '/../controller/searchPostedRequestsController.php';
-require_once __DIR__ . '/../controller/viewRequestController.php';
 require_once __DIR__ . '/../../shared/entity/serviceCategories.php';
 
 use CSRPlatform\PIN\Controller\searchPostedRequestsController;
-use CSRPlatform\PIN\Controller\viewRequestController;
 use CSRPlatform\Shared\Entity\Request;
 use CSRPlatform\Shared\Entity\ServiceCategories;
 
@@ -32,7 +30,6 @@ if (!$currentUser || strtolower((string) ($currentUser['role'] ?? '')) !== 'pin'
 
 $requestEntity = new Request();
 $searchController = new searchPostedRequestsController($requestEntity);
-$viewController = new viewRequestController($requestEntity);
 $categoriesEntity = new ServiceCategories();
 
 $searchQuery = $_GET['q'] ?? '';
@@ -45,11 +42,6 @@ $requests = $searchController->searchPostedRequests(
     $statusFilter,
     $serviceFilter
 );
-
-$selectedRequestId = isset($_GET['view']) ? (int) $_GET['view'] : 0;
-$selectedRequest = $selectedRequestId > 0
-    ? $viewController->viewPostedRequest((int) $currentUser['id'], $selectedRequestId, false)
-    : null;
 
 $categories = $categoriesEntity->listCategories('active');
 
@@ -90,7 +82,7 @@ include __DIR__ . '/../../shared/boundary/header.php';
                 <?php endforeach; ?>
             </select>
         </label>
-        <button type="submit" class="btn-secondary">Filter</button>
+        <button type="submit" class="btn-secondary btn-filter">Filter</button>
         <?php if ($searchQuery !== '' || $statusFilter !== 'all' || $serviceFilter !== null): ?>
             <a href="/index.php?page=pin-requests" class="btn-secondary">Reset</a>
         <?php endif; ?>
@@ -117,10 +109,8 @@ include __DIR__ . '/../../shared/boundary/header.php';
                     <td><?= (int) $row['views_count'] ?></td>
                     <td><?= (int) $row['shortlist_count'] ?></td>
                     <td class="actions">
-                        <a class="btn-secondary" href="/index.php?page=pin-requests&amp;view=<?= (int) $row['id'] ?>">View</a>
+                        <a class="btn-secondary" href="/index.php?page=pin-request-view&amp;id=<?= (int) $row['id'] ?>">View</a>
                         <a class="btn-secondary" href="/index.php?page=pin-request-edit&amp;id=<?= (int) $row['id'] ?>">Edit</a>
-                        <a class="btn-secondary" href="/index.php?page=pin-request-shortlist&amp;id=<?= (int) $row['id'] ?>">Shortlist count</a>
-                        <a class="btn-secondary" href="/index.php?page=pin-request-views&amp;id=<?= (int) $row['id'] ?>">View count</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -132,31 +122,4 @@ include __DIR__ . '/../../shared/boundary/header.php';
         </tbody>
     </table>
 </section>
-<?php if ($selectedRequest): ?>
-<section class="card">
-    <div class="card-header">
-        <div>
-            <h2><?= htmlspecialchars((string) $selectedRequest['title'], ENT_QUOTES) ?></h2>
-            <p><?= htmlspecialchars((string) ($selectedRequest['category_name'] ?? ''), ENT_QUOTES) ?> · <?= htmlspecialchars((string) $selectedRequest['status'], ENT_QUOTES) ?></p>
-        </div>
-        <div class="card-actions">
-            <a class="btn-secondary" href="/index.php?page=pin-request-edit&amp;id=<?= $selectedRequestId ?>">Edit</a>
-            <a class="btn-secondary" href="/index.php?page=pin-request-shortlist&amp;id=<?= $selectedRequestId ?>">Shortlist count</a>
-            <a class="btn-secondary" href="/index.php?page=pin-request-views&amp;id=<?= $selectedRequestId ?>">View count</a>
-        </div>
-    </div>
-    <div class="grid">
-        <div>
-            <h3>Details</h3>
-            <p><strong>Status:</strong> <?= htmlspecialchars((string) $selectedRequest['status'], ENT_QUOTES) ?></p>
-            <p><strong>Requested date:</strong> <?= htmlspecialchars((string) $selectedRequest['requested_date'], ENT_QUOTES) ?></p>
-            <p><strong>Last updated:</strong> <?= htmlspecialchars((string) $selectedRequest['updated_at'], ENT_QUOTES) ?></p>
-        </div>
-        <div>
-            <h3>Additional information</h3>
-            <p><?= nl2br(htmlspecialchars((string) ($selectedRequest['additional_details'] ?? $selectedRequest['description']), ENT_QUOTES)) ?></p>
-        </div>
-    </div>
-</section>
-<?php endif; ?>
 <?php include __DIR__ . '/../../shared/boundary/footer.php'; ?>
