@@ -26,8 +26,11 @@ $routes = [
     'pin-request-views' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/viewRequestViewCountUI.php',
     'pin-history' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/HistoryUI.php',
     'pm-categories' => __DIR__ . '/../csit314-csr-platform/src/PM/boundary/ServiceCategoryUI.php',
+    'pm-category-view' => __DIR__ . '/../csit314-csr-platform/src/PM/boundary/ServiceCategoryViewUI.php',
+    'pm-category-update' => __DIR__ . '/../csit314-csr-platform/src/PM/boundary/ServiceCategoryUpdateUI.php',
     'pm-report-daily' => __DIR__ . '/../csit314-csr-platform/src/PM/boundary/DailyReportUI.php',
     'pm-report-weekly' => __DIR__ . '/../csit314-csr-platform/src/PM/boundary/WeeklyReportUI.php',
+    'pm-report-monthly' => __DIR__ . '/../csit314-csr-platform/src/PM/boundary/MonthlyReportUI.php',
 ];
 
 if (!array_key_exists($page, $routes)) {

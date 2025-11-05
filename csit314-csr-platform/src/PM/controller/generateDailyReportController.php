@@ -4,26 +4,25 @@ declare(strict_types=1);
 
 namespace CSRPlatform\PM\Controller;
 
-use CSRPlatform\Shared\Database\DatabaseConnection;
+use CSRPlatform\Shared\Entity\Report;
+
+use DateTimeImmutable;
 
 final class generateDailyReportController
 {
+    public function __construct(private Report $report)
+    {
+    }
+
+    public function generateDailyReport(): array
+    {
+        $today = new DateTimeImmutable('today');
+        return $this->report->produceReport($today->format('Y-m-d'), $today->format('Y-m-d'));
+    }
+
+    /** @deprecated */
     public function generate(): array
     {
-        $pdo = DatabaseConnection::get();
-        $summarySql = "SELECT status, COUNT(*) AS total FROM pin_requests WHERE DATE(created_at) = CURRENT_DATE GROUP BY status";
-        $summary = $pdo->query($summarySql)->fetchAll();
-
-        $categorySql = "SELECT sc.name, COUNT(pr.id) AS total
-                        FROM service_categories sc
-                        LEFT JOIN pin_requests pr ON pr.category_id = sc.id AND DATE(pr.created_at) = CURRENT_DATE
-                        GROUP BY sc.id
-                        ORDER BY sc.name";
-        $byCategory = $pdo->query($categorySql)->fetchAll();
-
-        return [
-            'summary' => $summary,
-            'categories' => $byCategory,
-        ];
+        return $this->generateDailyReport();
     }
 }

@@ -6,19 +6,18 @@ namespace CSRPlatform\PM\Controller;
 
 use CSRPlatform\Shared\Entity\Report;
 
-use DateInterval;
 use DateTimeImmutable;
 
-final class generateWeeklyReportController
+final class generateMonthlyReportController
 {
     public function __construct(private Report $report)
     {
     }
 
-    public function generateWeeklyReport(): array
+    public function generateMonthlyReport(): array
     {
         $end = new DateTimeImmutable('today');
-        $start = $end->sub(new DateInterval('P6D'));
+        $start = $end->modify('first day of this month');
 
         return $this->report->produceReport($start->format('Y-m-d'), $end->format('Y-m-d'));
     }
@@ -26,6 +25,7 @@ final class generateWeeklyReportController
     /** @deprecated */
     public function generate(): array
     {
-        return $this->generateWeeklyReport();
+        return $this->generateMonthlyReport();
     }
 }
+

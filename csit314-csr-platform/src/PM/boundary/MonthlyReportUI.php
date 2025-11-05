@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../controller/generateWeeklyReportController.php';
+require_once __DIR__ . '/../controller/generateMonthlyReportController.php';
 
-use CSRPlatform\PM\Controller\generateWeeklyReportController;
+use CSRPlatform\PM\Controller\generateMonthlyReportController;
 use CSRPlatform\Shared\Entity\Report;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -32,10 +32,10 @@ if ($roleKey !== 'pm') {
     exit();
 }
 
-$controller = new generateWeeklyReportController(new Report());
-$report = $controller->generateWeeklyReport();
+$controller = new generateMonthlyReportController(new Report());
+$report = $controller->generateMonthlyReport();
 
-$pageTitle = 'Weekly report';
+$pageTitle = 'Monthly report';
 $navLinks = [
     ['href' => '/index.php?page=dashboard', 'label' => 'Dashboard'],
     ['href' => '/index.php?page=pm-categories', 'label' => 'Categories'],
@@ -48,7 +48,7 @@ include __DIR__ . '/../../shared/boundary/header.php';
 <section class="card">
     <div class="card-heading">
         <div>
-            <h1>Weekly activity report</h1>
+            <h1>Monthly activity report</h1>
             <p class="muted"><?= htmlspecialchars(($report['range']['start'] ?? '') . ' to ' . ($report['range']['end'] ?? ''), ENT_QUOTES) ?></p>
         </div>
         <div class="card-actions">

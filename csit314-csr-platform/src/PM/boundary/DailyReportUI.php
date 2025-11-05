@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../controller/generateDailyReportController.php';
 
 use CSRPlatform\PM\Controller\generateDailyReportController;
+use CSRPlatform\Shared\Entity\Report;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -25,8 +26,14 @@ if (!$currentUser) {
     exit();
 }
 
-$controller = new generateDailyReportController();
-$report = $controller->generate();
+$roleKey = strtolower((string) ($currentUser['role'] ?? ''));
+if ($roleKey !== 'pm') {
+    header('Location: /index.php?page=dashboard');
+    exit();
+}
+
+$controller = new generateDailyReportController(new Report());
+$report = $controller->generateDailyReport();
 
 $pageTitle = 'Daily report';
 $navLinks = [
@@ -34,35 +41,31 @@ $navLinks = [
     ['href' => '/index.php?page=pm-categories', 'label' => 'Categories'],
     ['href' => '/index.php?page=pm-report-daily', 'label' => 'Daily report'],
     ['href' => '/index.php?page=pm-report-weekly', 'label' => 'Weekly report'],
+    ['href' => '/index.php?page=pm-report-monthly', 'label' => 'Monthly report'],
 ];
 include __DIR__ . '/../../shared/boundary/header.php';
 ?>
 <section class="card">
-    <div class="card-header">
-        <h1>Daily activity report</h1>
-        <p>Summary of requests created today.</p>
+    <div class="card-heading">
+        <div>
+            <h1>Daily activity report</h1>
+            <p class="muted">Summary for <?= htmlspecialchars($report['range']['start'] ?? '', ENT_QUOTES) ?></p>
+        </div>
+        <div class="card-actions">
+            <a class="btn-secondary" href="/index.php?page=dashboard">Back to dashboard</a>
+        </div>
     </div>
-    <h2>Status summary</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Status</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($report['summary'] as $row): ?>
-                <tr>
-                    <td><?= htmlspecialchars((string) $row['status'], ENT_QUOTES) ?></td>
-                    <td><?= (int) $row['total'] ?></td>
-                </tr>
-            <?php endforeach; ?>
-            <?php if (($report['summary'] ?? []) === []): ?>
-                <tr><td colspan="2" style="text-align:center;">No requests created today.</td></tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
-    <h2>Categories</h2>
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <span class="metric-label">Requests created</span>
+            <span class="metric-value"><?= (int) ($report['totals']['requests'] ?? 0) ?></span>
+        </div>
+        <div class="metric-card">
+            <span class="metric-label">Completed</span>
+            <span class="metric-value"><?= (int) ($report['totals']['completed'] ?? 0) ?></span>
+        </div>
+    </div>
+    <h2>Requests by category</h2>
     <table class="table">
         <thead>
             <tr>
@@ -71,13 +74,13 @@ include __DIR__ . '/../../shared/boundary/header.php';
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($report['categories'] as $row): ?>
+            <?php foreach ($report['byCategory'] as $row): ?>
                 <tr>
                     <td><?= htmlspecialchars((string) $row['name'], ENT_QUOTES) ?></td>
                     <td><?= (int) $row['total'] ?></td>
                 </tr>
             <?php endforeach; ?>
-            <?php if (($report['categories'] ?? []) === []): ?>
+            <?php if (($report['byCategory'] ?? []) === []): ?>
                 <tr><td colspan="2" style="text-align:center;">No category data.</td></tr>
             <?php endif; ?>
         </tbody>
