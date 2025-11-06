@@ -1,78 +1,59 @@
-# CSR Match Platform (Pure PHP)
+# CSIT314 CSR Platform
 
-This project implements a CSR volunteer matching platform using a custom MVC stack that follows the Boundary–Control–Entity (BCE) methodology. It is written in pure PHP 8.2 with PDO and is designed for coursework that mandates object-oriented middleware, RBAC, and evidence of agile/TDD practices.
+This repository contains a lightweight CSR matching platform implemented with native PHP. The application avoids any framework or shared core and organises logic by roles using the boundary-controller-entity pattern.
 
-## Features
+## Project structure
 
-- Custom lightweight framework with Router, Controller, Auth, Session, Validator, and CSRF utilities.
-- Role-based access control using user accounts and profiles (User Admin, CSR Rep, Person In Need, Platform Manager).
-- User Admin console for managing accounts, profiles, suspension, and audit logs.
-- CSR Rep workspace for browsing requests, viewing details, maintaining shortlists, and reviewing service history.
-- PIN portal for creating and managing help requests plus tracking views and shortlist counts.
-- Platform Manager tools for managing service categories and generating daily/weekly/monthly CSV reports.
-- Reporting and seed scripts that populate 100+ records per data type for classroom demos.
-- PHPUnit test suite covering authentication, request workflows, and reporting services.
+```
+csit314-csr-platform/
+├── config/
+├── public/
+├── src/
+│   ├── admin/
+│   ├── csr-representative/
+│   ├── pin/
+│   ├── PM/
+│   ├── login/
+│   └── shared/
+└── scripts/
+```
 
-## Getting Started
+Refer to the `config/` directory for database and application settings. PostgreSQL is required for data persistence.
 
-1. **Install dependencies**
+## Getting started
+
+1. Install dependencies:
    ```bash
    composer install
    ```
-2. **Copy environment file**
+2. Create the PostgreSQL schema and seed data:
    ```bash
-   cp .env.example .env
+   psql -U csr_user -d csr_platform -f create_data_table.sql
    ```
-3. **Configure database**
-   Update `.env` with your PDO DSN. The default configuration now targets PostgreSQL (`pgsql:host=127.0.0.1;port=5432;dbname=csr_platform`). You can still point the DSN to MySQL or SQLite for local experiments if needed.
-
-4. **Run migrations and seeders**
-   ```bash
-   php scripts/migrate.php
-   php scripts/generate_test_data.php
-   ```
-
-5. **Serve the application**
+3. Start the PHP built-in server:
    ```bash
    php -S localhost:8000 -t public
    ```
 
-6. **Run the automated tests**
-   ```bash
-   composer test
-   ```
+## Demo accounts
 
-## Project Layout
+The seed data created by `create_data_table.sql` provisions these credentials:
 
-```
-project-root/
-├─ public/                     # Front controller and assets
-├─ app/
-│  ├─ Core/                    # Framework kernel
-│  ├─ Controllers/             # Boundary layer
-│  ├─ Http/Middleware/         # Request guards
-│  ├─ Models/                  # Entity layer
-│  ├─ Repositories/            # Persistence helpers
-│  ├─ Services/                # Control layer
-│  └─ Views/                   # Templates
-├─ config/                     # Routes, database, roles
-├─ database/                   # Migrations, seeders
-├─ scripts/                    # CLI utilities (migrate, seed)
-├─ tests/                      # PHPUnit suite
-└─ storage/logs/               # Application logs
+| Role | Email | Password |
+| --- | --- | --- |
+| Administrator | `admin@example.com` | `Password1` |
+| CSR Representative | `csr@example.com` | `Password1` |
+| Person in Need | `pin@example.com` | `Password1` |
+| Project Manager | `pm@example.com` | `Password1` |
+
+## Testing
+
+Execute PHPUnit tests with:
+
+```bash
+composer test
 ```
 
-## Demo Credentials
+## Licensing
 
-Seed data creates the following sample accounts:
-
-| Role | Username | Password |
-| ---- | -------- | -------- |
-| User Admin | admin@example.com | password123 |
-| CSR Rep | csr.rep@example.com | password123 |
-| Person In Need | pin.user@example.com | password123 |
-| Platform Manager | manager@example.com | password123 |
-
-## License
-
-Educational use only.
+This project is provided for academic use in CSIT314 labs. No commercial license is granted.

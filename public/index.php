@@ -1,22 +1,43 @@
 <?php
-
 require __DIR__ . '/../vendor/autoload.php';
 
-use App\Core\Application;
-use App\Core\Container;
+$page = $_GET['page'] ?? 'login';
 
-$envFile = __DIR__ . '/../.env';
-if (file_exists($envFile)) {
-    foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
-        if (str_starts_with(trim($line), '#')) {
-            continue;
-        }
-        [$key, $value] = array_map('trim', explode('=', $line, 2));
-        putenv("{$key}={$value}");
-    }
+$routes = [
+    'login' => __DIR__ . '/../csit314-csr-platform/src/login/boundary/loginUI.php',
+    'dashboard' => __DIR__ . '/../csit314-csr-platform/src/shared/boundary/DashboardUI.php',
+    'admin-dashboard' => __DIR__ . '/../csit314-csr-platform/src/shared/boundary/DashboardUI.php',
+    'admin-accounts' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/ViewAccountsUI.php',
+    'admin-account-create' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/CreateAccountUI.php',
+    'admin-account-view' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/ViewUserAccountUI.php',
+    'admin-account-edit' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/EditUserAccountUI.php',
+    'admin-profiles' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/ViewProfilesUI.php',
+    'admin-profile-create' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/CreateProfileUI.php',
+    'admin-profile-view' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/ViewProfileUI.php',
+    'admin-profile-edit' => __DIR__ . '/../csit314-csr-platform/src/admin/boundary/EditProfileUI.php',
+    'csr-requests' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/SearchRequestsUI.php',
+    'csr-request-view' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/ViewRequestUI.php',
+    'csr-shortlist' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/ShortlistUI.php',
+    'csr-history' => __DIR__ . '/../csit314-csr-platform/src/csr-representative/boundary/HistoryUI.php',
+    'pin-requests' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/viewRequestsUI.php',
+    'pin-request-create' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/createRequestUI.php',
+    'pin-request-view' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/viewRequestUI.php',
+    'pin-request-edit' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/editRequestUI.php',
+    'pin-request-shortlist' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/viewRequestShortlistCountUI.php',
+    'pin-request-views' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/viewRequestViewCountUI.php',
+    'pin-history' => __DIR__ . '/../csit314-csr-platform/src/pin/boundary/HistoryUI.php',
+    'pm-categories' => __DIR__ . '/../csit314-csr-platform/src/PM/boundary/ServiceCategoryUI.php',
+    'pm-category-view' => __DIR__ . '/../csit314-csr-platform/src/PM/boundary/ServiceCategoryViewUI.php',
+    'pm-category-update' => __DIR__ . '/../csit314-csr-platform/src/PM/boundary/ServiceCategoryUpdateUI.php',
+    'pm-report-daily' => __DIR__ . '/../csit314-csr-platform/src/PM/boundary/DailyReportUI.php',
+    'pm-report-weekly' => __DIR__ . '/../csit314-csr-platform/src/PM/boundary/WeeklyReportUI.php',
+    'pm-report-monthly' => __DIR__ . '/../csit314-csr-platform/src/PM/boundary/MonthlyReportUI.php',
+];
+
+if (!array_key_exists($page, $routes)) {
+    http_response_code(404);
+    echo '<h1>404 Not Found</h1>';
+    exit();
 }
 
-$container = new Container();
-$app = new Application($container);
-$app->bootstrap();
-$app->handle();
+require $routes[$page];
